@@ -149,3 +149,8 @@ $RECYCLE.BIN/
 
 # Mac crap
 .DS_Store
+
+# Latex
+*.aux
+*.synctex
+*.log
