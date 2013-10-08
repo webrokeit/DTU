@@ -1,0 +1,175 @@
+% DATEI    vom
+\documentclass[12pt]{report}
+\usepackage{graphicx}
+\usepackage{titling}
+\usepackage[latin1]{inputenc}
+\textheight = 25truecm
+\textwidth = 15.5 true cm
+\topmargin=-1.0truecm
+\evensidemargin=0pt
+\oddsidemargin=0pt
+\parindent=0pt
+\frenchspacing
+\pagestyle{empty}
+%\usepackage{}
+
+
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
+
+\begin{document}
+
+\begin{titlepage}
+\begin{center}
+
+\includegraphics[scale=2.0]{dtu_logo_cmyk.eps}\\[1cm]
+
+\textsc{\LARGE Technical University of Denmark}\\[1.5cm]
+
+\textsc{\Large 02246 Model Checking}\\[0.5cm]
+
+
+% Title
+\HRule \\[0.4cm]
+{\huge \bfseries Mandatory Assignment\\Part 1: Discrete Modelling and Verification}\\[0.1cm]
+\HRule \\[1.5cm]
+
+% Author and supervisor
+\large
+\emph{Authors:}
+\\[10pt]
+Andreas Hallberg \textsc{Kjeldsen}\\
+\emph{s092638@student.dtu.dk}
+\\[10pt]
+Morten Chabert \textsc{Eskesen}\\
+\emph{s133304@student.dtu.dk}
+
+\vfill
+
+% Bottom of the page
+{\large October 21, 2013}
+
+\end{center}
+\end{titlepage}
+\chapter*{Part A: Introductory Problems}
+\section*{Practical Problems}
+\subsection*{1.}
+\subsubsection*{(a)}
+$client_1$: $AG (state_1 = 1 \Rightarrow \neg(\neg job_1 = 1 \wedge \neg job_2 = 1))$\\
+$client_2$: $AG (state_2 = 1 \Rightarrow \neg(\neg job_1 = 2 \wedge \neg job_2 = 2))$
+\subsubsection*{(b)}
+$P>=1 [G state1=1=>(job1=1)|(job2=1)]$ - Verified.\\
+$P>=1 [G state2=1=>(job1=2)|(job2=2)]$ - Verified.
+\subsubsection*{(c)}
+$client_1$: $AG (state_1 = 1 \Rightarrow job_1 = true)$\\
+$client_2$: $AG (state_2 = 1 \Rightarrow job_2 = true)$\\
+We require that whenever $state_1 = 1$ then $job_1 = true$ because there should be a job waiting in the queue when the $state_1 = 1$. The same goes for $client_2$.
+\subsubsection*{(d)}
+$P>=1 [G state1=1=>job1=true]$ - Verified.\\
+$P>=1 [G state2=1=>job2=true]$ - Verified.
+\subsection*{2.}
+\subsubsection*{(a)}
+In order for the \emph{Scheduler} to cope with an extra client we first add an extra module called $client_3$ with the same commands as the two other clients with the names of the commands corresponding to $client_3$. We changed the finite range, which $job_1$ and $job_2$ can take their value over to 0\dots3. This does not increase the length of the queue because there is still only two jobs allowed in the queue ($job_1$ and $job_2$). We also added commands create3, serve3 and finish3 and only changed the values according to the number of $client_3$.
+\subsubsection*{(b)}
+In the new model there are 214 reachable states.
+\subsubsection*{(c)}
+A client cannot create a job when the queue is full. This is because all the modules synchronize over all action names that appear syntactically in the modules. The commands create1, create2 and create3 are also in scheduler with a guard that specifies that the $job_2 = 0$ for creation of a job to be possible, and $job_2 = 0$ is only true if the queue is empty.
+\subsubsection*{(d)}
+Yes the properties previously verified still hold in the new model. They do because the clients' states will only be 1 if their job is in the scheduler since the modules are synchronized.
+\subsection*{3.}
+\subsubsection*{(a)}
+In order to modify the queue to have a length of three we add another job to the queue called $job_3$ which will hold the third job of the queue. We also changed the create commands to have the guard $job_3 = 0$ because now this is the last job in the queue, so when it is 0 there is a place for one more job. Furthermore we added another method for shifting the queue when there is an empty slot. The old command stays in place, but there is now another command with the guard $job_2=0$ \& $job_3>0$ that shifts $job_3$ to $job_2$ so it is moved up in the queue. Since the commands have no action names the commands can always occur \emph{independently} of what any other modules in the systems are doing - just so long as its guard is true.
+\subsubsection*{(b)}
+In the new model there are 1459 reachable states.
+\subsubsection*{(c)}
+The properties previously verified do not hold in the new model, because the queue is now of length 3. Which means that a job created by a client could be in scheduled as the last job, i.e. in $job_3$. Example: this would cause (for $client_1$) to have $state_1 = 1$ while $job_3=1$ because the job is at the end of the queue.
+\subsubsection*{(d)}
+????????????????????????????
+\subsection*{4.}
+\subsubsection*{(a)}
+$AG$ $\phi$ specifies that from all the paths from this state $\phi$ should hold. Whereas property $\phi$ should only hold in that state.
+\subsubsection*{(b)}
+The semantics are different in the version of PRISM we use. If the property $\phi$ should hold in all reachable states it should be written $AG$ $\phi$. Because if only $\phi$ has been written as the property - this version of PRISM will only check if the property $\phi$ holds in the \emph{initial} state.
+\subsubsection*{(c)}
+
+\subsubsection*{(d)}
+
+\section*{Theoretical Problems}
+\subsection*{1.}
+\subsubsection*{(a)}
+
+\subsubsection*{(b)}
+
+\subsection*{2.}
+\begin{itemize}
+\item[(a)]
+\item[(b)]
+\item[(c)]
+\item[(d)]
+\item[(e)]
+\end{itemize}
+
+\subsection*{3.}
+\subsubsection*{(a)}
+
+\subsubsection*{(b)}
+
+\subsubsection*{(c)}
+
+\subsubsection*{(d)}
+
+\subsection*{4.}
+
+\chapter*{Part B: Intermediate Problems}
+\section*{Practical Problems}
+\subsection*{1.}
+\subsubsection*{(a)}
+
+\subsubsection*{(b)}
+
+\subsubsection*{(c)}
+
+\subsubsection*{(d)}
+
+\subsubsection*{(e)}
+
+\subsection*{2.}
+\subsubsection*{(a)}
+
+\subsubsection*{(b)}
+
+\subsubsection*{(c)}
+
+\subsubsection*{(d)}
+
+\subsubsection*{(e)}
+
+\section*{Theoretical Problems}
+\subsection*{1.}
+\subsubsection*{(a)}
+
+\subsubsection*{(b)}
+
+\subsubsection*{(c)}
+
+\subsubsection*{(d)}
+
+\subsubsection*{(e)}
+
+\subsubsection*{(f)}
+
+\subsection*{2.}
+\subsubsection*{(a)}
+
+\subsubsection*{(b)}
+
+\subsubsection*{(c)}
+
+\subsubsection*{(d)}
+
+\chapter*{Part C: Advanced Problems}
+Only one of these sections need to be answered.
+\section*{Practical Problems}
+
+\section*{Theoretical Problems}
+
+\end{document}

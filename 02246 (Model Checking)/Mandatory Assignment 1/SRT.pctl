@@ -1,0 +1,4 @@
+task1>0=>P>=1 [ F task1=0 ]
+
+task2>0=>P>=1 [ F task2=0 ]
+
