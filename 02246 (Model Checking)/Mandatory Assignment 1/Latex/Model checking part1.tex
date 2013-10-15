@@ -3,10 +3,7 @@
 \usepackage{titling}
 \usepackage[latin1]{inputenc}
 \usepackage{enumerate}
-\textwidth = 15.5 true cm
-\topmargin=-1.0truecm
-\evensidemargin=0pt
-\oddsidemargin=0pt
+\usepackage{float}
 \parindent=0pt
 \frenchspacing
 \pagestyle{empty}
@@ -20,7 +17,7 @@
 \begin{titlepage}
 \begin{center}
 
-\includegraphics[scale=2.0]{dtu_logo_cmyk.eps}\\[1cm]
+\includegraphics[scale=2.0]{../GFX/dtu_logo.pdf}\\[1cm]
 
 \textsc{\LARGE Technical University of Denmark}\\[1.5cm]
 
@@ -114,11 +111,19 @@ $AG$ $\phi$ specifies that from all the paths from this state $\phi$ should hold
 The semantics are different in the version of PRISM we use. If the property $\phi$ should hold in all reachable states it should be written $AG$ $\phi$. Because if only $\phi$ has been written as the property - this version of PRISM will only check if the property $\phi$ holds in the \emph{initial} state.
 
 \subsubsection*{A1.4c) How would you solve the classical model checking problem $M,s \models \phi$ as a problem of the form $\forall s' : M,s' \models \phi'$?}
+I'll have to think about this.
 
 \subsubsection*{A1.4d) How would you solve the model checking problem $\forall s' : M,s \models \phi$ as a problem of the form $M,s' \models \phi'$}
+I'll also have to think about this.
 
 \section*{A2) Theoretical Problems}
 \subsection*{A2.1}
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.75]{../GFX/ExerciseFigure1.pdf}
+	\caption{A transition system}
+\end{figure}
+
 Consider the transition system, shown graphically in \textbf{Figure 1}. The states are represented by circles, whose names are shown beneath them, and whose labels are shown inside them. The initial state is $s_0$.
 
 \subsubsection*{A2.1a) Write down this transition system formally, as a tuple $(S,\rightarrow,S_0,AP,L)$}
