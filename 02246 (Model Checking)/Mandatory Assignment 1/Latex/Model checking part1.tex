@@ -2,6 +2,7 @@
 \usepackage{graphicx}
 \usepackage{titling}
 \usepackage[latin1]{inputenc}
+\usepackage{enumerate}
 \textwidth = 15.5 true cm
 \topmargin=-1.0truecm
 \evensidemargin=0pt
@@ -74,59 +75,87 @@ $P>=1 [G state2=1=>job2=true]$ - Verified.
 
 
 \subsection*{A1.2}
-Add another client to the PRISM model of the FCFS scheduler. You will need to modify the Scheduler module to cope with the extra client, but for now do not increase the length of the queue.
+Add another client to the PRISM model of the FCFS scheduler. You will need to modify the $Scheduler$ module to cope with the extra client, but for now do not increase the length of the queue.
 
 \subsubsection*{A1.2a) Explain the changes that you made to the model, and argue why they satisfy the above instructions}
 In order for the \emph{Scheduler} to cope with an extra client we first add an extra module called $client_3$ with the same commands as the two other clients with the names of the commands corresponding to $client_3$. We changed the finite range, which $job_1$ and $job_2$ can take their value over to 0\dots3. This does not increase the length of the queue because there is still only two jobs allowed in the queue ($job_1$ and $job_2$). We also added commands create3, serve3 and finish3 and only changed the values according to the number of $client_3$.
-\subsubsection*{(b)}
+
+\subsubsection*{A1.2b) How many reachable states are in the new model?}
 In the new model there are 214 reachable states.
-\subsubsection*{(c)}
+
+\subsubsection*{A1.2c) What will happen if the queue is full when a client attempts to create a job?}
 A client cannot create a job when the queue is full. This is because all the modules synchronize over all action names that appear syntactically in the modules. The commands create1, create2 and create3 are also in scheduler with a guard that specifies that the $job_2 = 0$ for creation of a job to be possible, and $job_2 = 0$ is only true if the queue is empty.
-\subsubsection*{(d)}
+
+\subsubsection*{A1.2d) Do the properties you have previously verified still hold of the model? If not, why not?}
 Yes the properties previously verified still hold in the new model. They do because the clients' states will only be 1 if their job is in the scheduler since the modules are synchronized.
-\subsection*{3.}
-\subsubsection*{(a)}
+
+\subsection*{A1.3}
+Now modify the $Scheduler$ module so that the queue is of length three.
+
+\subsubsection*{A1.3a) Explain the changes that you made to the model, and argue why they are correct.}
 In order to modify the queue to have a length of three we add another job to the queue called $job_3$ which will hold the third job of the queue. We also changed the create commands to have the guard $job_3 = 0$ because now this is the last job in the queue, so when it is 0 there is a place for one more job. Furthermore we added another method for shifting the queue when there is an empty slot. The old command stays in place, but there is now another command with the guard $job_2=0$ \& $job_3>0$ that shifts $job_3$ to $job_2$ so it is moved up in the queue. Since the commands have no action names the commands can always occur \emph{independently} of what any other modules in the systems are doing - just so long as its guard is true.
-\subsubsection*{(b)}
+
+\subsubsection*{A1.3b) How many reachable states are in the new model?}
 In the new model there are 1459 reachable states.
-\subsubsection*{(c)}
+
+\subsubsection*{A1.3c) Do the properties now hold of the model? If not, why not?}
 The properties previously verified do not hold in the new model, because the queue is now of length 3. Which means that a job created by a client could be in scheduled as the last job, i.e. in $job_3$. Example: this would cause (for $client_1$) to have $state_1 = 1$ while $job_3=1$ because the job is at the end of the queue.
-\subsubsection*{(d)}
+
+\subsubsection*{A1.3d) Can you give an upper bound on the number of reachable states for a model with $n$ clients, and a queue of length $m$?}
 ????????????????????????????
-\subsection*{4.}
-\subsubsection*{(a)}
+
+\subsection*{A1.4}
+Consider the CTL properties $\phi$ and AG $\phi$, where $\phi$ is an atomic property.
+
+\subsubsection*{A1.4a) What are their semantics, and how do they differ?}
 $AG$ $\phi$ specifies that from all the paths from this state $\phi$ should hold. Whereas property $\phi$ should only hold in that state.
-\subsubsection*{(b)}
+
+\subsubsection*{A1.4b) Are their semantics different in the version of PRISM that you use?}
 The semantics are different in the version of PRISM we use. If the property $\phi$ should hold in all reachable states it should be written $AG$ $\phi$. Because if only $\phi$ has been written as the property - this version of PRISM will only check if the property $\phi$ holds in the \emph{initial} state.
-\subsubsection*{(c)}
 
-\subsubsection*{(d)}
+\subsubsection*{A1.4c) How would you solve the classical model checking problem $M,s \models \phi$ as a problem of the form $\forall s' : M,s' \models \phi'$?}
 
-\section*{Theoretical Problems}
-\subsection*{1.}
-\subsubsection*{(a)}
+\subsubsection*{A1.4d) How would you solve the model checking problem $\forall s' : M,s \models \phi$ as a problem of the form $M,s' \models \phi'$}
 
-\subsubsection*{(b)}
+\section*{A2) Theoretical Problems}
+\subsection*{A2.1}
+Consider the transition system, shown graphically in \textbf{Figure 1}. The states are represented by circles, whose names are shown beneath them, and whose labels are shown inside them. The initial state is $s_0$.
 
-\subsection*{2.}
-\begin{itemize}
-\item[(a)]
-\item[(b)]
-\item[(c)]
-\item[(d)]
-\item[(e)]
-\end{itemize}
+\subsubsection*{A2.1a) Write down this transition system formally, as a tuple $(S,\rightarrow,S_0,AP,L)$}
+The transition system will formally be written as:\\
+$\langle\{s_0,s_1,s_2,s_3\},\{(s_0 \rightarrow s_1),(s_1 \rightarrow s_1),(s_0 \rightarrow s_2),(s_2 \rightarrow s_2),(s_2 \rightarrow s_3)\},s_0,\{\phi_1,\phi_2\},L\rangle$
 
-\subsection*{3.}
-\subsubsection*{(a)}
+\subsubsection*{A2.1b) By directly reasoning with the semantics of CTL, determine whether the following properties hold of the state $s_0$}
+\begin{enumerate}[i.]
+	\item $AF \phi_2$: Does not hold as $s_2$ can loop indefinitely and therefore $s_3$ is never reached.
+	\item $AX \phi_2$: Does not hold as $s_0 \rightarrow s_2$ isn't allowed.
+	\item $EF \phi_1$: Holds $(s_0 \rightarrow s_2 \rightarrow s_3$).
+	\item $A[\phi_1 U \phi_2]$: Does not hold as $s_0 \rightarrow s_2$ isn't allowed.
+\end{enumerate}
 
-\subsubsection*{(b)}
+\subsection*{A2.2}
+For each of the following pairs of CTL formulae, determine whether (a) they are equivalent, (b) one implies the other, or (c) neither implies the other. Explain your reasoning.
+\begin{description}
+\item[A2.2a) $EX$ $EF$ $\phi$ and $EF$ $EX$ $\phi$:]
+\item[A2.2b) $AX$ $AF$ $\phi$ and $AF$ $AX$ $\phi$:]
+\item[A2.2c) $AG$ $EF$ $\phi$ and $EF$ $AG$ $\phi$:]
+\item[A2.2d) $AG$ $(\phi_1 \wedge \phi_2)$ and $(AG$ $\phi_1) \wedge (AG$ $\phi_2)$:]
+\item[A2.2e) $EF$ $(\phi_1 \wedge \phi_2)$ and $(EF$ $\phi_1) \wedge (EF$ $\phi_2)$:]
+\end{description}
 
-\subsubsection*{(c)}
+\subsection*{2A.3}
+Write down a CTRL* formula for each of the following properties, which are described in natural language. In each case, argue whether or not the property can also expressed in CTL.
 
-\subsubsection*{(d)}
+\subsubsection*{2A.3a) There is a path on which $\phi$ holds infinitely often.}
 
-\subsection*{4.}
+\subsubsection*{2A.3b) For all paths, $\phi_1$ holds along the path until $\phi_2$ holds of a state and $\phi_3$ holds of the state that immediately follows}
+
+\subsubsection*{2A.3c) There is a path on which either $\phi_1$ eventually holds or $\phi_2$ eventually holds}
+
+\subsubsection*{2A.3d) For all paths, either $\phi_1$ always holds or $\phi_2$ always holds}
+
+\subsection*{2A.4}
+Encode the transition system in \textbf{Figure 1} as a PRISM module, using a variable $s$, such that $0 \leq s \leq 3$, to represent the state. Define $\phi_1$ and $\phi_2$ as PRISM labels.
 
 \chapter*{Part B: Intermediate Problems}
 \section*{Practical Problems}
