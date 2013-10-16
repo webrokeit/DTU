@@ -1,0 +1,74 @@
+mdp
+
+module client1
+  state1 : [0..1] init 0; // State of the job (inactive/active)
+  task1  : [0..5] init 0; // Length of the job
+  priority1 : [1..2] init 1; // Priority of the job
+  
+  // Create a new job - length chose non-deterministically
+  [create1] state1=0 -> (state1'=1) & (task1'=1) & (priority1'=1);
+  [create1] state1=0 -> (state1'=1) & (task1'=2) & (priority1'=1);
+  [create1] state1=0 -> (state1'=1) & (task1'=3) & (priority1'=1);
+  [create1] state1=0 -> (state1'=1) & (task1'=4) & (priority1'=1);
+  [create1] state1=0 -> (state1'=1) & (task1'=5) & (priority1'=1);
+
+  [create1] state1=0 -> (state1'=1) & (task1'=1) & (priority1'=2);
+  [create1] state1=0 -> (state1'=1) & (task1'=2) & (priority1'=2);
+  [create1] state1=0 -> (state1'=1) & (task1'=3) & (priority1'=2);
+  [create1] state1=0 -> (state1'=1) & (task1'=4) & (priority1'=2);
+  [create1] state1=0 -> (state1'=1) & (task1'=5) & (priority1'=2);
+
+  // Serve the job
+  [serve1] state1=1 & task1>0 -> (task1'=task1-1);
+
+  // Complete the job
+  [finish1] state1=1 & task1=0 -> (state1'=0);
+
+endmodule
+
+module client2 = client1 [state1=state2,
+                          task1=task2,
+			  priority1=priority2,
+                          create1=create2,
+                          serve1=serve2,
+                          finish1=finish2 ]
+endmodule
+
+module scheduler
+  job1 : bool init false; // Is there a job from client1?
+  job2 : bool init false; // Is there a job from client2?
+  turn : [0..2] init 0; // Who is next?
+  job1time : bool init false; // Has job1 used up its time?
+  job2time : bool init false; // Has job2 used up its time?
+  wait1 : [0..5] init 0; // How long has job1 waited?
+  wait2 : [0..5] init 0; // How long has job2 waited?
+
+  // Record that there is a waiting job
+  [create1] job1=false & turn>0 -> (job1'=true);
+  [create1] job1=false & turn=0 -> (job1'=true) & (turn'=1);
+  [create2] job2=false & turn>0 -> (job2'=true);
+  [create2] job2=false & turn=0 -> (job2'=true) & (turn'=2);
+
+  [] job1=true & job1time=true & turn=1 -> (job1time'=false);
+  [] job2=true & job2time=true & turn=2 -> (job2time'=false);
+
+  // Serve the jobs
+  [serve1] job1=true & job2=false -> true;
+  [serve2] job1=false & job2=true -> true;
+  [serve1] job1=true & job2=true & turn=1 & job1time=false & priority1=priority2 -> (job1time'=true) & (turn'=2);
+  [serve2] job1=true & job2=true & turn=2 & job2time=false & priority2=priority1 -> (job2time'=true) & (turn'=1);
+  [serve1] job1=true & job2=true & wait1=5 -> (turn'=2);
+  [serve2] job1=true & job2=true & wait2=5 -> (turn'=1);
+  [serve1] job1=true & job2=true & priority1>priority2 & wait2<5 -> (turn'=2) & (wait2'=wait2+1);
+  [serve2] job1=true & job2=true & priority2>priority1 & wait1<5 -> (turn'=1) & (wait1'=wait1+1);
+
+  // Complete any job that has finished
+  [finish1] job1=true -> (job1'=false) & (job1time'=false) & (wait1'=0);
+  [finish2] job2=true -> (job2'=false) & (job2time'=false) & (wait2'=0);
+
+endmodule
+
+system
+  scheduler || client1 || client2
+endsystem
+
