@@ -4,6 +4,7 @@
 \usepackage[latin1]{inputenc}
 \usepackage{enumerate}
 \usepackage{float}
+\usepackage{latexsym}
 \parindent=0pt
 \frenchspacing
 \pagestyle{empty}
@@ -46,6 +47,21 @@ Morten Chabert \textsc{Eskesen}\\
 
 \end{center}
 \end{titlepage}
+
+\chapter*{HJ{\AE}LPE HALL{\O}J}
+\begin{tabular}{ | l  c  r | }
+	\hline
+	CTL	& & Wiki \\ \hline
+	$\forall$ & $\equiv$ &  A \\
+	$\exists$ & $\equiv$ & E \\
+	$\bigcirc$ & $\equiv$ & X \\
+	$\Box$ & $\equiv$ & G \\
+	$\Diamond$ & $\equiv$ & F \\
+	$\Phi$ & $\equiv$ & $\Phi$ \\
+	\hline
+\end{tabular}
+\newpage
+
 \chapter*{Part A: Introductory Problems}
 \section*{A1) Practical Problems}
 
@@ -102,18 +118,18 @@ The properties previously verified do not hold in the new model, because the que
 ????????????????????????????
 
 \subsection*{A1.4}
-Consider the CTL properties $\phi$ and AG $\phi$, where $\phi$ is an atomic property.
+Consider the CTL properties $\Phi$ and AG $\Phi$, where $\Phi$ is an atomic property.
 
 \subsubsection*{A1.4a) What are their semantics, and how do they differ?}
-$AG$ $\phi$ specifies that from all the paths from this state $\phi$ should hold. Whereas property $\phi$ should only hold in that state.
+$AG$ $\Phi$ specifies that from all the paths from this state $\Phi$ should hold. Whereas property $\Phi$ should only hold in that state.
 
 \subsubsection*{A1.4b) Are their semantics different in the version of PRISM that you use?}
-The semantics are different in the version of PRISM we use. If the property $\phi$ should hold in all reachable states it should be written $AG$ $\phi$. Because if only $\phi$ has been written as the property - this version of PRISM will only check if the property $\phi$ holds in the \emph{initial} state.
+The semantics are different in the version of PRISM we use. If the property $\Phi$ should hold in all reachable states it should be written $AG$ $\Phi$. Because if only $\Phi$ has been written as the property - this version of PRISM will only check if the property $\Phi$ holds in the \emph{initial} state.
 
-\subsubsection*{A1.4c) How would you solve the classical model checking problem $M,s \models \phi$ as a problem of the form $\forall s' : M,s' \models \phi'$?}
+\subsubsection*{A1.4c) How would you solve the classical model checking problem $M,s \models \Phi$ as a problem of the form $\forall s' : M,s' \models \Phi'$?}
 I'll have to think about this.
 
-\subsubsection*{A1.4d) How would you solve the model checking problem $\forall s' : M,s \models \phi$ as a problem of the form $M,s' \models \phi'$}
+\subsubsection*{A1.4d) How would you solve the model checking problem $\forall s' : M,s \models \Phi$ as a problem of the form $M,s' \models \Phi'$}
 I'll also have to think about this.
 
 \section*{A2) Theoretical Problems}
@@ -128,39 +144,39 @@ Consider the transition system, shown graphically in \textbf{Figure 1}. The stat
 
 \subsubsection*{A2.1a) Write down this transition system formally, as a tuple $(S,\rightarrow,S_0,AP,L)$}
 The transition system will formally be written as:\\
-$\langle\{s_0,s_1,s_2,s_3\},\{(s_0 \rightarrow s_1),(s_1 \rightarrow s_1),(s_0 \rightarrow s_2),(s_2 \rightarrow s_2),(s_2 \rightarrow s_3)\},s_0,\{\phi_1,\phi_2\},L\rangle$
+$\langle\{s_0,s_1,s_2,s_3\},\{(s_0 \rightarrow s_1),(s_1 \rightarrow s_1),(s_0 \rightarrow s_2),(s_2 \rightarrow s_2),(s_2 \rightarrow s_3)\},s_0,\{\Phi_1,\Phi_2\},L\rangle$
 
 \subsubsection*{A2.1b) By directly reasoning with the semantics of CTL, determine whether the following properties hold of the state $s_0$}
 \begin{enumerate}[i.]
-	\item $AF \phi_2$: Does not hold as $s_2$ can loop indefinitely and therefore $s_3$ is never reached.
-	\item $AX \phi_2$: Does not hold as $s_0 \rightarrow s_2$ isn't allowed.
-	\item $EF \phi_1$: Holds $(s_0 \rightarrow s_2 \rightarrow s_3$).
-	\item $A[\phi_1 U \phi_2]$: Does not hold as $s_0 \rightarrow s_2$ isn't allowed.
+	\item $AF \Phi_2$: Does not hold as $s_2$ can loop indefinitely and therefore $s_3$ is never reached.
+	\item $AX \Phi_2$: Does not hold as $s_0 \rightarrow s_2$ isn't allowed.
+	\item $EF \Phi_1$: Holds $(s_0 \rightarrow s_2 \rightarrow s_3$).
+	\item $A[\Phi_1 U \Phi_2]$: Does not hold as $s_0 \rightarrow s_2$ isn't allowed.
 \end{enumerate}
 
 \subsection*{A2.2}
 For each of the following pairs of CTL formulae, determine whether (a) they are equivalent, (b) one implies the other, or (c) neither implies the other. Explain your reasoning.
 \begin{description}
-\item[A2.2a) $EX$ $EF$ $\phi$ and $EF$ $EX$ $\phi$:]
-\item[A2.2b) $AX$ $AF$ $\phi$ and $AF$ $AX$ $\phi$:]
-\item[A2.2c) $AG$ $EF$ $\phi$ and $EF$ $AG$ $\phi$:]
-\item[A2.2d) $AG$ $(\phi_1 \wedge \phi_2)$ and $(AG$ $\phi_1) \wedge (AG$ $\phi_2)$:]
-\item[A2.2e) $EF$ $(\phi_1 \wedge \phi_2)$ and $(EF$ $\phi_1) \wedge (EF$ $\phi_2)$:]
+\item[A2.2a) $EX$ $EF$ $\Phi$ and $EF$ $EX$ $\Phi$:]
+\item[A2.2b) $AX$ $AF$ $\Phi$ and $AF$ $AX$ $\Phi$:]
+\item[A2.2c) $AG$ $EF$ $\Phi$ and $EF$ $AG$ $\Phi$:]
+\item[A2.2d) $AG$ $(\Phi_1 \wedge \Phi_2)$ and $(AG$ $\Phi_1) \wedge (AG$ $\Phi_2)$:]
+\item[A2.2e) $EF$ $(\Phi_1 \wedge \Phi_2)$ and $(EF$ $\Phi_1) \wedge (EF$ $\Phi_2)$:]
 \end{description}
 
 \subsection*{2A.3}
 Write down a CTRL* formula for each of the following properties, which are described in natural language. In each case, argue whether or not the property can also expressed in CTL.
 
-\subsubsection*{2A.3a) There is a path on which $\phi$ holds infinitely often.}
+\subsubsection*{2A.3a) There is a path on which $\Phi$ holds infinitely often.}
 
-\subsubsection*{2A.3b) For all paths, $\phi_1$ holds along the path until $\phi_2$ holds of a state and $\phi_3$ holds of the state that immediately follows}
+\subsubsection*{2A.3b) For all paths, $\Phi_1$ holds along the path until $\Phi_2$ holds of a state and $\Phi_3$ holds of the state that immediately follows}
 
-\subsubsection*{2A.3c) There is a path on which either $\phi_1$ eventually holds or $\phi_2$ eventually holds}
+\subsubsection*{2A.3c) There is a path on which either $\Phi_1$ eventually holds or $\Phi_2$ eventually holds}
 
-\subsubsection*{2A.3d) For all paths, either $\phi_1$ always holds or $\phi_2$ always holds}
+\subsubsection*{2A.3d) For all paths, either $\Phi_1$ always holds or $\Phi_2$ always holds}
 
 \subsection*{2A.4}
-Encode the transition system in \textbf{Figure 1} as a PRISM module, using a variable $s$, such that $0 \leq s \leq 3$, to represent the state. Define $\phi_1$ and $\phi_2$ as PRISM labels.
+Encode the transition system in \textbf{Figure 1} as a PRISM module, using a variable $s$, such that $0 \leq s \leq 3$, to represent the state. Define $\Phi_1$ and $\Phi_2$ as PRISM labels.
 
 \chapter*{Part B: Intermediate Problems}
 \section*{B1) Practical Problems}
