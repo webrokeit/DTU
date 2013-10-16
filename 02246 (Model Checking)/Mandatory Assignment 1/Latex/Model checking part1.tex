@@ -1,15 +1,12 @@
-% DATEI    vom
 \documentclass[12pt]{report}
 \usepackage{graphicx}
 \usepackage{titling}
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage[latin1]{inputenc}
-\textheight = 25truecm
-\textwidth = 15.5 true cm
-\topmargin=-1.0truecm
-\evensidemargin=0pt
-\oddsidemargin=0pt
+\usepackage{enumerate}
+\usepackage{float}
+\usepackage{latexsym}
 \parindent=0pt
 \frenchspacing
 \pagestyle{empty}
@@ -23,7 +20,7 @@
 \begin{titlepage}
 \begin{center}
 
-\includegraphics[scale=2.0]{dtu_logo_cmyk.eps}\\[1cm]
+\includegraphics[scale=2.0]{../GFX/dtu_logo.pdf}\\[1cm]
 
 \textsc{\LARGE Technical University of Denmark}\\[1.5cm]
 
@@ -52,78 +49,140 @@ Morten Chabert \textsc{Eskesen}\\
 
 \end{center}
 \end{titlepage}
+
+\chapter*{HJ{\AE}LPE HALL{\O}J}
+\begin{tabular}{ | l  c  r | }
+	\hline
+	CTL	& & Wiki \\ \hline
+	$\forall$ & $\equiv$ &  A \\
+	$\exists$ & $\equiv$ & E \\
+	$\bigcirc$ & $\equiv$ & X \\
+	$\Box$ & $\equiv$ & G \\
+	$\Diamond$ & $\equiv$ & F \\
+	$\Phi$ & $\equiv$ & $\Phi$ \\
+	\hline
+\end{tabular}
+\newpage
+
 \chapter*{Part A: Introductory Problems}
-\section*{Practical Problems}
-\subsection*{1.}
-\subsubsection*{(a)}
+\section*{A1) Practical Problems}
+
+\subsection*{A1.1}
+For the FCFS scheduler, we would like to verify that whenever a client has an active job, the scheduler has that job somewhere in its queue. For example, in the case of the first client, we require that whenever $state_1 = 1$, then either $job_1 = 1$ or $job_2 = 1$.
+
+\subsubsection*{A1.1a) Express this as two CTL properties - one for each client}
 $client_1$: $AG (state_1 = 1 \Rightarrow \neg(\neg job_1 = 1 \wedge \neg job_2 = 1))$\\
 $client_2$: $AG (state_2 = 1 \Rightarrow \neg(\neg job_1 = 2 \wedge \neg job_2 = 2))$
-\subsubsection*{(b)}
+
+\subsubsection*{A1.1b) Use PRISM to verify whether these properties hold of the FCFS scheduler model}
 $P>=1 [G state1=1=>(job1=1)|(job2=1)]$ - Verified.\\
 $P>=1 [G state2=1=>(job1=2)|(job2=2)]$ - Verified.
-\subsubsection*{(c)}
+
+\subsubsection*{A1.1c) Write down two similar properties for the SRT scheduler, explaining your construction}
 $client_1$: $AG (state_1 = 1 \Rightarrow job_1 = true)$\\
 $client_2$: $AG (state_2 = 1 \Rightarrow job_2 = true)$\\
+\\
 We require that whenever $state_1 = 1$ then $job_1 = true$ because there should be a job waiting in the queue when the $state_1 = 1$. The same goes for $client_2$.
-\subsubsection*{(d)}
+
+\subsubsection*{A1.1d) Verify whether they hold of the model}
 $P>=1 [G state1=1=>job1=true]$ - Verified.\\
 $P>=1 [G state2=1=>job2=true]$ - Verified.
-\subsection*{2.}
-\subsubsection*{(a)}
+
+
+\subsection*{A1.2}
+Add another client to the PRISM model of the FCFS scheduler. You will need to modify the $Scheduler$ module to cope with the extra client, but for now do not increase the length of the queue.
+
+\subsubsection*{A1.2a) Explain the changes that you made to the model, and argue why they satisfy the above instructions}
 In order for the \emph{Scheduler} to cope with an extra client we first add an extra module called $client_3$ with the same commands as the two other clients with the names of the commands corresponding to $client_3$. We changed the finite range, which $job_1$ and $job_2$ can take their value over to 0\dots3. This does not increase the length of the queue because there is still only two jobs allowed in the queue ($job_1$ and $job_2$). We also added commands create3, serve3 and finish3 and only changed the values according to the number of $client_3$.
-\subsubsection*{(b)}
+
+\subsubsection*{A1.2b) How many reachable states are in the new model?}
 In the new model there are 214 reachable states.
-\subsubsection*{(c)}
+
+\subsubsection*{A1.2c) What will happen if the queue is full when a client attempts to create a job?}
 A client cannot create a job when the queue is full. This is because all the modules synchronize over all action names that appear syntactically in the modules. The commands create1, create2 and create3 are also in scheduler with a guard that specifies that the $job_2 = 0$ for creation of a job to be possible, and $job_2 = 0$ is only true if the queue is empty.
-\subsubsection*{(d)}
+
+\subsubsection*{A1.2d) Do the properties you have previously verified still hold of the model? If not, why not?}
 Yes the properties previously verified still hold in the new model. They do because the clients' states will only be 1 if their job is in the scheduler since the modules are synchronized.
-\subsection*{3.}
-\subsubsection*{(a)}
+
+\subsection*{A1.3}
+Now modify the $Scheduler$ module so that the queue is of length three.
+
+\subsubsection*{A1.3a) Explain the changes that you made to the model, and argue why they are correct.}
 In order to modify the queue to have a length of three we add another job to the queue called $job_3$ which will hold the third job of the queue. We also changed the create commands to have the guard $job_3 = 0$ because now this is the last job in the queue, so when it is 0 there is a place for one more job. Furthermore we added another method for shifting the queue when there is an empty slot. The old command stays in place, but there is now another command with the guard $job_2=0$ \& $job_3>0$ that shifts $job_3$ to $job_2$ so it is moved up in the queue. Since the commands have no action names the commands can always occur \emph{independently} of what any other modules in the systems are doing - just so long as its guard is true.
-\subsubsection*{(b)}
+
+\subsubsection*{A1.3b) How many reachable states are in the new model?}
 In the new model there are 1459 reachable states.
-\subsubsection*{(c)}
+
+\subsubsection*{A1.3c) Do the properties now hold of the model? If not, why not?}
 The properties previously verified do not hold in the new model, because the queue is now of length 3. Which means that a job created by a client could be in scheduled as the last job, i.e. in $job_3$. Example: this would cause (for $client_1$) to have $state_1 = 1$ while $job_3=1$ because the job is at the end of the queue.
-\subsubsection*{(d)}
+
+\subsubsection*{A1.3d) Can you give an upper bound on the number of reachable states for a model with $n$ clients, and a queue of length $m$?}
 ????????????????????????????
-\subsection*{4.}
-\subsubsection*{(a)}
-$AG$ $\phi$ specifies that from all the paths from this state $\phi$ should hold. Whereas property $\phi$ should only hold in that state.
-\subsubsection*{(b)}
-The semantics are different in the version of PRISM we use. If the property $\phi$ should hold in all reachable states it should be written $AG$ $\phi$. Because if only $\phi$ has been written as the property - this version of PRISM will only check if the property $\phi$ holds in the \emph{initial} state.
-\subsubsection*{(c)}
 
-\subsubsection*{(d)}
+\subsection*{A1.4}
+Consider the CTL properties $\Phi$ and AG $\Phi$, where $\Phi$ is an atomic property.
 
-\section*{Theoretical Problems}
-\subsection*{1.}
-\subsubsection*{(a)}
+\subsubsection*{A1.4a) What are their semantics, and how do they differ?}
+$AG$ $\Phi$ specifies that from all the paths from this state $\Phi$ should hold. Whereas property $\Phi$ should only hold in that state.
 
-\subsubsection*{(b)}
+\subsubsection*{A1.4b) Are their semantics different in the version of PRISM that you use?}
+The semantics are different in the version of PRISM we use. If the property $\Phi$ should hold in all reachable states it should be written $AG$ $\Phi$. Because if only $\Phi$ has been written as the property - this version of PRISM will only check if the property $\Phi$ holds in the \emph{initial} state.
 
-\subsection*{2.}
-\begin{itemize}
-\item[(a)]
-\item[(b)]
-\item[(c)]
-\item[(d)]
-\item[(e)]
-\end{itemize}
+\subsubsection*{A1.4c) How would you solve the classical model checking problem $M,s \models \Phi$ as a problem of the form $\forall s' : M,s' \models \Phi'$?}
+I'll have to think about this.
 
-\subsection*{3.}
-\subsubsection*{(a)}
+\subsubsection*{A1.4d) How would you solve the model checking problem $\forall s' : M,s \models \Phi$ as a problem of the form $M,s' \models \Phi'$}
+I'll also have to think about this.
 
-\subsubsection*{(b)}
+\section*{A2) Theoretical Problems}
+\subsection*{A2.1}
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.75]{../GFX/ExerciseFigure1.pdf}
+	\caption{A transition system}
+\end{figure}
 
-\subsubsection*{(c)}
+Consider the transition system, shown graphically in \textbf{Figure 1}. The states are represented by circles, whose names are shown beneath them, and whose labels are shown inside them. The initial state is $s_0$.
 
-\subsubsection*{(d)}
+\subsubsection*{A2.1a) Write down this transition system formally, as a tuple $(S,\rightarrow,S_0,AP,L)$}
+The transition system will formally be written as:\\
+$\langle\{s_0,s_1,s_2,s_3\},\{(s_0 \rightarrow s_1),(s_1 \rightarrow s_1),(s_0 \rightarrow s_2),(s_2 \rightarrow s_2),(s_2 \rightarrow s_3)\},s_0,\{\Phi_1,\Phi_2\},L\rangle$
 
-\subsection*{4.}
+\subsubsection*{A2.1b) By directly reasoning with the semantics of CTL, determine whether the following properties hold of the state $s_0$}
+\begin{enumerate}[i.]
+	\item $AF \Phi_2$: Does not hold as $s_2$ can loop indefinitely and therefore $s_3$ is never reached.
+	\item $AX \Phi_2$: Does not hold as $s_0 \rightarrow s_2$ isn't allowed.
+	\item $EF \Phi_1$: Holds $(s_0 \rightarrow s_2 \rightarrow s_3$).
+	\item $A[\Phi_1 U \Phi_2]$: Does not hold as $s_0 \rightarrow s_2$ isn't allowed.
+\end{enumerate}
+
+\subsection*{A2.2}
+For each of the following pairs of CTL formulae, determine whether (a) they are equivalent, (b) one implies the other, or (c) neither implies the other. Explain your reasoning.
+\begin{description}
+\item[A2.2a) $EX$ $EF$ $\Phi$ and $EF$ $EX$ $\Phi$:]
+\item[A2.2b) $AX$ $AF$ $\Phi$ and $AF$ $AX$ $\Phi$:]
+\item[A2.2c) $AG$ $EF$ $\Phi$ and $EF$ $AG$ $\Phi$:]
+\item[A2.2d) $AG$ $(\Phi_1 \wedge \Phi_2)$ and $(AG$ $\Phi_1) \wedge (AG$ $\Phi_2)$:]
+\item[A2.2e) $EF$ $(\Phi_1 \wedge \Phi_2)$ and $(EF$ $\Phi_1) \wedge (EF$ $\Phi_2)$:]
+\end{description}
+
+\subsection*{2A.3}
+Write down a CTRL* formula for each of the following properties, which are described in natural language. In each case, argue whether or not the property can also expressed in CTL.
+
+\subsubsection*{2A.3a) There is a path on which $\Phi$ holds infinitely often.}
+
+\subsubsection*{2A.3b) For all paths, $\Phi_1$ holds along the path until $\Phi_2$ holds of a state and $\Phi_3$ holds of the state that immediately follows}
+
+\subsubsection*{2A.3c) There is a path on which either $\Phi_1$ eventually holds or $\Phi_2$ eventually holds}
+
+\subsubsection*{2A.3d) For all paths, either $\Phi_1$ always holds or $\Phi_2$ always holds}
+
+\subsection*{2A.4}
+Encode the transition system in \textbf{Figure 1} as a PRISM module, using a variable $s$, such that $0 \leq s \leq 3$, to represent the state. Define $\Phi_1$ and $\Phi_2$ as PRISM labels.
 
 \chapter*{Part B: Intermediate Problems}
-\section*{Practical Problems}
-\subsection*{1.}
+\section*{B1) Practical Problems}
+\subsection*{B1.1 }
 \subsubsection*{(a)}
 In order to model a round-robin scheduler from the SRT scheduler we introduce some variables to the \emph{Scheduler} module.
 \begin{center}
@@ -190,8 +249,18 @@ In the new model there 360 reachable states.
 $P>=1 [G state1=1=>(job1=1)|(job2=1)]$ - Verified.\\
 $P>=1 [G state2=1=>(job1=2)|(job2=2)]$ - Verified.
 
-\section*{Theoretical Problems}
-\subsection*{1.}
+\section*{B2) Theoretical Problems}
+\subsection*{B2.1}
+
+\begin{figure}[H]
+	\centering
+	\begin{tabular}{ l r }
+		\includegraphics[scale=0.75]{../GFX/ExerciseFigure2-M1.pdf}
+		& \includegraphics[scale=0.75]{../GFX/ExerciseFigure2-M2.pdf}
+	\end{tabular}
+	\caption{Two transition systems, $M_1$ and $M_2$}
+\end{figure}
+
 \subsubsection*{(a)}
 
 \subsubsection*{(b)}
@@ -215,7 +284,7 @@ $P>=1 [G state2=1=>(job1=2)|(job2=2)]$ - Verified.
 
 \chapter*{Part C: Advanced Problems}
 \section*{Practical Problems}
-We have modified our round-robin scheduler to include priorities. In our specification the scheduler choses the job with the highest priority and it serves it till its finished unless the other job has waited 5 turns. This avoid starvation but it could also keep an important job in the queue while serving a less important job. If the priority is equal the scheduler switches between the jobs in a regular round-robin fashion. 
+We have modified our round-robin scheduler to include priorities. In our specification the scheduler choses the job with the highest priority and it serves it till its finished unless the other job has waited 5 turns. This avoid starvation but it could also keep an important job in the queue while serving a less important job. If the priority is equal the scheduler switches between the jobs in a regular round-robin fashion.\\
 \begin{tabular}{ c c c c }
 No. & CTL & PRISM notation & Verified \\
 1. & $AG (state_1 = 1 \Rightarrow job_1 = true)$ & $P>=1 [G state1=1=>job1=true]$ & $\checkmark$ \\
