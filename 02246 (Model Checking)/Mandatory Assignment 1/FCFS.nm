@@ -45,8 +45,8 @@ module scheduler
   [create3] job3=0 -> (job3'=3);
 
   // Shift the queue if there is an empty slot
-  [] job1=0 & job2>0 -> (job1'=job2) & (job2'=0);
   [] job2=0 & job3>0 -> (job2'=job3) & (job3'=0);
+  [] job1=0 & job2>0 -> (job1'=job2) & (job2'=0);
 
   // Serve the job at the head of the queue
   [serve1] job1=1 -> true;

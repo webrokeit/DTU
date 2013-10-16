@@ -2,9 +2,7 @@ task1>0=>P>=1 [ F task1=0 ]
 
 task2>0=>P>=1 [ F task2=0 ]
 
-state1=1=>(job1=1) | (job2=1)
+P>=1 [G state1=1=>(job1=1)|(job2=1)]
 
-state2=1=>(job1=2) | (job2=2)
-
-state3=1=>(job3=3) & (job3=1)
+P>=1 [G state2=1=>(job1=2)|(job2=2)]
 

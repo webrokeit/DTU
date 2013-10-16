@@ -1,0 +1,8 @@
+P>=1 [ G state1=1=>(job1=1)|(job2=1) ]
+
+P>=1[G state2=1=>(job1=2) | (job2=2)]
+
+P>=1[G task1>0=>P>=1 [ F task1=0 ]]
+
+P>=1[G task2>0=>P>=1 [ F task2=0 ]]
+

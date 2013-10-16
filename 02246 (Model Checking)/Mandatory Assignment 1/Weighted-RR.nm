@@ -55,8 +55,8 @@ module scheduler
   // Serve the jobs
   [serve1] job1=true & job2=false -> true;
   [serve2] job1=false & job2=true -> true;
-  [serve1] job1=true & job2=true & turn=1 & job1time=false & priority1=priority2 -> (job1time'=true) & (turn'=2);
-  [serve2] job1=true & job2=true & turn=2 & job2time=false & priority2=priority1 -> (job2time'=true) & (turn'=1);
+  [serve1] job1=true & job2=true & turn=1 & job1time=false & priority1=priority2 & wait2<5 -> (job1time'=true) & (turn'=2);
+  [serve2] job1=true & job2=true & turn=2 & job2time=false & priority2=priority1 & wait1<5 -> (job2time'=true) & (turn'=1);
   [serve1] job1=true & job2=true & wait1=5 -> (turn'=2);
   [serve2] job1=true & job2=true & wait2=5 -> (turn'=1);
   [serve1] job1=true & job2=true & priority1>priority2 & wait2<5 -> (turn'=2) & (wait2'=wait2+1);
