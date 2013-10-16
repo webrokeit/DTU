@@ -7,6 +7,8 @@
 \usepackage{latexsym}
 \usepackage{amssymb}
 \usepackage{amsthm}
+\usepackage{amsfonts}
+\usepackage[usenames,dvipsnames,svgnames,table]{xcolor}
 \parindent=0pt
 \frenchspacing
 \pagestyle{empty}
@@ -58,7 +60,6 @@ Morten Chabert \textsc{Eskesen}\\
 	$\bigcirc$ & $\equiv$ & X \\
 	$\Box$ & $\equiv$ & G \\
 	$\Diamond$ & $\equiv$ & F \\
-	$\Phi$ & $\equiv$ & $\Phi$ \\
 	\hline
 \end{tabular}
 \newpage
@@ -158,11 +159,27 @@ $\langle\{s_0,s_1,s_2,s_3\},\{(s_0 \rightarrow s_1),(s_1 \rightarrow s_1),(s_0 \
 \subsection*{A2.2}
 For each of the following pairs of CTL formulae, determine whether (a) they are equivalent, (b) one implies the other, or (c) neither implies the other. Explain your reasoning.
 \begin{description}
-\item[A2.2a) $EX$ $EF$ $\Phi$ and $EF$ $EX$ $\Phi$:]
-\item[A2.2b) $AX$ $AF$ $\Phi$ and $AF$ $AX$ $\Phi$:]
-\item[A2.2c) $AG$ $EF$ $\Phi$ and $EF$ $AG$ $\Phi$:]
-\item[A2.2d) $AG$ $(\Phi_1 \wedge \Phi_2)$ and $(AG$ $\Phi_1) \wedge (AG$ $\Phi_2)$:]
-\item[A2.2e) $EF$ $(\Phi_1 \wedge \Phi_2)$ and $(EF$ $\Phi_1) \wedge (EF$ $\Phi_2)$:]
+	\item[A2.2a) $EX$ $EF$ $\Phi$ and $EF$ $EX$ $\Phi$:]
+	
+	\item[A2.2b) $AX$ $AF$ $\Phi$ and $AF$ $AX$ $\Phi$:]
+	
+	\item[A2.2c) $AG$ $EF$ $\Phi$ and $EF$ $AG$ $\Phi$:] The first formulae implies the second formulae.\\
+	If $AG$ $EF$ $\Phi$ satisfies a transition system then $EF$ $AG$ $\Phi$ will satisfy the same transition system, but not the other way around. Figure A2.2c shows two transition systems, $M1$ and $M2$. $M1$ will satisfy both formulae whereas $M2$ will only satisfy the second formulae.
+	\begin{figure}[H]
+		\centering
+		\begin{tabular}{ l r }
+			\includegraphics[scale=0.75]{../GFX/Answer-A2-2c-1.pdf}
+			& \includegraphics[scale=0.75]{../GFX/Answer-A2-2c-2.pdf}
+		\end{tabular}\\
+		Figure A2.2c: Two transition systems $M1$ and $M2$.
+	\end{figure}
+	\textcolor{ForestGreen}{Green} indicates a state that is satisfied both formulae. \textcolor{Goldenrod}{Yellow} indicates a state that is satisfied by just the second formulae. \textcolor{Grey}{Grey} indicates a state that is satisfied by no of the formulae.
+	
+	\item[A2.2d) $AG$ $(\Phi_1 \wedge \Phi_2)$ and $(AG$ $\Phi_1) \wedge (AG$ $\Phi_2)$:] They're equal.\\
+		The first formulae dictates that every state reachable must have $\Phi_1$ and $\Phi_2$. The second formulae firstly dictates that every state reachable must have $\Phi_1$ and secondly dictates that every state reachable must have $\Phi_2$. Thous for both of the formulae to be satisfied every reachable state must have both $\Phi_1$ and $\Phi_2$.\\
+		Also it's a distribute law in CTL, see page 330 of the course book.
+		
+	\item[A2.2e) $EF$ $(\Phi_1 \wedge \Phi_2)$ and $(EF$ $\Phi_1) \wedge (EF$ $\Phi_2)$:]
 \end{description}
 
 \subsection*{2A.3}
