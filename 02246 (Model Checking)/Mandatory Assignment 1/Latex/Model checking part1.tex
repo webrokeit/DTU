@@ -14,6 +14,8 @@
 \pagestyle{empty}
 %\usepackage{}
 
+
+\newcommand{\tab}[1]{\hspace{.2\textwidth}\rlap{#1}}
 \newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
 
 \begin{document}
@@ -144,13 +146,14 @@ I'll also have to think about this.
 
 Consider the transition system, shown graphically in \textbf{Figure 1}. The states are represented by circles, whose names are shown beneath them, and whose labels are shown inside them. The initial state is $s_0$.
 
-\subsubsection*{A2.1a) Write down this transition system formally, as a tuple $(S,\rightarrow,S_0,AP,L)$}
+\subsubsection*{A2.1a) Write down this transition system formally, as a tuple\\$(S,\rightarrow,S_0,AP,L)$}
 The transition system will formally be written as:\\
-$\langle\{s_0,s_1,s_2,s_3\},\{(s_0 \rightarrow s_1),(s_1 \rightarrow s_1),(s_0 \rightarrow s_2),(s_2 \rightarrow s_2),(s_2 \rightarrow s_3)\},s_0,\{\Phi_1,\Phi_2\},L\rangle$
+$\langle\{s_0,s_1,s_2,s_3\},\{(s_0 \rightarrow s_1),(s_1 \rightarrow s_1),(s_0 \rightarrow s_2),(s_2 \rightarrow s_2),(s_2 \rightarrow s_3)\},s_0,\\
+\{\Phi_1,\Phi_2\},\{(s_0, \{\Phi_1\}), (s_1, \{\Phi_2\}), (s_2, \{\}), (s_3, \{\Phi_1, \Phi_2\})\}\rangle$
 
 \subsubsection*{A2.1b) By directly reasoning with the semantics of CTL, determine whether the following properties hold of the state $s_0$}
 \begin{enumerate}[i.]
-	\item $AF \Phi_2$: Does not hold as $s_2$ can loop indefinitely and therefore $s_3$ is never reached.
+	\item $AF \Phi_2$: Does not hold as $s_2$ can loop infinitely and therefore $s_3$ is never reached.
 	\item $AX \Phi_2$: Does not hold as $s_0 \rightarrow s_2$ isn't allowed.
 	\item $EF \Phi_1$: Holds $(s_0 \rightarrow s_2 \rightarrow s_3$).
 	\item $A[\Phi_1 U \Phi_2]$: Does not hold as $s_0 \rightarrow s_2$ isn't allowed.
@@ -159,7 +162,8 @@ $\langle\{s_0,s_1,s_2,s_3\},\{(s_0 \rightarrow s_1),(s_1 \rightarrow s_1),(s_0 \
 \subsection*{A2.2}
 For each of the following pairs of CTL formulae, determine whether (a) they are equivalent, (b) one implies the other, or (c) neither implies the other. Explain your reasoning.
 \begin{description}
-	\item[A2.2a) $EX \; EF \; \Phi$ and $EF \; EX \; \Phi$:] They are equal\\
+	\item[A2.2a) $EX \; EF \; \Phi$ and $EF \; EX \; \Phi$:]
+		They are equal\\
 		$\left(EX \; EF \; \Phi \equiv EF \; EX \; \Phi\right)$.\\
 		The first formulae dictates that somewhere there is a state which at some point has a descendant that contains $\Phi$. The second formulae dictates that somewhere there is a state which immediate descendant contains $\Phi$.
 		\begin{figure}[H]
@@ -169,49 +173,71 @@ For each of the following pairs of CTL formulae, determine whether (a) they are 
 		\end{figure}
 		In Figure A2.2a both formulae will be satisfied. For the first formulae we match $s_0$ with $EX$ then somewhere in the descendant path of $s_0$ we reach $s_1$ which satisfies $EF \; \Phi$. For the second formulae we keep staying in $s_0$ for however long it might be and the final time we hit $s_0$ we will match $EF$ then immediately afterwards we will go to $s_1$ which satisfies $EX \; \Phi$.
 		
-	\item[A2.2b) $AX \; AF \; \Phi$ and $AF \; AX \; \Phi$:] They are equal\\
-	$\left(AX \; AF \; \Phi \equiv AF \; AX \; \Phi\right)$.\\
-	The first formulae dictates that for every state all the descendant states of the immediate descendant must somewhere have a state that contains $\Phi$. The second formulae dictates that all states must have a descendant which all immediate descendants contains $\Phi$.
-	\begin{figure}[H]
-		\centering
-		\begin{tabular}{ l r }
-			\includegraphics[scale=0.75]{../GFX/Answer-A2-2b-1.pdf}
-			& \includegraphics[scale=0.75]{../GFX/Answer-A2-2b-2.pdf}
-		\end{tabular}\\
-		Figure A2.2b: Two transition systems $M_1$ and $M_2$.
-	\end{figure}
-	In Figure A2.2b the transition system $M_1$ satisfies both formulae. Transition system $M_2$ will not satisfy any of the formulae.
+	\item[A2.2b) $AX \; AF \; \Phi$ and $AF \; AX \; \Phi$:]
+		They are equal\\
+		$\left(AX \; AF \; \Phi \equiv AF \; AX \; \Phi\right)$.\\
+		The first formulae dictates that for every state all the descendant states of the immediate descendant must somewhere have a state that contains $\Phi$. The second formulae dictates that all states must have a descendant which all immediate descendants contains $\Phi$.
+		\begin{figure}[H]
+			\centering
+			\begin{tabular}{ l r }
+				\includegraphics[scale=0.75]{../GFX/Answer-A2-2b-1.pdf}
+				& \includegraphics[scale=0.75]{../GFX/Answer-A2-2b-2.pdf}
+			\end{tabular}\\
+			Figure A2.2b: Two transition systems $M_1$ and $M_2$.
+		\end{figure}
+		In Figure A2.2b the transition system $M_1$ satisfies both formulae. Transition system $M_2$ will not satisfy any of the formulae as state $s_2$ will never be satisfied.
 	
-	\item[A2.2c) $AG \; EF \; \Phi$ and $EF \; AG \; \Phi$:] The first formulae implies the second formulae $\left(AG \; EF \; \Phi \Rightarrow EF \; AG \; \Phi\right)$.\\
-	If $AG \; EF \; \Phi$ satisfies a transition system then $EF \; AG \; \Phi$ will satisfy the same transition system, but not the other way around. Figure A2.2c shows two transition systems, $M_1$ and $M_2$. $M_1$ will satisfy both formulae whereas $M_2$ will only satisfy the second formulae.
-	\begin{figure}[H]
-		\centering
-		\begin{tabular}{ l r }
-			\includegraphics[scale=0.75]{../GFX/Answer-A2-2c-1.pdf}
-			& \includegraphics[scale=0.75]{../GFX/Answer-A2-2c-2.pdf}
-		\end{tabular}\\
-		Figure A2.2c: Two transition systems $M_1$ and $M_2$.
-	\end{figure}
-	\textcolor{ForestGreen}{Green} indicates a state that is satisfied both formulae. \textcolor{Goldenrod}{Yellow} indicates a state that is satisfied by just the second formulae. \textcolor{Grey}{Grey} indicates a state that is satisfied by no of the formulae.
+	\item[A2.2c) $AG \; EF \; \Phi$ and $EF \; AG \; \Phi$:]
+		The first formulae implies the second formulae $\left(AG \; EF \; \Phi \Rightarrow EF \; AG \; \Phi\right)$.\\
+		If $AG \; EF \; \Phi$ satisfies a transition system then $EF \; AG \; \Phi$ will satisfy the same transition system, but not the other way around. Figure A2.2c shows two transition systems, $M_1$ and $M_2$. $M_1$ will satisfy both formulae whereas $M_2$ will only satisfy the second formulae.
+		\begin{figure}[H]
+			\centering
+			\begin{tabular}{ l r }
+				\includegraphics[scale=0.75]{../GFX/Answer-A2-2c-1.pdf}
+				& \includegraphics[scale=0.75]{../GFX/Answer-A2-2c-2.pdf}
+			\end{tabular}\\
+			Figure A2.2c: Two transition systems $M_1$ and $M_2$.
+		\end{figure}
+		\textcolor{ForestGreen}{Green} indicates a state that is satisfied for both formulae. \textcolor{Goldenrod}{Yellow} indicates a state that is satisfied by just the second formulae. \textcolor{Grey}{Grey} indicates a state that is satisfied by none of the formulae.
 	
-	\item[A2.2d) $AG \; (\Phi_1 \wedge \Phi_2)$ and $(AG \; \Phi_1) \wedge (AG\;\Phi_2)$:] They are equal\\
+	\item[A2.2d) $AG \; (\Phi_1 \wedge \Phi_2)$ and $(AG \; \Phi_1) \wedge (AG\;\Phi_2)$:]
+		They are equal\\
 		$\left(AG (\Phi_1 \wedge \Phi_2) \equiv (AG \; \Phi_1) \wedge (AG \;\Phi_2)\right)$.\\
 		The first formulae dictates that every state reachable must have $\Phi_1$ and $\Phi_2$. The second formulae firstly dictates that every state reachable must have $\Phi_1$ and secondly dictates that every state reachable must have $\Phi_2$. Thous for both of the formulae to be satisfied every reachable state must have both $\Phi_1$ and $\Phi_2$.\\
 		Also it's a distribute law in CTL, see page 330 of the course book.
 		
-	\item[A2.2e) $EF$ $(\Phi_1 \wedge \Phi_2)$ and $(EF$ $\Phi_1) \wedge (EF$ $\Phi_2)$:]
+	\item[A2.2e) $EF \; (\Phi_1 \wedge \Phi_2)$ and $(EF \; \Phi_1) \wedge (EF \;\Phi_2)$:]
+		The first formulae implies the second formulae $\left(EF \; (\Phi_1 \wedge \Phi_2) \Rightarrow (EF \; \Phi_1) \wedge (EF \;\Phi_2)\right)$.\\
+		The first formulae dictates that there must exist a reachable state having both $\Phi_1$ and $\Phi_2$. The second formulae firstly dictates that there must exist a reachable state containing $\Phi_1$ and secondly it dictates that there must exist a reachable state containing $\Phi_2$. Thous if the first formulae is satisfied the second formulae must also be. On the contrary if the second formulae is satisfied the first formulae may not necessary also be, as $\Phi_1$ and $\Phi_2$ can be in different states but in the same tree, this would satisfy the second formulae but not the first.
+		\begin{figure}[H]
+			\centering
+			\begin{tabular}{ l r }
+				\includegraphics[scale=0.75]{../GFX/Answer-A2-2e-1.pdf}
+				& \includegraphics[scale=0.75]{../GFX/Answer-A2-2e-2.pdf}
+			\end{tabular}\\
+			Figure A2.2e: Two transition systems $M_1$ and $M_2$.
+		\end{figure}
+		\textcolor{ForestGreen}{Green} indicates a state that is satisfied for both formulae. \textcolor{Goldenrod}{Yellow} indicates a state that is satisfied by just the second formulae. \textcolor{Grey}{Grey} indicates a state that is satisfied by none of the formulae.
 \end{description}
 
 \subsection*{2A.3}
 Write down a CTL* formula for each of the following properties, which are described in natural language. In each case, argue whether or not the property can also expressed in CTL.
 
-\subsubsection*{2A.3a) There is a path on which $\Phi$ holds infinitely often.}
+\subsubsection*{2A.3a) There is a path on which $\Phi$ holds infinitely often}
+	\textbf{CTL*:} $\exists \Box \Phi$\\
+	\textbf{CTL:} Would be the same as for CTL*.
 
 \subsubsection*{2A.3b) For all paths, $\Phi_1$ holds along the path until $\Phi_2$ holds of a state and $\Phi_3$ holds of the state that immediately follows}
+	\textbf{CTL*:} $\forall (\Phi_1 U \Phi_2) \bigcirc \Phi_3$\\
+	\textbf{CTL:} In CTL a path quantifier ($\exists, \forall$) has to be in front of a state operator ($\Diamond, \Box, \bigcirc, U, W$), therefore the formulae for CTL* is not possible to use with CTL. Furthermore, the CTL* formulae cannot be translated into CTL due to $\Phi_3$ having to follow $\Phi_2$ immediately. 
 
 \subsubsection*{2A.3c) There is a path on which either $\Phi_1$ eventually holds or $\Phi_2$ eventually holds}
+	\textbf{CTL*:} $\exists \Diamond \left((\Phi_1 \wedge \neg\Phi_2) \vee (\neg\Phi_1 \wedge \Phi_2)\right)$\\
+	\textbf{CTL:} Would be the same as for CTL*.
 
 \subsubsection*{2A.3d) For all paths, either $\Phi_1$ always holds or $\Phi_2$ always holds}
+	\textbf{CTL*:} $\forall(\Box \Phi_1 \vee \Box \Phi_2)$\\
+	\textbf{CTL:} Not possible to create due to the $\Box$ having to be inside the parentheses.
 
 \subsection*{2A.4}
 Encode the transition system in \textbf{Figure 1} as a PRISM module, using a variable $s$, such that $0 \leq s \leq 3$, to represent the state. Define $\Phi_1$ and $\Phi_2$ as PRISM labels.
