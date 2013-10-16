@@ -30,21 +30,28 @@ module scheduler
   job1 : bool init false; // Is there a job from client1?
   job2 : bool init false; // Is there a job from client2?
   turn : [0..2] init 0; // Who is next?
+  job1time : bool init false; // Has job1 used up its time?
+  job2time : bool init false; // Has job2 used up its time?
+
 
   // Record that there is a waiting job
-  [create1] job1=false -> (job1'=true);
-  [create2] job2=false -> (job2'=true);
+  [create1] job1=false & turn>0 -> (job1'=true);
+  [create1] job1=false & turn=0 -> (job1'=true) & (turn'=1);
+  [create2] job2=false & turn>0 -> (job2'=true);
+  [create2] job2=false & turn=0 -> (job2'=true) & (turn'=2);
+
+  [] job1=true & job1time=true & turn=1 -> (job1time'=false);
+  [] job2=true & job2time=true & turn=2 -> (job2time'=false);
 
   // Serve the jobs
   [serve1] job1=true & job2=false -> true;
   [serve2] job1=false & job2=true -> true;
-  [serve1] job1=true & job2=true & turn=1 -> (turn'=2);
-  [serve2] job1=true & job2=true & turn=2 -> (turn'=1);
-  //[] job1=0 & job2>0 -> (job1'=job2) & (job2'=0);
+  [serve1] job1=true & job2=true & turn=1 & job1time=false -> (job1time'=true) & (turn'=2);
+  [serve2] job1=true & job2=true & turn=2 & job2time=false -> (job2time'=true) & (turn'=1);
 
   // Complete any job that has finished
-  [finish1] job1=true -> (job1'=false);
-  [finish2] job2=true -> (job2'=false);
+  [finish1] job1=true -> (job1'=false) & (job1time'=false);
+  [finish2] job2=true -> (job2'=false) & (job2time'=false);
 
 endmodule
 
