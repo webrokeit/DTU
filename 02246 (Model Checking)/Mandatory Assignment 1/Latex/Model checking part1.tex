@@ -1,17 +1,16 @@
 \documentclass[12pt]{report}
 \usepackage{graphicx}
 \usepackage{titling}
-\usepackage{amsmath}
-\usepackage{amssymb}
 \usepackage[latin1]{inputenc}
 \usepackage{enumerate}
 \usepackage{float}
 \usepackage{latexsym}
+\usepackage{amssymb}
+\usepackage{amsthm}
 \parindent=0pt
 \frenchspacing
 \pagestyle{empty}
 %\usepackage{}
-
 
 \newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
 
@@ -182,32 +181,30 @@ Encode the transition system in \textbf{Figure 1} as a PRISM module, using a var
 
 \chapter*{Part B: Intermediate Problems}
 \section*{B1) Practical Problems}
-\subsection*{B1.1 }
-\subsubsection*{(a)}
-In order to model a round-robin scheduler from the SRT scheduler we introduce some variables to the \emph{Scheduler} module.
+\subsection*{Round-robin Scheduler}
+In this part we will model a round-robin scheduler (found in the file RR.nm). A round-robin scheduler cycles between jobs and executes each task for just one time unit before moving onto the next. We model the scheduler by modifying the SRT scheduler which was handed out with the assignment (SRT.nm). In order to model a round-robin scheduler from the SRT scheduler we need to introduce some variables to the \emph{Scheduler} module.
 \begin{center}
 turn : {[0..2]} init 0; // Who is next?\\
 job1time : bool init false; // Has job1 used up its time?\\
 job2time : bool init false; // Has job2 used up its time?\\
 \end{center}
-The turn variable specifies which job is next to be served. When turn=1 the next job to be served is job1.\\
-The jobXtime variable specifies if jobX has used up all its serving time in the scheduler. So if jobXtime is true the next job should be served whereas if jobXtime is false this job should be served soon.\\
-We also introduce some new commands with no action names in the module. These commands can always occur independently of what any other modules in the system are doing. Its guard just has to be true.
+The turn variable specifies which job is next to be served. When turn=1 the next job to be served is $job_1$ which is the job of $client_1$.\\
+The $job_Xtime$ variable specifies if $job_X$ has used up all its serving time in the scheduler. So if $job_Xtime$ is true the next job should be served whereas if $job_Xtime$ is false this job should be served next. It should only be served next because there are only 2 jobs in this scheduler but if there were more jobs it should be served soon because it is not necessarily that job's turn next when more jobs are cycled.\\
+We also introduce some new commands with no action names in the module. These commands can always occur independently of what any other modules in the system are doing. The guard of these commands just has to be true.
 \begin{center}
 {[]} job1=true \& job1time=true \& turn=1 $\Rightarrow$ (job1time$'$=false);\\
 {[]} job2=true \& job2time=true \& turn=2 $\Rightarrow$ (job2time$'$=false);
 \end{center}
-These commands are used to switch between the jobs. If job1 has used up all its time in the scheduler but it is now job1s turn in the queue job1time should not be true. It should then be modified to false so it can be served by the scheduler. The same goes for job2.\\
-Furthermore we have also modified the serve commands.
+These commands are used to cycle between the jobs. If $job_1$ has used up all its time in the scheduler but it is now $job_1$'s turn in the queue $job_1time$ should not be true because of the guard in the serve commands which we will look at next. It should then be modified to false so it can be served by the scheduler. The same goes for $job_2$.\\
+The serve commands have been modified in order to be able to cycle the jobs in a round-robin fashion.
 \begin{center}
 {[serve1]} job1=true \& job2=false $\Rightarrow$ true;\\
 {[serve2]} job1=false \& job2=true $\Rightarrow$ true;\\
 {[serve1]} job1=true \& job2=true \& turn=1 \& job1time=false $\Rightarrow$ (job1time$'$=true) \& (turn$'$=2);\\
 {[serve2]} job1=true \& job2=true \& turn=2 \& job2time=false $\Rightarrow$ (job2time$'$=true) \& (turn$'$=1);
 \end{center}
-It serves the jobs if there is no other job in the queue. That should not be modified. However it should only serve a job if it is the jobs turn to be served and the job has not used up its time being served. This is in the guard specified as turn has to correspond with the clients number and its jobtime has to be false.
-\subsubsection*{(b)}
-We have made some additions to the \emph{create} and \emph{finish} commands. The create command now has two different kinds for each client. One is the same as the SRT scheduler. The other command has another guard - turn=0. This command is only used if there has not been any jobs scheduled in the round-robin scheduler before the creation of the new job. When turn=0 there has not been scheduled any jobs yet because turn is initialized as 0 and then turn is only altered between 1 and 2.
+It serves the jobs if there is no other job in the queue which is still intact from the model of the SRT scheduler. That should not be modified. However it should only serve a job if it is that job's turn to be served and the job has not used up its time being served. This is in the guard specified as turn has to correspond with the client's number and its jobtime has to be false.\\
+We have also made some additions to the \emph{create} and \emph{finish} commands. The create command now has two different kinds for each client. One of the commands has the guard $job_X$=false and turn=0. This command is only used if there has not been any jobs scheduled in the round-robin scheduler before the creation of the new job. When turn=0 there has not been scheduled any jobs yet because turn is initialized as 0 and then turn is only altered between 1 and 2. The other create command is used when there has been created jobs previously which means that the turn variable has been used and therefore turn $>$ 0.
 \begin{center}
 {[create1]} job1=false \& turn>0 $\Rightarrow$ (job$1'$=true);\\
 {[create1]} job1=false \& turn=0 $\Rightarrow$ (job$1'$=true) \& (turn$'$=1);\\
@@ -217,16 +214,16 @@ $\dots$\\
 {[finish1]} job1=true $\Rightarrow$ (job$1'$=false) \& (job1time$'$=false);\\
 {[finish2]} job2=true $\Rightarrow$ (job$2'$=false) \& (job2time$'$=false);
 \end{center}
-The finish commands has been altered to also set the variable jobXtime to false. Since the job is now finished its time in the queue should not be specified as used up. It should therefore be sat as false so it does not affect the next job created by the same client.
-\subsubsection*{(c)}
-In the new model there are 277 reachable states.
-\subsubsection*{(d)}
-$P>=1 [G state1=1=>job1=true]$ - Verified.\\
-$P>=1 [G state2=1=>job2=true]$ - Verified.
+The finish commands has been altered to also set the variable $job_Xtime$ to false. Since the job is now finished its time in the queue should not be specified as used up. It should therefore be sat as false so it does not affect the next job created by the same client.\\
+This model of a round-robin scheduler has 277 reachable states.\\
+We have specified some properties in CTL which we previously have verified for the FCFS and SRT schedulers. We will verify these properties in PRISM.\\
+$client_1$: $AG (state_1 = 1 \Rightarrow job_1 = true)$\\
+$client_2$: $AG (state_2 = 1 \Rightarrow job_2 = true)$\\
+$client_1$: $AG(task_1>0 \Rightarrow AF task_1 = 0)$ \\
+$client_2$: $AG(task_2>0 \Rightarrow AF task_2 = 0)$ \\
 
-\subsection*{2.}
-\subsubsection*{(a)}
-The \emph{Client} module has been modified with an additional variable called \emph{priority} which can be either 1 or 2. When the priority is 2 the job has a higher priority than a job with priority 1. The create commands have been altered to 10 new ones so the client is able to create jobs with both priority 1 and priority 2.
+\subsection*{Priority First Come First Served Scheduler}
+In this part we will model a FCFS scheduler that is able to handle tasks with two different priority levels. A FCFS scheduler serves a job until it is finished however this variant can stop a job if a new job is created with higher priority. In order to accommodate jobs having a priority the \emph{Client} module have to be modified to have an additional variable called \emph{priority} which can be either 1 or 2. When the priority is 2 the job has a higher priority than a job with priority 1. The create commands have been altered to 10 new ones so the client is able to create jobs with both priority 1 and priority 2.
 \begin{center}
 priority1 : [1..2] init 1; // Priority of the job\\
 {[create1]} state1=0 $\Rightarrow$ (state1$'$=1) \& (task1$'$=1) \& (priority1$'$=1);\\
@@ -234,7 +231,6 @@ $\dots$\\
 {[create1]} state1=0 $\Rightarrow$ (state1$'$=1) \& (task1$'$=1) \& (priority1$'$=2);\\
 $\dots$
 \end{center}
-\subsubsection*{(b)}
 The \emph{Scheduler} module is modified so that when a new job is created and it has a higher priority than a job in the queue it moves ahead of that job. This is done in the module by creating some new create commands in the Scheduler module.
 \begin{center}
 {[create1]} job2=0 $\Rightarrow$ (job2$'$=1);\\
@@ -242,12 +238,14 @@ The \emph{Scheduler} module is modified so that when a new job is created and it
 {[create1]} job2=0 \& priority1=2 \& priority2=1 $\Rightarrow$ (job2$'$=job1) \& (job1$'$=1);\\
 {[create2]} job2=0 \& priority2=2 \& priority1=1 $\Rightarrow$ (job2$'$=job1) \& (job1$'$=2);
 \end{center}
-When a new job is created by any of the clients and it has a priority of 2 and the existing job in the queue has a priority of 1 then the new job moves ahead in the queue and the existing job moves back. If the priorities of the jobs are the same no changes should be made and likewise when the existing job in the queue has a priority of 2 and the newly added job has a priority of 1 then no changes should be made.
-\subsubsection*{(c)}
-In the new model there 360 reachable states.
-\subsubsection*{(d)}
-$P>=1 [G state1=1=>(job1=1)|(job2=1)]$ - Verified.\\
-$P>=1 [G state2=1=>(job1=2)|(job2=2)]$ - Verified.
+When a new job is created by any of the clients and it has a priority of 2 and the existing job in the queue has a priority of 1 then the new job moves ahead in the queue and the existing job moves back. If the priorities of the jobs are the same no changes should be made and likewise when the existing job in the queue has a priority of 2 and the newly added job has a priority of 1 then no changes should be made. This however involves pre-empting. If a job is running and a job is created with a higher priority it will interrupt the running job and the new job will jump ahead in the queue. This can result in starvation of a job meaning that a job will never be served which will also mean that the client who created that job will never be able to create a new job. This model of FCFS with priority has 360 reachable states.\\
+We have specified some properties in CTL which we previously have verified for the FCFS and SRT schedulers. We will verify these properties in PRISM.\\
+$client_1$: $AG (state_1 = 1 \Rightarrow \neg(\neg job_1 = 1 \wedge \neg job_2 = 1))$\\
+$client_2$: $AG (state_2 = 1 \Rightarrow \neg(\neg job_1 = 2 \wedge \neg job_2 = 2))$\\
+$client_1$: $AG(task_1>0 \Rightarrow AF task_1 = 0)$ \\
+$client_2$: $AG(task_2>0 \Rightarrow AF task_2 = 0)$ \\
+
+The two last properties fail because this model could result in starvation of a job as explained earlier. This means that a job's length (which is specified in the variable task) will never reach 0.
 
 \section*{B2) Theoretical Problems}
 \subsection*{B2.1}
@@ -284,13 +282,46 @@ $P>=1 [G state2=1=>(job1=2)|(job2=2)]$ - Verified.
 
 \chapter*{Part C: Advanced Problems}
 \section*{Practical Problems}
-We have modified our round-robin scheduler to include priorities. In our specification the scheduler choses the job with the highest priority and it serves it till its finished unless the other job has waited 5 turns. This avoid starvation but it could also keep an important job in the queue while serving a less important job. If the priority is equal the scheduler switches between the jobs in a regular round-robin fashion.\\
-\begin{tabular}{ c c c c }
-No. & CTL & PRISM notation & Verified \\
-1. & $AG (state_1 = 1 \Rightarrow job_1 = true)$ & $P>=1 [G state1=1=>job1=true]$ & $\checkmark$ \\
-2. & $AG (state_2 = 1 \Rightarrow job_2 = true)$ & $P>=1 [G state2=1=>job2=true]$ & $\checkmark$ \\
-3. & $task_1>0 \Rightarrow AF task_1 = 0$ & $task1>0=>P>=1$ [ F task1=0 ] & $\checkmark$ \\
-4. & $task_2>0 \Rightarrow AF task_2 = 0$ & $task2>0=>P>=1$ [ F task2=0 ] & $\checkmark$ \\
-
+In the practical part of part B we modeled a round-robin scheduler. In this part we have modified the scheduler to include priorities (the model can be found in the Weighted-RR.nm file). When a scheduler has to include priorities it is important to decide how these priorities should affect the scheduling of jobs. In our specification the scheduler chooses the job with the highest priority and it serves it till its finished. There is however one exception to this. If a job has waited 5 turns this job will be served even though it may have a priority lower than the job that has been put on hold. This is a very simple but not a very convenient way to avoid starvation of a job because this could keep a job with a higher priority in the queue while serving a less important job. If the priority is equal the scheduler cycles between the jobs in a regular round-robin fashion. We use the notion that a job can either have a priority of 1 or 2 where 2 is the highest priority. This is specified by the client when the client creates a job. The \emph{Scheduler} module has been changed to accommodate priorities. It introduces two new variables $wait_1$ and $wait_2$ which specifies how long a job has waited and it is an integer between 0 and 5 with an initial value of 0. $wait_1$ specifies how long $job_1$ has waited and $wait_2$ specifies how long $job_2$ has waited.\\
+The finish commands has been altered to accommodate the wait variables because if a job has finished it should not affect the clients next job that the previous job waited 4 turns for its turn. So the variable is reset to 0.\\
+\begin{center}
+{[finish1]} job1=true $\Rightarrow$ (job1$'$=false) \& (job1time$'$=false) \& (wait1$'$=0);\\
+{[finish2]} job2=true $\Rightarrow$ (job2$'$=false) \& (job2time$'$=false) \& (wait2$'$=0);
+\end{center}
+The serve commands have also been altered to comply with jobs having priorities and waiting time. However one thing that should not be changed is the fact that if only one client has a job in the scheduler that job should of course be served. This can be seen in the first two lines below.
+\begin{center}
+1. {[serve1]} job1=true \& job2=false $\Rightarrow$ true;\\
+2. {[serve2]} job1=false \& job2=true $\Rightarrow$ true;\\
+3. {[serve1]} job1=true \& job2=true \& turn=1 \& job1time=false \& priority1=priority2 \& wait2$<$5 $\Rightarrow$ (job1time$'$=true) \& (turn$'$=2);\\
+4. {[serve2]} job1=true \& job2=true \& turn=2 \& job2time=false \& priority2=priority1 \& wait1$<$5 $\Rightarrow$ (job2time$'$=true) \& (turn$'$=1);\\
+5. {[serve1]} job1=true \& job2=true \& wait1=5 $\Rightarrow$ (turn$'$=2);\\
+6. {[serve2]} job1=true \& job2=true \& wait2=5 $\Rightarrow$ (turn$'$=1);\\
+7. {[serve1]} job1=true \& job2=true \& priority1$>$priority2 \& wait2$<$5 $\Rightarrow$ (turn$'$=2) \& (wait2$'$=wait2+1);\\
+8. {[serve2]} job1=true \& job2=true \& priority2$>$priority1 \& wait1$<$5 $\Rightarrow$ (turn$'$=1) \& (wait1$'$=wait1+1);
+\end{center}
+The first two conditions in every guard above are very simple - the two job's have be to true meaning both clients have a job in the scheduler. Line 3 and 4 specifies the regular round-robin. If the priorities are equal and a job has not waited 5 turns for its turn then they should be cycled in a regular round-robin fashion. Line 5 and 6 specifies that if one job has waited 5 turns then that job should be served until it is finished and then the wait variable is reset to 0. However the update in these lines are interesting it changes the turn variable so it is the other job's turn to be served. This is done so that when $job_1$ is finished and that $client_1$ enters another job with the same priority as $job_2$ it will be $job_2$s turn to be served. This is a minor detail done in order to faster clear out jobs in the scheduler. Line 7 and 8 serves a job if its priority is higher than the other job's priority and it the other job has not waited 5 turns. The update again changes the turn variable to the other job for the same reason as line 5 and 6. It also increments the wait variable for the other job so the other job does not have to wait too long to be served. The Weighted-RR model has 3655 reachable states.\\
+We have specified some properties in CTL which we will use PRISM to verify for our model. The properties specified below can also be found specified in PRISM notation in the Weighted-RR.pctl file.\\
+\begin{tabular}{ c c c }
+\\No. & CTL & Verified \\
+1. & $AG (state_1 = 1 \Rightarrow job_1 = true)$ & $\checkmark$ \\
+2. & $AG (state_2 = 1 \Rightarrow job_2 = true)$ & $\checkmark$ \\
+3. & $AG(task_1>0 \Rightarrow AF task_1 = 0)$ & $\checkmark$ \\
+4. & $AG(task_2>0 \Rightarrow AF task_2 = 0)$ & $\checkmark$ \\
+5. & $A(task_1>0 \wedge wait_1=5 U task1=0 \wedge job1=false$ & $\checkmark$ \\
+6. & $AG(wait_1=5 \wedge task_1=1 \Rightarrow (AX task_1=0))$ & X \\
+7. & $AG(wait_1=5 \wedge task_1=1 \Rightarrow (EX task_1=0))$ & $\checkmark$ \\
+8. & $AG(wait_1=5 \wedge task_2=1 \Rightarrow (EX task_2=0))$ & X \\
+9. & $AG(wait_2=5 \wedge task_1=1 \Rightarrow (EX task_1=0))$ & X \\
+10. & $AG(priority_2>priority_1 \wedge task_2=1 \wedge wait_1<5 \Rightarrow (EX task_2=0))$ & $\checkmark$ \\
+11. & $AG(priority_2>priority_1 \wedge task_2=1 \wedge wait_1<5 \Rightarrow (EX task_1=0))$ & X \\
+\\
 \end{tabular}
+No. 1 is a property that specify that if $state_1$ is 1 then $job_1$ should be true meaning that when $client_1$ has created a job it should be in the scheduler. The same goes for $client_2$ which is specified by no. 2 in the list.\\
+No. 3 and 4. specify that it is globally the case whenever $task_1$ and $task_2$ is larger than 0 then it should eventually hold that $task_1$ and $task_2$ is 0 which means that the job has to eventually finish. This property could not be verified if the scheduler did not avoid starvation because then a job would never finish and it would just be in the scheduler forever. We prevent this by having a maximum waiting period of 5 turns as explained earlier.\\
+No. 5 specifies that when $job_1$ has waited 5 turns and the job's length is larger than 0 it should hold until $task_1$ = 0 and $job_1$ = false. This is a property to verify that when a job has waited 5 turns it should be served till it is finished.\\
+No. 6 specifies that it is globally the case that if a job has waited 5 turns and the length of its job is only 1 then in all the next states the length of the job should be 0, i.e. the job is finished. This property has not been verified and it should not be because in the scheduler there are two actions that can happen independently of all the other modules and this could create a new state where some of the variables have changed.\\
+No. 7 specifies that it is globally the case that if a job has waited 5 turns and the length of its job is only 1 then in one of the next states the length of job should be 0. This property has been verified. This verifies that in one of the next states it is the job's turn to be served when it has waited 5 turns, however this is not enough to verify that the job will always be served ahead of the other job because of its waiting period.\\
+This brings us to no. 8 and 9. No. 8 and 9 specify that if a job has waited 5 turns and the length of the other job is 0 then in one of the next states the length of the other job should be 0. This is not verified by PRISM which means that it is modeled correctly. It means that if a job has waited 5 turns the other job will never be served ahead of that job.\\
+No. 10 specifies that if a job has a higher priority than the other job and its length is 1 and the other job has not waited 5 turns then in one of the next states the length of the job should be 0. This has been verified by PRISM. It verifies that it in one of the next states it is the job's turn to be served when it has a higher priority than the other job. Again however this is not enough to verify that the job will always be served ahead of the other job if it has a higher priority and the other job has not waited 5 turns. \\
+This brings us to no. 11. No. 11 specifies that if a job has a higher priority than the other job and its length is 1 and the other job has not waited 5 turns then in one of the next states the length of the other job should be 0. This is not verified by PRISM which means that it is modeled correctly. It means that if a job has a higher priority and the other job has not waited 5 turns the other job will never be served ahead of that job.
 \end{document}
