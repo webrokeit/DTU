@@ -1,0 +1,15 @@
+mdp
+
+module figure
+  s : [0..3] init 0;
+  
+  [proceed] s = 0 -> (s' = 1);
+  [proceed] s = 0 -> (s' = 2);
+  [proceed] s = 1 -> (s' = 1);
+  [proceed] s = 2 -> (s' = 2);
+  [proceed] s = 2 -> (s' = 3);
+  [proceed] s = 3 -> (s' = 3);
+endmodule
+
+label "phi1" = s=0 | s=3;
+label "phi2" = s=1 | s=3;

@@ -9,11 +9,43 @@
 \usepackage{amsthm}
 \usepackage{amsfonts}
 \usepackage[usenames,dvipsnames,svgnames,table]{xcolor}
+\usepackage{listings}
 \parindent=0pt
 \frenchspacing
 \pagestyle{empty}
-%\usepackage{}
 
+\lstdefinestyle{prismmodel}{
+	tabsize=1,
+	captionpos=b
+  	belowcaptionskip=1\baselineskip,
+  	breaklines=true,
+  	frame=single,
+	frameround=tttt,
+	captionpos=b,
+  	language={},
+  	numbers=left,
+  	numbersep=5pt,
+  	numberstyle=\tiny\ttfamily\color{Black},
+  	basicstyle=\footnotesize\ttfamily\color{Black},
+  	keywordstyle=\bfseries\color{Black},
+	morekeywords={module, endmodule, label, init, mdp }, 
+	otherkeywords={=, :, [, ], |},
+	identifierstyle={\color{red}\let\textcolor\textcolordummy},
+	morestring=[b][\color{red}\bfseries]",
+	commentstyle=\color{Green},
+	moredelim=[s][\color{DarkOrchid}\ttfamily]{[}{]},
+	literate=%
+		*{0}{{{\color{blue}0}}}1
+	    {1}{{{\color{blue}1}}}1
+	    {2}{{{\color{blue}2}}}1
+	    {3}{{{\color{blue}3}}}1
+	    {4}{{{\color{blue}4}}}1
+	    {5}{{{\color{blue}5}}}1
+	    {6}{{{\color{blue}6}}}1
+	    {7}{{{\color{blue}7}}}1
+	    {8}{{{\color{blue}8}}}1
+	    {9}{{{\color{blue}9}}}1
+}
 
 \newcommand{\tab}[1]{\hspace{.2\textwidth}\rlap{#1}}
 \newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
@@ -239,8 +271,12 @@ Write down a CTL* formula for each of the following properties, which are descri
 	\textbf{CTL*:} $\forall(\Box \Phi_1 \vee \Box \Phi_2)$\\
 	\textbf{CTL:} Not possible to create due to the $\Box$ having to be inside the parentheses.
 
+\newpage
 \subsection*{2A.4}
-Encode the transition system in \textbf{Figure 1} as a PRISM module, using a variable $s$, such that $0 \leq s \leq 3$, to represent the state. Define $\Phi_1$ and $\Phi_2$ as PRISM labels.
+Encode the transition system in \textbf{Figure 1} as a PRISM module, using a variable $s$, such that $0 \leq s \leq 3$, to represent the state. Define $\Phi_1$ and $\Phi_2$ as PRISM labels.\\
+\\
+\textbf{The PRISM module:}
+\lstinputlisting[style=prismmodel,caption={PRISM module encoding the transition system in \textbf{Figure1}.}]{../A2.4.nm}
 
 \chapter*{Part B: Intermediate Problems}
 \section*{B1) Practical Problems}
