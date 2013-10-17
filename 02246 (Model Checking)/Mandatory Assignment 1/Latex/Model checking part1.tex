@@ -47,7 +47,7 @@
 	    {9}{{{\color{blue}9}}}1
 }
 
-\newcommand{\tab}[1]{\hspace{.2\textwidth}\rlap{#1}}
+\newcommand{\tab}{\hspace*{2em}}
 \newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
 
 \begin{document}
@@ -277,6 +277,8 @@ Encode the transition system in \textbf{Figure 1} as a PRISM module, using a var
 \\
 \textbf{The PRISM module:}
 \lstinputlisting[style=prismmodel,caption={PRISM module encoding the transition system in \textbf{Figure1}.}]{../A2.4.nm}
+\textbf{The PRISM properties:}
+\lstinputlisting[style=prismmodel,caption={PRISM properties for \textbf{Figure1}.}]{../A2.4.pctl}
 
 \chapter*{Part B: Intermediate Problems}
 \section*{B1) Practical Problems}
@@ -289,7 +291,7 @@ job2time : bool init false; // Has job2 used up its time?\\
 \end{center}
 The turn variable specifies which job is next to be served. When turn=1 the next job to be served is $job_1$ which is the job of $client_1$.\\
 The $job_Xtime$ variable specifies if $job_X$ has used up all its serving time in the scheduler. So if $job_Xtime$ is true the next job should be served whereas if $job_Xtime$ is false this job should be served next. It should only be served next because there are only 2 jobs in this scheduler but if there were more jobs it should be served soon because it is not necessarily that job's turn next when more jobs are cycled.\\
-We also introduce some new commands with no action names in the module. These commands can always occur independently of what any other modules in the system are doing. The guard of these commands just has to be true.
+We also introduce some new commands with no action names in the module. These commands can always occur independently of any other module in the system. The guard of these commands just has to be true.
 \begin{center}
 {[]} job1=true \& job1time=true \& turn=1 $\Rightarrow$ (job1time$'$=false);\\
 {[]} job2=true \& job2time=true \& turn=2 $\Rightarrow$ (job2time$'$=false);
@@ -302,18 +304,18 @@ The serve commands have been modified in order to be able to cycle the jobs in a
 {[serve1]} job1=true \& job2=true \& turn=1 \& job1time=false $\Rightarrow$ (job1time$'$=true) \& (turn$'$=2);\\
 {[serve2]} job1=true \& job2=true \& turn=2 \& job2time=false $\Rightarrow$ (job2time$'$=true) \& (turn$'$=1);
 \end{center}
-It serves the jobs if there is no other job in the queue which is still intact from the model of the SRT scheduler. That should not be modified. However it should only serve a job if it is that job's turn to be served and the job has not used up its time being served. This is in the guard specified as turn has to correspond with the client's number and its jobtime has to be false.\\
+It serves the jobs if there is no other job in the queue which is still intact from the model of the SRT scheduler. That should not be modified. However it should only serve a job if it is that job's turn to be served and the job has not used up its time being served. \textbf{\textcolor{Goldenrod}{This is in the guard specified as turn has to correspond with the client's number and its jobtime has to be false.}}\\
 We have also made some additions to the \emph{create} and \emph{finish} commands. The create command now has two different kinds for each client. One of the commands has the guard $job_X$=false and turn=0. This command is only used if there has not been any jobs scheduled in the round-robin scheduler before the creation of the new job. When turn=0 there has not been scheduled any jobs yet because turn is initialized as 0 and then turn is only altered between 1 and 2. The other create command is used when there has been created jobs previously which means that the turn variable has been used and therefore turn $>$ 0.
 \begin{center}
-{[create1]} job1=false \& turn>0 $\Rightarrow$ (job$1'$=true);\\
+{[create1]} job1=false \& turn$>$0 $\Rightarrow$ (job$1'$=true);\\
 {[create1]} job1=false \& turn=0 $\Rightarrow$ (job$1'$=true) \& (turn$'$=1);\\
-{[create2]} job2=false \& turn>0 $\Rightarrow$ (job$2'$=true);\\
+{[create2]} job2=false \& turn$>$0 $\Rightarrow$ (job$2'$=true);\\
 {[create2]} job2=false \& turn=0 $\Rightarrow$ (job$2'$=true) \& (turn$'$=2);\\
 $\dots$\\
 {[finish1]} job1=true $\Rightarrow$ (job$1'$=false) \& (job1time$'$=false);\\
 {[finish2]} job2=true $\Rightarrow$ (job$2'$=false) \& (job2time$'$=false);
 \end{center}
-The finish commands has been altered to also set the variable $job_Xtime$ to false. Since the job is now finished its time in the queue should not be specified as used up. It should therefore be sat as false so it does not affect the next job created by the same client.\\
+The finish commands has been altered to also set the variable $job_Xtime$ to false. Since the job is now finished, its time in the queue should not be specified as used up. It should therefore be set as false so it does not affect the next job created by the same client.\\
 This model of a round-robin scheduler has 277 reachable states.\\
 We have specified some properties in CTL which we previously have verified for the FCFS and SRT schedulers. We will verify these properties in PRISM.\\
 $client_1$: $AG (state_1 = 1 \Rightarrow job_1 = true)$\\
@@ -338,6 +340,7 @@ The \emph{Scheduler} module is modified so that when a new job is created and it
 {[create2]} job2=0 \& priority2=2 \& priority1=1 $\Rightarrow$ (job2$'$=job1) \& (job1$'$=2);
 \end{center}
 When a new job is created by any of the clients and it has a priority of 2 and the existing job in the queue has a priority of 1 then the new job moves ahead in the queue and the existing job moves back. If the priorities of the jobs are the same no changes should be made and likewise when the existing job in the queue has a priority of 2 and the newly added job has a priority of 1 then no changes should be made. This however involves pre-empting. If a job is running and a job is created with a higher priority it will interrupt the running job and the new job will jump ahead in the queue. This can result in starvation of a job meaning that a job will never be served which will also mean that the client who created that job will never be able to create a new job. This model of FCFS with priority has 360 reachable states.\\
+\\
 We have specified some properties in CTL which we previously have verified for the FCFS and SRT schedulers. We will verify these properties in PRISM.\\
 $client_1$: $AG (state_1 = 1 \Rightarrow \neg(\neg job_1 = 1 \wedge \neg job_2 = 1))$\\
 $client_2$: $AG (state_2 = 1 \Rightarrow \neg(\neg job_1 = 2 \wedge \neg job_2 = 2))$\\
@@ -359,30 +362,29 @@ The two last properties fail because this model could result in starvation of a 
 \end{figure}
 The two transition systems in Figure 2: $M_1 = (S_1,\rightarrow_1,\{s_0\},AP,L_1)$ and $M_2 = (S_2,\rightarrow_2,\{s_0\},AP,L_2)$ where $AP = \{\phi_1, \phi_2\}$.\\
 We have to find the coarsest bisimulation relation between the states of the two structures: $R_{12} \subseteq S_1 \times S_2$.\\
-The first step to find this is finding the states that have the same labels. This gives us:\\
+The first step to find this, is finding the states that have the same labels. This gives us:\\
 $R_{12} = \{(s_0, s_0), (s_0, s_3), (s_1,s_1), (s_1,s_2),(s_2,s_1),(s_2,s_2),(s_3,s_1),(s_3,s_2),\\
 (s_4,s_0),(s_4,s_3),(s_5,s_0),(s_5,s_3)\}$\\
 The next step in finding the coarsest bisimulation relation between two transition systems is to remove the entries that does not satisfy the mutual simulation conditions. Doing so will give us the following:\\
 $R_{12} = \{(s_0, s_0), (s_0, s_3), (s_1,s_1), (s_1,s_2),(s_2,s_1),(s_2,s_2),(s_3,s_1),(s_3,s_2),\\
 (s_4,s_0),(s_4,s_3),(s_5,s_0),(s_5,s_3)\}$\\
 $R_{12}$ is a bisimulation relation of $M_1$ and $M_2$ ($M_1 \sim M_2$) because the initial states are bisimilar: $s_0 R s_0$. It is also the coarsest bisimulation relation because we started by finding all the states that have the same label and put them in the relation. Then we proceeded to remove the entries that does not satisfy the mutual simulation conditions which led us to removing none. We did not remove any entries because every state in the two transition systems that have the same label have an incoming edge to a state with another label and an outgoing edge to a state with another level. 
-\subsubsection*{(a)}
-
-\subsubsection*{(b)}
-
-\subsubsection*{(c)}
-
-\subsubsection*{(d)}
-
-\subsubsection*{(e)}
-
-\subsubsection*{(f)}
 
 \subsection*{2.}
-\subsubsection*{(a)}
+\subsubsection*{(a)} $\Phi' = \neg(\exists \bigcirc \Phi_1) \wedge (\neg\exists \Box (\neg \Phi_2))$
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.75]{../GFX/Answer-b2-2a.pdf}\\
+	Figure B2.2a: An abstract syntax tree.
+\end{figure}
 
 \subsubsection*{(b)}
-
+$Sat(\Psi) = Sat\left(\neg(\exists \bigcirc \Phi_1)\right) = S \setminus \{s \in S : Post(s) \bigcap Sat(\Phi_1) \neq \emptyset\}$\\
+\begin{tabular}{@{\hspace{0em}}l@{\hspace{1mm}}l@{\hspace{1mm}}l}
+	$Sat(\Psi')$ & $=$ & $Sat\left(\neg(\exists \Box \Phi_2)\right)$\\
+	& $=$ & $S \setminus \{T \subseteq Sat(\Phi_2)$ and $s \in T \Rightarrow Post(s) \bigcap T \neq \emptyset\}$
+\end{tabular}\\
+$Sat(\Phi') = Sat\left(\neg(\exists \bigcirc \Phi_1) \wedge (\neg\exists \Box (\neg \Phi_2))\right) = Sat(\Psi) \bigcap Sat(\Psi')$
 \subsubsection*{(c)}
 
 \subsubsection*{(d)}
