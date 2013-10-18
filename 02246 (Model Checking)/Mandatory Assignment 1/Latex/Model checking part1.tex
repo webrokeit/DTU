@@ -329,7 +329,16 @@ $R_{12} = \{(s_0, s_0), (s_0, s_3), (s_1,s_1), (s_1,s_2),(s_2,s_1),(s_2,s_2),(s_
 The next step in finding the coarsest bisimulation relation between two transition systems is to remove the entries that does not satisfy the mutual simulation conditions. Doing so will give us the following:\\
 $R_{12} = \{(s_0, s_0), (s_0, s_3), (s_1,s_1), (s_1,s_2),(s_2,s_1),(s_2,s_2),(s_3,s_1),(s_3,s_2),\\
 (s_4,s_0),(s_4,s_3),(s_5,s_0),(s_5,s_3)\}$\\
-$R_{12}$ is a bisimulation relation of $M_1$ and $M_2$ ($M_1 \sim M_2$) because the initial states are bisimilar: $s_0 R s_0$. It is also the coarsest bisimulation relation because we started by finding all the states that have the same label and put them in the relation. Then we proceeded to remove the entries that does not satisfy the mutual simulation conditions which led us to removing none. We did not remove any entries because every state in the two transition systems that have the same label have an incoming edge to a state with another label and an outgoing edge to a state with another level. 
+$R_{12}$ is a bisimulation relation of $M_1$ and $M_2$ ($M_1 \sim M_2$) because the initial states are bisimilar: $s_0 R s_0$. It is also the coarsest bisimulation relation because we started by finding all the states that have the same label and put them in the relation. Then we proceeded to remove the entries that does not satisfy the mutual simulation conditions which led us to removing none. We did not remove any entries because every state in the two transition systems that have the same label have an incoming edge to a state with another label and an outgoing edge to a state with another label.\\
+We have to find the coarsest bisimulation relation between the states of $M_1$: $R_{11} \subseteq S_1 \times S_1$.\\
+We do the same thing as we did last time - we find the states that have the same labels. This gives us:\\
+$R_{11} = \{(s_0,s_0),(s_0,s_4),(s_0,s_5),(s_1,s_1),(s_1,s_2),(s_1,s_3),(s_2,s_1),(s_2,s_2),\\
+(s_2,s_3),(s_3,s_1),(s_3,s_2),(s_3,s_3),(s_4,s_0),(s_4,s_4),(s_4,s_5),(s_5,s_0),(s_5,s_4),\\(s_5,s_5)\}$\\
+The next step is to remove the entries that does not satisfy the mutual simulation conditions which will give us the following:\\
+$R_{11} = \{(s_0,s_0),(s_0,s_4),(s_0,s_5),(s_1,s_1),(s_1,s_2),(s_1,s_3),(s_2,s_1),(s_2,s_2),\\
+(s_2,s_3),(s_3,s_1),(s_3,s_2),(s_3,s_3),(s_4,s_0),(s_4,s_4),(s_4,s_5),(s_5,s_0),(s_5,s_4),\\(s_5,s_5)\}$\\
+$R_{11}$ is a bisimulation relation of $M_1$ and $M_1$ ($M_1 \sim M_1$) because the initial states are bisimiliar: $s_0 R s_0$. It is maximal because all states with the same label is in the relation. No entries have been removed due to every state having an incoming edge from and an outgoing edge to a state of the other label.\\
+
 \subsubsection*{(a)}
 
 \subsubsection*{(b)}
