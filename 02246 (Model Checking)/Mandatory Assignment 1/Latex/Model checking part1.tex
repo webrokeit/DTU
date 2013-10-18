@@ -151,7 +151,7 @@ In the new model there are 1459 reachable states.
 The properties previously verified do not hold in the new model, because the queue is now of length 3. Which means that a job created by a client could be in scheduled as the last job, i.e. in $job_3$. Example: this would cause (for $client_1$) to have $state_1 = 1$ while $job_3=1$ because the job is at the end of the queue.
 
 \subsubsection*{A1.3d) Can you give an upper bound on the number of reachable states for a model with $n$ clients, and a queue of length $m$?}
-????????????????????????????
+There is no way to determine an upper bound on the number of reachable states for a model with $n$ clients and a queue of length $m$. A model with 2 clients and a queue of length 2 has 83 reachable states. With 3 clients and a queue of length 2 there is 214 reachable states whilst with 3 client and a queue of length 3 there is 1459 reachable states. There is no coherence between these numbers so it is impossible to give an upper bound. Although making the queue longer will increase the number of reachable states a lot more than adding another client.
 
 \subsection*{A1.4}
 Consider the CTL properties $\Phi$ and AG $\Phi$, where $\Phi$ is an atomic property.
@@ -163,7 +163,7 @@ $AG$ $\Phi$ specifies that from all the paths from this state $\Phi$ should hold
 The semantics are different in the version of PRISM we use. If the property $\Phi$ should hold in all reachable states it should be written $AG$ $\Phi$. Because if only $\Phi$ has been written as the property - this version of PRISM will only check if the property $\Phi$ holds in the \emph{initial} state.
 
 \subsubsection*{A1.4c) How would you solve the classical model checking problem $M,s \models \Phi$ as a problem of the form $\forall s' : M,s' \models \Phi'$?}
-I'll have to think about this.
+I'll have to think about this..
 
 \subsubsection*{A1.4d) How would you solve the model checking problem $\forall s' : M,s \models \Phi$ as a problem of the form $M,s' \models \Phi'$}
 I'll also have to think about this.
@@ -304,7 +304,7 @@ The serve commands have been modified in order to be able to cycle the jobs in a
 {[serve1]} job1=true \& job2=true \& turn=1 \& job1time=false $\Rightarrow$ (job1time$'$=true) \& (turn$'$=2);\\
 {[serve2]} job1=true \& job2=true \& turn=2 \& job2time=false $\Rightarrow$ (job2time$'$=true) \& (turn$'$=1);
 \end{center}
-It serves the jobs if there is no other job in the queue which is still intact from the model of the SRT scheduler. That should not be modified. However it should only serve a job if it is that job's turn to be served and the job has not used up its time being served. \textbf{\textcolor{Goldenrod}{This is in the guard specified as turn has to correspond with the client's number and its jobtime has to be false.}}\\
+It serves the jobs if there is no other job in the queue which is still intact from the model of the SRT scheduler. That should not be modified. However it should only serve a job if it is that job's turn to be served and the job has not used up its time being served. The guard specifies that that the turn variable has to be equal to the client's number ($client_1$, $client_2$) and its jobtime has to be false.\\
 We have also made some additions to the \emph{create} and \emph{finish} commands. The create command now has two different kinds for each client. One of the commands has the guard $job_X$=false and turn=0. This command is only used if there has not been any jobs scheduled in the round-robin scheduler before the creation of the new job. When turn=0 there has not been scheduled any jobs yet because turn is initialized as 0 and then turn is only altered between 1 and 2. The other create command is used when there has been created jobs previously which means that the turn variable has been used and therefore turn $>$ 0.
 \begin{center}
 {[create1]} job1=false \& turn$>$0 $\Rightarrow$ (job$1'$=true);\\
@@ -350,8 +350,7 @@ $client_2$: $AG(task_2>0 \Rightarrow AF task_2 = 0)$ \\
 The two last properties fail because this model could result in starvation of a job as explained earlier. This means that a job's length (which is specified in the variable task) will never reach 0.
 
 \section*{B2) Theoretical Problems}
-\subsection*{B2.1}
-
+\subsection*{Bisimulation relations}
 \begin{figure}[H]
 	\centering
 	\begin{tabular}{ l r }
@@ -377,7 +376,15 @@ The next step is to remove the entries that does not satisfy the mutual simulati
 $R_{11} = \{(s_0,s_0),(s_0,s_4),(s_0,s_5),(s_1,s_1),(s_1,s_2),(s_1,s_3),(s_2,s_1),(s_2,s_2),\\
 (s_2,s_3),(s_3,s_1),(s_3,s_2),(s_3,s_3),(s_4,s_0),(s_4,s_4),(s_4,s_5),(s_5,s_0),(s_5,s_4),\\(s_5,s_5)\}$\\
 $R_{11}$ is a bisimulation relation of $M_1$ and $M_1$ ($M_1 \sim M_1$) because the initial states are bisimiliar: $s_0 R s_0$. It is maximal because all states with the same label is in the relation. No entries have been removed due to every state having an incoming edge from and an outgoing edge to a state of the other label.\\
-
+We can use this to construct the bisimulation quotient $M_1 / \sim$ of $M_1$. Then we have to find the bisimilar states and since no entries was removed due to satisfying the mutual simulation conditions all states with the same label are bisimilar.\\
+$s_0 \sim_T s_4$, $s_0 \sim_T s_5$, $s_4 \sim_T s_5$, $s_1 \sim_T s_2$, $s_1 \sim_T s_3$ and $s_2 \sim_T s_3$.\\
+This gives us the bisimulation quotient $M_1 / \sim$ of $M_1$. This is shown in the Figure below.\\
+INSERT FIGURE\\ %%Tegning fra Andreas
+We want to find out if this is bisimilar to $M_2$. We take the same approach as before by putting all the states with the same labels in the relation.\\
+$R = \{(\{s_0,s_4,s_5\},s_0), (\{s_0,s_4,s_5\},s_3), (\{s_1,s_2,s_3\},s_1), (\{s_1,s_2,s_3\},s_2)\}$\\
+We want to remove the entries in this relation which do not satisfy the mutual simulation conditions. This gives us the following relation:\\
+$R = \{(\{s_0,s_4,s_5\},s_0), (\{s_0,s_4,s_5\},s_3), (\{s_1,s_2,s_3\},s_1), (\{s_1,s_2,s_3\},s_2)\}$\\
+Again no entries was removed because every state with label $\phi_1$ has an outgoing edge to and an incoming edge from a state that has label $\phi_2$ and vice versa. This is therefore the coarsest bisimulation relation since all the states with the same label are in the relation and none was removed for not satisfying the mutual simulation conditions.
 \subsection*{2.}
 \subsubsection*{(a)} $\Phi' = \neg(\exists \bigcirc \Phi_1) \wedge (\neg\exists \Box (\neg \Phi_2))$
 \begin{figure}[H]
