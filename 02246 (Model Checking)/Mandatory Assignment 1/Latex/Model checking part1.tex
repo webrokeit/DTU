@@ -163,10 +163,12 @@ $AG$ $\Phi$ specifies that from all the paths from this state $\Phi$ should hold
 The semantics are different in the version of PRISM we use. If the property $\Phi$ should hold in all reachable states it should be written $AG$ $\Phi$. Because if only $\Phi$ has been written as the property - this version of PRISM will only check if the property $\Phi$ holds in the \emph{initial} state.
 
 \subsubsection*{A1.4c) How would you solve the classical model checking problem $M,s \models \Phi$ as a problem of the form $\forall s' : M,s' \models \Phi'$?}
-I'll have to think about this..
+The problem $M,s \models \Phi$ means that in $M$ there is a state $s$ that satisfies $\Phi$. The problem $\forall s' : M,s' \models \Phi'$ means that for every state $s'$ in $M$, $\Phi'$ is satisfied. Assuming all states are reachable, we can model the first problem as the second problem by specifying $\Phi' = \exists \Diamond \Phi$.\\
+$\forall s' : M,s' \models \exists \Diamond \Phi$. This states that for every $s'$ in $M$ there exists a path that at some point satisfies $\Phi$.
 
-\subsubsection*{A1.4d) How would you solve the model checking problem $\forall s' : M,s \models \Phi$ as a problem of the form $M,s' \models \Phi'$}
-I'll also have to think about this.
+\subsubsection*{A1.4d) How would you solve the model checking problem $\forall s' : M,s' \models \Phi$ as a problem of the form $M,s \models \Phi'$}
+The problem $\forall s' : M,s' \models \Phi$ means that for every state $s'$ in $M$, $\Phi$ is satisfied. The problem $M,s \models \Phi'$ means that in $M$ there is a state $s$ that satisfies $\Phi'$. Assuming all states are reachable, we model the first problem as the second problem by specifying $\Phi' = \forall \Box \Phi$.\\
+$M,s \models \forall \Box \Phi$. This states that in $M$ there is a state $s$ for which all reachable paths and all subsequent subpaths satisfies $\Phi$.
 
 \section*{A2) Theoretical Problems}
 \subsection*{A2.1}
