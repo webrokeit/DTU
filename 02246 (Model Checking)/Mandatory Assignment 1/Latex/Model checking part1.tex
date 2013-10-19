@@ -1,6 +1,7 @@
 \documentclass[12pt]{report}
 \usepackage{graphicx}
 \usepackage{titling}
+\usepackage{fancyhdr}
 \usepackage[latin1]{inputenc}
 \usepackage{enumerate}
 \usepackage{float}
@@ -12,7 +13,12 @@
 \usepackage{listings}
 \parindent=0pt
 \frenchspacing
-\pagestyle{empty}
+
+\pagestyle{fancy}
+
+\fancyhead[L]{\slshape\footnotesize October 21, 2013\\\textsc{02246 Model Checking}}
+\fancyhead[R]{\slshape\footnotesize \textsc{Andreas Kjeldsen (s092638)}\\\textsc{Morten Eskesen (s133304)}}
+\fancyfoot[C]{\thepage}
 
 \lstdefinestyle{prismmodel}{
 	tabsize=1,
@@ -364,47 +370,126 @@ The two last properties fail because this model could result in starvation of a 
 The two transition systems in Figure 2: $M_1 = (S_1,\rightarrow_1,\{s_0\},AP,L_1)$ and $M_2 = (S_2,\rightarrow_2,\{s_0\},AP,L_2)$ where $AP = \{\phi_1, \phi_2\}$.\\
 We have to find the coarsest bisimulation relation between the states of the two structures: $R_{12} \subseteq S_1 \times S_2$.\\
 The first step to find this, is finding the states that have the same labels. This gives us:\\
-$R_{12} = \{(s_0, s_0), (s_0, s_3), (s_1,s_1), (s_1,s_2),(s_2,s_1),(s_2,s_2),(s_3,s_1),(s_3,s_2),\\
-(s_4,s_0),(s_4,s_3),(s_5,s_0),(s_5,s_3)\}$\\
-The next step in finding the coarsest bisimulation relation between two transition systems is to remove the entries that does not satisfy the mutual simulation conditions. Doing so will give us the following:\\
-$R_{12} = \{(s_0, s_0), (s_0, s_3), (s_1,s_1), (s_1,s_2),(s_2,s_1),(s_2,s_2),(s_3,s_1),(s_3,s_2),\\
-(s_4,s_0),(s_4,s_3),(s_5,s_0),(s_5,s_3)\}$\\
+$$R_{12} = \left\{
+	\begin{array}{c}
+		(s_0, s_0),(s_0, s_3),(s_1,s_1), (s_1,s_2),(s_2,s_1),(s_2,s_2), \\
+		(s_3,s_1),(s_3,s_2),(s_4,s_0),(s_4,s_3),(s_5,s_0),(s_5,s_3)
+	\end{array}
+\right\}$$
+
+The next step in finding the coarsest bisimulation relation between two transition systems is to remove the entries that does not satisfy the mutual simulation conditions. Doing so will give us the following:
+$$R_{12} = \left\{
+	\begin{array}{c}
+		(s_0, s_0),(s_0, s_3),(s_1,s_1), (s_1,s_2),(s_2,s_1),(s_2,s_2), \\
+		(s_3,s_1),(s_3,s_2),(s_4,s_0),(s_4,s_3),(s_5,s_0),(s_5,s_3)
+	\end{array}
+\right\}$$
+
 $R_{12}$ is a bisimulation relation of $M_1$ and $M_2$ ($M_1 \sim M_2$) because the initial states are bisimilar: $s_0 R s_0$. It is also the coarsest bisimulation relation because we started by finding all the states that have the same label and put them in the relation. Then we proceeded to remove the entries that does not satisfy the mutual simulation conditions which led us to removing none. We did not remove any entries because every state in the two transition systems that have the same label have an incoming edge to a state with another label and an outgoing edge to a state with another label.\\
 We have to find the coarsest bisimulation relation between the states of $M_1$: $R_{11} \subseteq S_1 \times S_1$.\\
-We do the same thing as we did last time - we find the states that have the same labels. This gives us:\\
-$R_{11} = \{(s_0,s_0),(s_0,s_4),(s_0,s_5),(s_1,s_1),(s_1,s_2),(s_1,s_3),(s_2,s_1),(s_2,s_2),\\
-(s_2,s_3),(s_3,s_1),(s_3,s_2),(s_3,s_3),(s_4,s_0),(s_4,s_4),(s_4,s_5),(s_5,s_0),(s_5,s_4),\\(s_5,s_5)\}$\\
-The next step is to remove the entries that does not satisfy the mutual simulation conditions which will give us the following:\\
-$R_{11} = \{(s_0,s_0),(s_0,s_4),(s_0,s_5),(s_1,s_1),(s_1,s_2),(s_1,s_3),(s_2,s_1),(s_2,s_2),\\
-(s_2,s_3),(s_3,s_1),(s_3,s_2),(s_3,s_3),(s_4,s_0),(s_4,s_4),(s_4,s_5),(s_5,s_0),(s_5,s_4),\\(s_5,s_5)\}$\\
+We do the same thing as we did last time - we find the states that have the same labels. This gives us:
+$$R_{11} = \left\{
+	\begin{array}{c}
+		(s_0,s_0),(s_0,s_4),(s_0,s_5),(s_1,s_1),(s_1,s_2),(s_1,s_3), \\
+		(s_2,s_1),(s_2,s_2),(s_2,s_3),(s_3,s_1),(s_3,s_2),(s_3,s_3), \\
+		(s_4,s_0),(s_4,s_4),(s_4,s_5),(s_5,s_0),(s_5,s_4),(s_5,s_5)
+	\end{array}
+\right\}$$
+
+The next step is to remove the entries that does not satisfy the mutual simulation conditions which will give us the following:
+$$R_{11} = \left\{
+	\begin{array}{c}
+	    (s_0,s_0),(s_0,s_4),(s_0,s_5),(s_1,s_1),(s_1,s_2),(s_1,s_3),\\
+	    (s_2,s_1),(s_2,s_2),(s_2,s_3),(s_3,s_1),(s_3,s_2),(s_3,s_3), \\
+	    (s_4,s_0),(s_4,s_4),(s_4,s_5),(s_5,s_0),(s_5,s_4),(s_5,s_5)
+	\end{array}
+\right\}$$
+
 $R_{11}$ is a bisimulation relation of $M_1$ and $M_1$ ($M_1 \sim M_1$) because the initial states are bisimiliar: $s_0 R s_0$. It is maximal because all states with the same label is in the relation. No entries have been removed due to every state having an incoming edge from and an outgoing edge to a state of the other label.\\
 We can use this to construct the bisimulation quotient $M_1 / \sim$ of $M_1$. Then we have to find the bisimilar states and since no entries was removed due to satisfying the mutual simulation conditions all states with the same label are bisimilar.\\
 $s_0 \sim_T s_4$, $s_0 \sim_T s_5$, $s_4 \sim_T s_5$, $s_1 \sim_T s_2$, $s_1 \sim_T s_3$ and $s_2 \sim_T s_3$.\\
 This gives us the bisimulation quotient $M_1 / \sim$ of $M_1$. This is shown in the Figure below.\\
-INSERT FIGURE\\ %%Tegning fra Andreas
-We want to find out if this is bisimilar to $M_2$. We take the same approach as before by putting all the states with the same labels in the relation.\\
-$R = \{(\{s_0,s_4,s_5\},s_0), (\{s_0,s_4,s_5\},s_3), (\{s_1,s_2,s_3\},s_1), (\{s_1,s_2,s_3\},s_2)\}$\\
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.75]{../GFX/Answer-b2-1e.pdf}\\
+	Figure B2.1e: Bisimulation quotient of $M_1 / \sim$ of $M_1$.
+\end{figure}
+
+We want to find out if this is bisimilar to $M_2$. We take the same approach as before by putting all the states with the same labels in the relation.
+$$R = \left\{
+	\begin{array}{c}
+	    (\{s_0,s_4,s_5\},s_0),(\{s_0,s_4,s_5\},s_3),\\
+	    (\{s_1,s_2,s_3\},s_1), (\{s_1,s_2,s_3\},s_2)
+	\end{array}
+\right\}$$
+
 We want to remove the entries in this relation which do not satisfy the mutual simulation conditions. This gives us the following relation:\\
-$R = \{(\{s_0,s_4,s_5\},s_0), (\{s_0,s_4,s_5\},s_3), (\{s_1,s_2,s_3\},s_1), (\{s_1,s_2,s_3\},s_2)\}$\\
+$$R = \left\{
+	\begin{array}{c}
+	    (\{s_0,s_4,s_5\},s_0),(\{s_0,s_4,s_5\},s_3),\\
+	    (\{s_1,s_2,s_3\},s_1), (\{s_1,s_2,s_3\},s_2)
+	\end{array}
+\right\}$$
+
 Again no entries was removed because every state with label $\phi_1$ has an outgoing edge to and an incoming edge from a state that has label $\phi_2$ and vice versa. This is therefore the coarsest bisimulation relation since all the states with the same label are in the relation and none was removed for not satisfying the mutual simulation conditions.
-\subsection*{2.}
-\subsubsection*{(a)} $\Phi' = \neg(\exists \bigcirc \Phi_1) \wedge (\neg\exists \Box (\neg \Phi_2))$
+
+\subsection*{Satisfiability}
+Let's consider the following CTL formula
+$$\Phi = \neg(EX \Phi_1) \wedge (AF \Phi_2)$$
+where $\Phi_1$ and $\Phi_2$ are atomic propositions. We can convert $\Phi$ into $\exists$-normal form, which is a normalization of the used operators. The allowed operators are: $\neg, \wedge, \exists \bigcirc, \exists \cup, \exists \Box$. We will call the $\exists$NF version of $\Phi$ for $\Phi'$.
+$$\Phi' = \neg(\exists \bigcirc \Phi_1) \wedge (\neg\exists \Box (\neg \Phi_2))$$
+Further we can draw an abstract syntax tree for $\Phi'$ to better illustrate it.
 \begin{figure}[H]
 	\centering
 	\includegraphics[scale=0.75]{../GFX/Answer-b2-2a.pdf}\\
-	Figure B2.2a: An abstract syntax tree.
+	\caption{An abstract syntax tree of $\Phi'$.}
 \end{figure}
+A formula can be split into sub-terms, often denoted as $\Psi$. In Figure 3, the sub-terms of $\Phi'$ is shown.
+$$\Psi = \neg(\exists \bigcirc \Phi_1)$$
+$$\Psi' = \neg(\exists \Box (\neg \Phi_2))$$
 
-\subsubsection*{(b)}
-$Sat(\Psi) = Sat\left(\neg(\exists \bigcirc \Phi_1)\right) = S \setminus \{s \in S : Post(s) \bigcap Sat(\Phi_1) \neq \emptyset\}$\\
-\begin{tabular}{@{\hspace{0em}}l@{\hspace{1mm}}l@{\hspace{1mm}}l}
-	$Sat(\Psi')$ & $=$ & $Sat\left(\neg(\exists \Box \Phi_2)\right)$\\
-	& $=$ & $S \setminus \{T \subseteq Sat(\Phi_2)$ and $s \in T \Rightarrow Post(s) \bigcap T \neq \emptyset\}$
-\end{tabular}\\
-$Sat(\Phi') = Sat\left(\neg(\exists \bigcirc \Phi_1) \wedge (\neg\exists \Box (\neg \Phi_2))\right) = Sat(\Psi) \bigcap Sat(\Psi')$
-\subsubsection*{(c)}
+We wish to define how $\Phi$ is satisfied. We can do this by using the $Sat()$ keyword. $Sat(\Phi)$ means the set of states that satisfy $\Phi$. For each of our sub-terms $(\Psi, \Psi')$ and for $\Phi'$, we wish to list the set of states which satisfy them.
+$$Sat(\Psi) = Sat\left(\neg(\exists \bigcirc \Phi_1)\right) = S \setminus \{s \in S : Post(s) \bigcap Sat(\Phi_1) \neq \emptyset\}$$
+$$Sat(\Psi') = Sat\left(\neg(\exists \Box (\neg \Phi_2))\right) = S \setminus \{T \subseteq Sat(\neg \Phi_2) \; and \; s \in T \Rightarrow Post(s) \bigcap T \neq \emptyset\}$$
+$$Sat(\Phi') = Sat\left(\neg(\exists \bigcirc \Phi_1) \wedge (\neg\exists \Box (\neg \Phi_2))\right) = Sat(\Psi) \bigcap Sat(\Psi')$$
+\\
+We can calculate the set of states satisfying $Sat(\Phi) = Sat(\Phi')$ for $M_1$ from Figure 2. To start finding out which states are satisfied for $Sat(\Phi)$ we start off with the left side of the $\wedge$ symbol $(\neg(EX \Phi_1))$. We have to find states which does not have an immediate path to a state containing $\Phi_1$. We will call this set for $T_{11}$.
+$$T_{11} = \{s_0,s_4,s_5\}$$
+Now for the right part of the $\wedge$ symbol $(AF \Phi_2)$. We have to find states which all paths from the state at some point reaches $\Phi_2$. We will call this set for $T_{12}$.
+$$T_{12} = \{s_0,s_1,s_2,s_3,s_4,s_5\}$$
+We can now calculate the set of states that match both the left and right side of the $\wedge$ symbol, which is the union of the two sets. We will call this set for $T_1$.
+$$T_1 = T_{11} \cup T_{12} = \{s_0,s_4,s_5\}$$
+Now on to finding out which states are satisfied for $Sat(\Phi')$. Same procedure as before. First the set of states that match the left side of the $\wedge$ symbol $(\neg(\exists \bigcirc \Phi_1))$. As before we have to find a state which do not have an immediate path to a state containing $\Phi_1$. We will call this set for $T_{21}$.
+$$T_{21} = \{s_0,s_4,s_5\}$$
+The right part of the $\wedge$ symbol $(\neg\exists \Box (\neg \Phi_2))$ is next. We have to find states where no path exists where the paths from the state and all subsequent paths never contains $\Phi_2$. We will call this set $T_{22}$.
+$$T_{22} = \{s_0,s_1,s_2,s_3,s_4,s_5\}$$
+We can yet again calculate the set of states that match both the left and right side of the $\wedge$ symbol, which is the union of the two sets. We will call this set for $T_2$.
+$$T_2 = T_{21} \cup T_{22} = \{s_0,s_4,s_5\}$$
+At last we can calculate the set of states that satisfy the following statement $Sat(\Phi) = Sat(\Phi')$.
+$$Sat(\Phi) \cup Sat(\Phi') = T_1 \cup T_2 = \{s_0,s_4,s_5\}$$
 
-\subsubsection*{(d)}
+\subsection*{Recursiveness}
+A recursive subterm of $\Phi$ is $\Psi'$ $\left(\neg(\exists \Box \Phi_2)\right)$. Using the following expansion law: $$\exists \Box \Phi = \Phi \wedge \exists \bigcirc \exists \Box \Phi$$
+We can see that the $\exists \Box \Phi$ part is recursive and thereby a \emph{fixed point}. Fixed points can either be a \emph{least} fixed point or a \emph{greatest} fixed point. As the names suggests the least fixed point is the smallest set of satisfying states while the greatest fixed point is the largest set of satisfying states.\\
+To compute the smallest and largest set we have to make use of the expansion laws and the fact that we have a recursive expression.
+\begin{description}
+	\item[Least fixed point]$\,$\\ % Allow newline hack $\;$ is a thin space
+	An expression containing a least fixed point could be $\exists (\Phi_1 \cup \Phi_2)$. The expansion laws dictates that the expression could be expanded to $$\Phi_2 \vee \left(\Phi_1 \wedge \exists \bigcirc \exists(\Phi_1 \cup \Phi2)\right)$$
+	Hence $\exists (\Phi_1 \cup \Phi_2)$ is the fixed point.\\
+	This can be expressed as
+	$$Sat\left(\exists (\Phi_1 \cup \Phi_2)\right) = Sat(\Phi_2) \cup \{s \in Sat(\Phi_1) : Post(s) \cap T \neq \emptyset\} \subseteq T$$
+	Where $T$ is the smallest set of satisfying states.
+	
+	\item[Greatest fixed point]$\,$\\
+	An expression containing a greatest fixed point could be $\exists \Box \Phi$. The expansion laws dictates that the expression could be expanded to
+	$$\Phi \wedge \exists \bigcirc \exists \Box \Phi$$
+	Hence $\exists \Box \Phi$ is the fixed point.\\
+	This can be expressed as
+	$$Sat(\exists \Box \Phi) = \{s \in Sat(\Phi) : Post(s) \cap T \neq \emptyset) \supseteq T$$
+	Where T is the largest set of satisfying states.
+\end{description}
+For our expression the fixed point used is a greatest fixed point as shown above.
 
 \chapter*{Part C: Advanced Problems}
 \section*{Practical Problems}
@@ -428,19 +513,19 @@ The serve commands have also been altered to comply with jobs having priorities 
 The first two conditions in every guard above are very simple - the two job's have be to true meaning both clients have a job in the scheduler. Line 3 and 4 specifies the regular round-robin. If the priorities are equal and a job has not waited 5 turns for its turn then they should be cycled in a regular round-robin fashion. Line 5 and 6 specifies that if one job has waited 5 turns then that job should be served until it is finished and then the wait variable is reset to 0. However the update in these lines are interesting it changes the turn variable so it is the other job's turn to be served. This is done so that when $job_1$ is finished and that $client_1$ enters another job with the same priority as $job_2$ it will be $job_2$s turn to be served. This is a minor detail done in order to faster clear out jobs in the scheduler. Line 7 and 8 serves a job if its priority is higher than the other job's priority and it the other job has not waited 5 turns. The update again changes the turn variable to the other job for the same reason as line 5 and 6. It also increments the wait variable for the other job so the other job does not have to wait too long to be served. The Weighted-RR model has 3655 reachable states.\\
 We have specified some properties in CTL which we will use PRISM to verify for our model. The properties specified below can also be found specified in PRISM notation in the Weighted-RR.pctl file.\\
 \begin{tabular}{ c c c }
-\\No. & CTL & Verified \\
+\\No. & CTL & Verified \\\hline
 1. & $AG (state_1 = 1 \Rightarrow job_1 = true)$ & $\checkmark$ \\
 2. & $AG (state_2 = 1 \Rightarrow job_2 = true)$ & $\checkmark$ \\
 3. & $AG(task_1>0 \Rightarrow AF task_1 = 0)$ & $\checkmark$ \\
 4. & $AG(task_2>0 \Rightarrow AF task_2 = 0)$ & $\checkmark$ \\
 5. & $A(task_1>0 \wedge wait_1=5 U task1=0 \wedge job1=false$ & $\checkmark$ \\
-6. & $AG(wait_1=5 \wedge task_1=1 \Rightarrow (AX task_1=0))$ & X \\
+6. & $AG(wait_1=5 \wedge task_1=1 \Rightarrow (AX task_1=0))$ & $\div$ \\
 7. & $AG(wait_1=5 \wedge task_1=1 \Rightarrow (EX task_1=0))$ & $\checkmark$ \\
-8. & $AG(wait_1=5 \wedge task_2=1 \Rightarrow (EX task_2=0))$ & X \\
-9. & $AG(wait_2=5 \wedge task_1=1 \Rightarrow (EX task_1=0))$ & X \\
+8. & $AG(wait_1=5 \wedge task_2=1 \Rightarrow (EX task_2=0))$ & $\div$ \\
+9. & $AG(wait_2=5 \wedge task_1=1 \Rightarrow (EX task_1=0))$ & $\div$ \\
 10. & $AG(priority_2>priority_1 \wedge task_2=1 \wedge wait_1<5 \Rightarrow (EX task_2=0))$ & $\checkmark$ \\
-11. & $AG(priority_2>priority_1 \wedge task_2=1 \wedge wait_1<5 \Rightarrow (EX task_1=0))$ & X \\
-\\
+11. & $AG(priority_2>priority_1 \wedge task_2=1 \wedge wait_1<5 \Rightarrow (EX task_1=0))$ & $\div$ \\
+\hline\\
 \end{tabular}
 No. 1 is a property that specify that if $state_1$ is 1 then $job_1$ should be true meaning that when $client_1$ has created a job it should be in the scheduler. The same goes for $client_2$ which is specified by no. 2 in the list.\\
 No. 3 and 4. specify that it is globally the case whenever $task_1$ and $task_2$ is larger than 0 then it should eventually hold that $task_1$ and $task_2$ is 0 which means that the job has to eventually finish. This property could not be verified if the scheduler did not avoid starvation because then a job would never finish and it would just be in the scheduler forever. We prevent this by having a maximum waiting period of 5 turns as explained earlier.\\
