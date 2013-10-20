@@ -91,19 +91,20 @@ Morten Chabert \textsc{Eskesen}\\
 \end{center}
 \end{titlepage}
 
-\chapter*{HJ{\AE}LPE HALL{\O}J}
-\begin{tabular}{ | l  c  r | }
-	\hline
-	CTL	& & Wiki \\ \hline
-	$\forall$ & $\equiv$ &  A \\
-	$\exists$ & $\equiv$ & E \\
-	$\bigcirc$ & $\equiv$ & X \\
-	$\Box$ & $\equiv$ & G \\
-	$\Diamond$ & $\equiv$ & F \\
-	\hline
-\end{tabular}
-\newpage
-
+%%\chapter*{HJ{\AE}LPE HALL{\O}J}
+%%\begin{tabular}{ | l  c  r | }
+%%	\hline
+%%	CTL	& & Wiki \\ \hline
+%%	$\forall$ & $\equiv$ &  A \\
+%%	$\exists$ & $\equiv$ & E \\
+%%	$\bigcirc$ & $\equiv$ & X \\
+%%	$\Box$ & $\equiv$ & G \\
+%%	$\Diamond$ & $\equiv$ & F \\
+%%	\hline
+%%\end{tabular}
+%%\newpage
+\chapter*{Introductory notes}
+This report has been written by the both of us. All parts have been worked on together and therefore our responsibility for each assignment is equal.
 \chapter*{Part A: Introductory Problems}
 \section*{A1) Practical Problems}
 
@@ -115,8 +116,14 @@ $client_1$: $AG (state_1 = 1 \Rightarrow \neg(\neg job_1 = 1 \wedge \neg job_2 =
 $client_2$: $AG (state_2 = 1 \Rightarrow \neg(\neg job_1 = 2 \wedge \neg job_2 = 2))$
 
 \subsubsection*{A1.1b) Use PRISM to verify whether these properties hold of the FCFS scheduler model}
-$P>=1 [G state1=1=>(job1=1)|(job2=1)]$ - Verified.\\
-$P>=1 [G state2=1=>(job1=2)|(job2=2)]$ - Verified.
+\begin{figure}[H]
+			\centering
+			\begin{tabular}{ l r }
+				\includegraphics[scale=0.75]{../GFX/"A1-1b-client1.png}
+				& \includegraphics[scale=0.75]{../GFX/A1-1b-client2.png}
+			\end{tabular}\\
+			Figure A1.1b: The properties verified by PRISM.
+		\end{figure}
 
 \subsubsection*{A1.1c) Write down two similar properties for the SRT scheduler, explaining your construction}
 $client_1$: $AG (state_1 = 1 \Rightarrow job_1 = true)$\\
@@ -125,8 +132,14 @@ $client_2$: $AG (state_2 = 1 \Rightarrow job_2 = true)$\\
 We require that whenever $state_1 = 1$ then $job_1 = true$ because there should be a job waiting in the queue when the $state_1 = 1$. The same goes for $client_2$.
 
 \subsubsection*{A1.1d) Verify whether they hold of the model}
-$P>=1 [G state1=1=>job1=true]$ - Verified.\\
-$P>=1 [G state2=1=>job2=true]$ - Verified.
+\begin{figure}[H]
+			\centering
+			\begin{tabular}{ l r }
+				\includegraphics[scale=0.75]{../GFX/A1-1d-client1.png}
+				& \includegraphics[scale=0.75]{../GFX/A1-1d-client2.png}
+			\end{tabular}\\
+			Figure A1.1d: The properties verified by PRISM.
+		\end{figure}
 
 
 \subsection*{A1.2}
@@ -330,7 +343,16 @@ $client_1$: $AG (state_1 = 1 \Rightarrow job_1 = true)$\\
 $client_2$: $AG (state_2 = 1 \Rightarrow job_2 = true)$\\
 $client_1$: $AG(task_1>0 \Rightarrow AF task_1 = 0)$ \\
 $client_2$: $AG(task_2>0 \Rightarrow AF task_2 = 0)$ \\
-
+\begin{figure}[H]
+			\centering
+			\begin{tabular}{ l c c r }
+				\includegraphics[scale=0.5]{../GFX/A1-1d-client1.png}
+				& \includegraphics[scale=0.5]{../GFX/A1-1d-client2.png}
+				& \includegraphics[scale=0.5]{../GFX/A2-1RR.png}
+				& \includegraphics[scale=0.5]{../GFX/A2-1RR2.png}
+			\end{tabular}\\
+			Figure B1.1: The properties verified by PRISM.
+		\end{figure}
 \subsection*{Priority First Come First Served Scheduler}
 In this part we will model a FCFS scheduler that is able to handle tasks with two different priority levels. A FCFS scheduler serves a job until it is finished however this variant can stop a job if a new job is created with higher priority. In order to accommodate jobs having a priority the \emph{Client} module have to be modified to have an additional variable called \emph{priority} which can be either 1 or 2. When the priority is 2 the job has a higher priority than a job with priority 1. The create commands have been altered to 10 new ones so the client is able to create jobs with both priority 1 and priority 2.
 \begin{center}
@@ -355,8 +377,17 @@ $client_2$: $AG (state_2 = 1 \Rightarrow \neg(\neg job_1 = 2 \wedge \neg job_2 =
 $client_1$: $AG(task_1>0 \Rightarrow AF task_1 = 0)$ \\
 $client_2$: $AG(task_2>0 \Rightarrow AF task_2 = 0)$ \\
 
-The two last properties fail because this model could result in starvation of a job as explained earlier. This means that a job's length (which is specified in the variable task) will never reach 0.
-
+The two last properties failed verification because this model could result in starvation of a job as explained earlier. This means that a job's length (which is specified in the variable task) will never reach 0.\\
+\begin{figure}[H]
+			\centering
+			\begin{tabular}{ l c c r }
+				\includegraphics[scale=0.5]{../GFX/A1-1b-client2.png}
+				& \includegraphics[scale=0.5]{../GFX/A1-1b-client2.png}
+				& \includegraphics[scale=0.5]{../GFX/A2-2-PFCFS.png}
+				& \includegraphics[scale=0.5]{../GFX/A2-2-PFCFS.png}
+			\end{tabular}\\
+			Figure B1.2: The properties verified by PRISM.
+		\end{figure}
 \section*{B2) Theoretical Problems}
 \subsection*{Bisimulation relations}
 \begin{figure}[H]
