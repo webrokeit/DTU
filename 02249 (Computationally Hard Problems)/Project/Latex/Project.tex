@@ -49,9 +49,58 @@ $$max \left\{\nsum\limits_{e_i \in T} w(e_i), \nsum\limits_{e_i \in T} w(e_{m+1-
 and NO otherwise.\\
 \HRule
 
-\subsection{a) Yeah!}
+\subsection*{a) Description of the problem in colloquial terms}
+A minimum spanning tree is a subgraph within a undirected, connected weighted graph that is a tree and connects all the vertices together with a weight less or equal to the weight of every other spanning tree. The main difference between a minimum spanning tree and a mirror friendly minimum spanning tree is the inequality described above. In a mirror friendly minimum spanning tree the inequality must be satisfied. It should be possible to mirror the spanning tree in such a way that the maximum of the spanning tree and the mirrored spanning tree is less than or equal to a fixed value, $B$. This also means that the mirror friendly minimum spanning tree may not be equal to the minimum spanning tree in the graph, i.e. it may have a larger weight than the minimum spanning tree.
 
-\subsubsection{Solve an example problem}
+\subsubsection*{Solve an example problem}
 \textbf{Input:} $V = \{1,2,3\}$, $E = \{e_1 = \{1,2\},e_2 = \{2,3\},e_3 = \{1,3\}\}$, $w(e_i) = i$ for $i \in \{1,2,3\}$ and $B = 4$.
+\begin{center}
+\begin{tabular}{ c c }
+Spanning Tree & Mirrored Spanning Tree\\
+$e_1 + e_2 = 3$ & $e_{3+1-1} + e_{3+1-2} = 5$\\
+$e_3 + e_1 = 4$ & $e_{3+1-3} + e_{3+1-1} = 4$\\
+\end{tabular}
+\end{center}
+$$max \left\{e_3 + e_1, e_{3+1-3} + e_{3+1-1}\right\} \leq 4$$
+$$max \left\{4, 4\right\} \leq 4$$
+Output would be a spanning tree consisting of the edges: $e_3$ and $e_1$.
+\subsection*{b) Show that MFMST is in $NP$}
+\subsubsection*{1. Design a deterministic algorithm $A$ which takes as input a problem instance $X$ and random sequence $R$}
+
+\textbf{1a. Specify what the random sequence $R$ consists of}\\
+
+\textbf{1b. Specify how $A$ interprets $R$ as a guess}\\
+
+\textbf{1c. Specify how $A$ verifies the guess}\\
+
+\subsubsection*{2. Show that the two conditions are met}
+
+\textbf{If the answer to $X$ is YES, then there is a string $R^*$ with positive probability such that $A(X, R^*) = YES$}\\
+
+\textbf{If the answer to $X$ is NO, then $A(X, R) = NO$ for all $R$}\\
+
+\subsubsection*{3. Show that $A$ is $p$-bounded for some polynomial $p$}
+
+\subsection*{c) Show that MFMST is $NP$-complete}
+\subsubsection*{Suitable problem $P_c$ known to be $NP$-complete}
+
+Prove $P_c \leq_p$ \textsc{MirrorFriendlyMinimumSpanningTree}.
+
+\textbf{Outline of the transformation}\\
+
+\textbf{Answer to $X$ is YES then answer to $T(X)$ is YES}\\
+
+\textbf{Answer to $T(X)$ is YES then answer to $X$ is YES}\\
+
+\textbf{Time Analysis}
+
+\subsection*{d) Find an algorithm which solves the optimizing version of the problem}
+
+
+\subsection*{e) Prove the worst-case running time of the algorithm}
+
+
+\subsection*{f) Implement the algorithm developed in d)}
+
 
 \end{document}
