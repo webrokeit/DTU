@@ -91,18 +91,6 @@ Morten Chabert \textsc{Eskesen}\\
 \end{center}
 \end{titlepage}
 
-%%\chapter*{HJ{\AE}LPE HALL{\O}J}
-%%\begin{tabular}{ | l  c  r | }
-%%	\hline
-%%	CTL	& & Wiki \\ \hline
-%%	$\forall$ & $\equiv$ &  A \\
-%%	$\exists$ & $\equiv$ & E \\
-%%	$\bigcirc$ & $\equiv$ & X \\
-%%	$\Box$ & $\equiv$ & G \\
-%%	$\Diamond$ & $\equiv$ & F \\
-%%	\hline
-%%\end{tabular}
-%%\newpage
 \chapter*{Introductory notes}
 This report has been written by the both of us. All parts have been worked on together and therefore our responsibility for each assignment is equal.
 \chapter*{Part A: Introductory Problems}
@@ -117,13 +105,13 @@ $client_2$: $AG (state_2 = 1 \Rightarrow \neg(\neg job_1 = 2 \wedge \neg job_2 =
 
 \subsubsection*{A1.1b) Use PRISM to verify whether these properties hold of the FCFS scheduler model}
 \begin{figure}[H]
-			\centering
-			\begin{tabular}{ l r }
-				\includegraphics[scale=0.75]{../GFX/"A1-1b-client1.png}
-				& \includegraphics[scale=0.75]{../GFX/A1-1b-client2.png}
-			\end{tabular}\\
-			Figure A1.1b: The properties verified by PRISM.
-		\end{figure}
+	\centering
+	\begin{tabular}{ l r }
+		\includegraphics[scale=0.75]{../GFX/"A1-1b-client1.png}
+		& \includegraphics[scale=0.75]{../GFX/A1-1b-client2.png}
+	\end{tabular}\\
+	Figure A1.1b: The properties verified by PRISM.
+\end{figure}
 
 \subsubsection*{A1.1c) Write down two similar properties for the SRT scheduler, explaining your construction}
 $client_1$: $AG (state_1 = 1 \Rightarrow job_1 = true)$\\
@@ -292,12 +280,12 @@ Write down a CTL* formula for each of the following properties, which are descri
 	\textbf{CTL*:} $\forall(\Box \Phi_1 \vee \Box \Phi_2)$\\
 	\textbf{CTL:} Not possible to create due to the $\Box$ having to be inside the parentheses.
 
-\newpage
 \subsection*{2A.4}
 Encode the transition system in \textbf{Figure 1} as a PRISM module, using a variable $s$, such that $0 \leq s \leq 3$, to represent the state. Define $\Phi_1$ and $\Phi_2$ as PRISM labels.\\
 \\
 \textbf{The PRISM module:}
 \lstinputlisting[style=prismmodel,caption={PRISM module encoding the transition system in \textbf{Figure1}.}]{../A2.4.nm}
+\newpage
 \textbf{The PRISM properties:}
 \lstinputlisting[style=prismmodel,caption={PRISM properties for \textbf{Figure1}.}]{../A2.4.pctl}
 
@@ -344,15 +332,14 @@ $client_2$: $AG (state_2 = 1 \Rightarrow job_2 = true)$\\
 $client_1$: $AG(task_1>0 \Rightarrow AF task_1 = 0)$ \\
 $client_2$: $AG(task_2>0 \Rightarrow AF task_2 = 0)$ \\
 \begin{figure}[H]
-			\centering
-			\begin{tabular}{ l c c r }
-				\includegraphics[scale=0.5]{../GFX/A1-1d-client1.png}
-				& \includegraphics[scale=0.5]{../GFX/A1-1d-client2.png}
-				& \includegraphics[scale=0.5]{../GFX/A2-1RR.png}
-				& \includegraphics[scale=0.5]{../GFX/A2-1RR2.png}
-			\end{tabular}\\
-			Figure B1.1: The properties verified by PRISM.
-		\end{figure}
+	\centering
+	\includegraphics[scale=0.75]{../GFX/A1-1d-client1.png}
+	\includegraphics[scale=0.75]{../GFX/A1-1d-client2.png}\\
+	\includegraphics[scale=0.75]{../GFX/A2-1RR.png}
+	\includegraphics[scale=0.75]{../GFX/A2-1RR2.png}\\
+	Figure B1.1: The properties verified by PRISM.
+\end{figure}
+
 \subsection*{Priority First Come First Served Scheduler}
 In this part we will model a FCFS scheduler that is able to handle tasks with two different priority levels. A FCFS scheduler serves a job until it is finished however this variant can stop a job if a new job is created with higher priority. In order to accommodate jobs having a priority the \emph{Client} module have to be modified to have an additional variable called \emph{priority} which can be either 1 or 2. When the priority is 2 the job has a higher priority than a job with priority 1. The create commands have been altered to 10 new ones so the client is able to create jobs with both priority 1 and priority 2.
 \begin{center}
@@ -379,23 +366,19 @@ $client_2$: $AG(task_2>0 \Rightarrow AF task_2 = 0)$ \\
 
 The two last properties failed verification because this model could result in starvation of a job as explained earlier. This means that a job's length (which is specified in the variable task) will never reach 0.\\
 \begin{figure}[H]
-			\centering
-			\begin{tabular}{ l c c r }
-				\includegraphics[scale=0.5]{../GFX/A1-1b-client2.png}
-				& \includegraphics[scale=0.5]{../GFX/A1-1b-client2.png}
-				& \includegraphics[scale=0.5]{../GFX/A2-2-PFCFS.png}
-				& \includegraphics[scale=0.5]{../GFX/A2-2-PFCFS.png}
-			\end{tabular}\\
-			Figure B1.2: The properties verified by PRISM.
-		\end{figure}
+	\centering
+	\includegraphics[scale=0.75]{../GFX/A1-1b-client2.png}
+	\includegraphics[scale=0.75]{../GFX/A1-1b-client2.png}\\
+	\includegraphics[scale=0.75]{../GFX/A2-2-PFCFS.png}
+	\includegraphics[scale=0.75]{../GFX/A2-2-PFCFS.png}\\
+	Figure B1.2: The properties verified by PRISM.
+\end{figure}
 \section*{B2) Theoretical Problems}
 \subsection*{Bisimulation relations}
 \begin{figure}[H]
 	\centering
-	\begin{tabular}{ l r }
-		\includegraphics[scale=0.75]{../GFX/ExerciseFigure2-M1.pdf}
-		& \includegraphics[scale=0.75]{../GFX/ExerciseFigure2-M2.pdf}
-	\end{tabular}
+	\includegraphics[scale=0.70]{../GFX/ExerciseFigure2-M1.pdf}
+	\includegraphics[scale=0.70]{../GFX/ExerciseFigure2-M2.pdf}
 	\caption{Two transition systems, $M_1$ and $M_2$}
 \end{figure}
 The two transition systems in Figure 2: $M_1 = (S_1,\rightarrow_1,\{s_0\},AP,L_1)$ and $M_2 = (S_2,\rightarrow_2,\{s_0\},AP,L_2)$ where $AP = \{\phi_1, \phi_2\}$.\\
