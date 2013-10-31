@@ -69,21 +69,38 @@ The algorithm would output YES.
 
 \subsection*{b) Show that MFMST is in $NP$}
 \subsubsection*{1. Design a deterministic algorithm $A$ which takes as input a problem instance $X$ and random sequence $R$}
-
-\textbf{1a. Specify what the random sequence $R$ consists of}\\
-
-\textbf{1b. Specify how $A$ interprets $R$ as a guess}\\
-
-\textbf{1c. Specify how $A$ verifies the guess}\\
-
+\textbf{Specify what the random sequence $R$ consists of}\\
+Let the string $R$ consist of bits: $R = r_1,r_2,\dots,r_n$.\\[0.25cm]
+\textbf{Specify how $A$ interprets $R$ as a guess}\\
+Consider the first $m$ bits. If the $i$-th bit is 1, mark the edge $e_i$.\\[0.25cm]
+\textbf{Specify how $A$ verifies the guess}\\
+If the marked edges create a mirror friendly minimum spanning tree with a weight less than or equal to $B$, answer YES, otherwise NO.
 \subsubsection*{2. Show that the two conditions are met}
-
-\textbf{If the answer to $X$ is YES, then there is a string $R^*$ with positive probability such that $A(X, R^*) = YES$}\\
-
-\textbf{If the answer to $X$ is NO, then $A(X, R) = NO$ for all $R$}\\
-
+\textbf{If the answer to $X$ is YES, then there is a string $R^*$ with positive probability such that $A(X, R^*) = YES$}
+\begin{itemize}
+\item[] Asssume that the answer is YES
+\item[] Then there is a subset of the edges that creates a mirror friendly minimum spanning tree with a weight less than or equal to $B$.
+\item[] Let $S \subseteq \{1,\dots,m\}$ be the set that describe the edges' index
+\item[] Construct the bit string $R^* = r_1,r_2,\dots,r_m$ where $r_i = 1$ if and if only if $i \in S$
+\item[] When $A$ receives $R^*$, it will select the edges in $S$, check that the weight of the edges are less than or equal to $B$ and answer YES.
+\item[] Altogether there is a string of length at most $p(n)$ that will give YES. The probability of randomly creating it is positive.
+\end{itemize}
+\textbf{If the answer to $X$ is NO, then $A(X, R) = NO$ for all $R$}
+\begin{itemize}
+\item[] Assume that the answer is NO
+\item[] Then no set of the edges create a mirror friendly minimum spanning tree with a weight less than or equal to $B$.
+\item[] If $R$ does not contain enough bits, the algorithm will correctly answer NO.
+\item[] Otherwise the algorithm will mark some edges and compute their weight. This will be compared to $B$. But as no set of edges has a weight less than or equal to $B$, the answer is NO.
+\end{itemize}
 \subsubsection*{3. Show that $A$ is $p$-bounded for some polynomial $p$}
-
+\begin{itemize}
+\item[] There are $m$ edges.
+\item[] It is checked that the string $R$ consists of at least $m$ bits. Time: $O(m)$.
+\item[] Every edge is marked or not marked. Time: $O(m)$.
+\item[] The weights of the marked edges are added. Time: $O(m)$.
+\item[] The computed total weight is compared to $B$ and the answer is returned. Time: $O(1)$.
+\end{itemize}
+Altogether the time is: $O(m)$.
 \subsection*{c) Show that MFMST is $NP$-complete}
 \subsubsection*{Suitable problem $P_c$ known to be $NP$-complete}
 
