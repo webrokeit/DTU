@@ -10,6 +10,7 @@ namespace MFMSTProject.MFMST {
         public int EdgeCount { get { return _edges.Count; } }
         public ICollection<Edge>[] Edges { get; private set; }
         private readonly List<Edge> _edges = new List<Edge>();
+		private List<Edge> _enumEdges = new List<Edge> ();
 
         public EdgeWeightedGraph(int vertices) {
             if (vertices < 1) throw new ArgumentException("There must be at least one vertex in a graph", "vertices");
@@ -28,12 +29,20 @@ namespace MFMSTProject.MFMST {
             get { return _edges[index]; }
         }
 
+		// The enumerator is called heavily, therefore calculate the edges to enumerate
+		// beforehand, to avoid redoing the same checks over and over.
+		// Uses more space, but only references are kept not copies.
+		public void PrepEnumerator() {
+			_enumEdges.Clear ();
+			for (var i = 0; i < Vertices; i++) {
+				foreach (var edge in Edges[i]) {
+					if (edge.Vertex2 > i) _enumEdges.Add(edge);
+				}
+			}
+		}
+
         public IEnumerator<Edge> GetEnumerator() {
-            for (var i = 0; i < Vertices; i++) {
-                foreach (var edge in Edges[i]) {
-                    if (edge.Vertex2 > i) yield return edge;
-                }
-            }
+			return _enumEdges.GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator() {

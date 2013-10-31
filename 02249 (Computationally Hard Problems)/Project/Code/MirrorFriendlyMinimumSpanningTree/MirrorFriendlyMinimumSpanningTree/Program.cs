@@ -8,11 +8,9 @@ using MFMSTProject.MFMST;
 namespace MFMSTProject {
     class Program {
         static void Main(string[] args) {
-            //var G = EdgeWeightedGraph.FromStream(Console.In, !Console.IsInputRedirected);
-
             EdgeWeightedGraph G = null;
-            if (Console.IsInputRedirected) {
-                G = EdgeWeightedGraph.FromStream(Console.In, false);
+            if (Console.IsInputRedirected && false) {
+                G = EdgeWeightedGraph.FromStream(Console.In, true);
             } else {
                 using (var fs = new FileStream("TestFiles/test03.uwg", FileMode.Open, FileAccess.Read, FileShare.Read)) {
                     using (var sr = new StreamReader(fs)) {
