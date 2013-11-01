@@ -65,12 +65,16 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <ItemGroup />
   <ItemGroup>
-    <Folder Include="TestFiles\" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="TestFiles\test01.uwg" />
-    <Content Include="TestFiles\test02.uwg" />
-    <Content Include="TestFiles\test03.uwg" />
+    <Content Include="TestFiles\test01.uwg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestFiles\test02.uwg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestFiles\test03.uwg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 </Project>
