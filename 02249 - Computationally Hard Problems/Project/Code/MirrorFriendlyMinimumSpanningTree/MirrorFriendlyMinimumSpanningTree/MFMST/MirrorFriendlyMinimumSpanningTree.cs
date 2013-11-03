@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using MFMSTProject.Util;
+using System.Threading;
 
 /*
  * Highly customized version Prims eager MST algorithm, found in Sedgewick & Wayne, Algorithms (4th ED, 2011)
@@ -13,6 +14,7 @@ using MFMSTProject.Util;
  * 	Andreas Kjeldsen (s092638),
  * 	Morten Eskesen (s133304)
 */
+
 namespace MFMSTProject.MFMST {
 	// MFMST using a priority queue for picking the edge with lowest weight
     public class MirrorFriendlyMinimumSpanningTree : IEnumerable<Edge> {
@@ -21,6 +23,7 @@ namespace MFMSTProject.MFMST {
         private List<HashSet<int>> _breakers = null;
         private readonly int[] _baseDistTo = null;
 
+		public bool TerminatedPrematurely { get; private set; }
         public Edge[] EdgeTo { get; private set; }
         public int[] DistTo { get; private set; }
         public bool[] Marked { get; private set; }
@@ -52,7 +55,20 @@ namespace MFMSTProject.MFMST {
             return edgeToClone;
         }
 
-        public void Run() {
+        public void Run(int maxExecutionTime) {
+			var t = new Thread (() => {
+				try{
+					Thread.Sleep(maxExecutionTime);
+				} catch { 
+					// Just return, don't set terminate
+					return;
+				}
+				TerminatedPrematurely = true;
+			});
+			t.IsBackground = true;
+			t.Start ();
+
+			TerminatedPrematurely = false;
             MakeMst(new HashSet<int>());
             var threshold = Math.Max(Weight, MirrorWeight);
 
@@ -67,37 +83,41 @@ namespace MFMSTProject.MFMST {
 				// .OrderBy(x => Guid.NewGuid())
 				.ToArray();
 
-            foreach (var excludes in PermutateMstEdges(edgeToClone).Where(excludes => excludes.Count > 0)) {
-				Reset();
-                MakeMst(excludes);
-                if (IsMst) {
-					// Save the weights in local variables as it's calculated using
-					// enumeration which can be time consuming.
-					var weight = Weight;
-					var mirrorWeight = MirrorWeight;
-					if (Math.Max (weight, mirrorWeight) < threshold) {
-						// Update our threshold value.
-						threshold = Math.Max(weight, mirrorWeight);
-						edgeToRes = CloneEdgeTo ();
-					} else if(Math.Min(weight, mirrorWeight) >= threshold){
-						// If the current set of excludes causes the lowest weight
-						// to be larger than our current threshold then we obviously
-						// made a wrong choice excluding the edges and would like not
-						// to make the same mistakes again.
-						_breakers.Add(new HashSet<int>(excludes));
-					} 
-                } else {
-					// The current set of excludes makes it impossible for the graph
-					// to contain a MST, do not make the same mistake again.
-                    _breakers.Add(new HashSet<int>(excludes));
-                }
-            }
+			if (!TerminatedPrematurely) {
+				foreach (var excludes in PermutateMstEdges(edgeToClone).Where(excludes => excludes.Count > 0)) {
+					Reset ();
+					MakeMst (excludes);
+					if (TerminatedPrematurely) break;
+					if (IsMst) {
+						// Save the weights in local variables as it's calculated using
+						// enumeration which can be time consuming.
+						var weight = Weight;
+						var mirrorWeight = MirrorWeight;
+						if (Math.Max (weight, mirrorWeight) < threshold) {
+							// Update our threshold value.
+							threshold = Math.Max (weight, mirrorWeight);
+							edgeToRes = CloneEdgeTo ();
+						} else if (Math.Min (weight, mirrorWeight) >= threshold) {
+							// If the current set of excludes causes the lowest weight
+							// to be larger than our current threshold then we obviously
+							// made a wrong choice excluding the edges and would like not
+							// to make the same mistakes again.
+							_breakers.Add (new HashSet<int> (excludes));
+						} 
+					} else {
+						// The current set of excludes makes it impossible for the graph
+						// to contain a MST, do not make the same mistake again.
+						_breakers.Add (new HashSet<int> (excludes));
+					}
+				}
+			}
 
             EdgeTo = edgeToRes;
+			if (!TerminatedPrematurely && t.IsAlive) t.Abort ();
         }
 
         private void MakeMst(ISet<int> excludes) {
-            while (!_priorityQueue.IsEmpty) {
+			while (!TerminatedPrematurely && !_priorityQueue.IsEmpty) {
                 Visit(_graph, _priorityQueue.DeleteMinimum(), excludes);
             }
         }
