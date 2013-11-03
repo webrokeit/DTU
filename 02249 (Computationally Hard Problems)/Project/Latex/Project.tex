@@ -100,17 +100,47 @@ If the marked edges create a mirror friendly minimum spanning tree with a weight
 Altogether the time is: $O(m)$.
 \subsection*{c) Show that MFMST is $NP$-complete}
 \subsubsection*{Suitable problem $P_c$ known to be $NP$-complete}
-
-Prove $P_c \leq_p$ \textsc{MirrorFriendlyMinimumSpanningTree}.
-
-\textbf{Outline of the transformation}\\
-
-\textbf{Answer to $X$ is YES then answer to $T(X)$ is YES}\\
-
-\textbf{Answer to $T(X)$ is YES then answer to $X$ is YES}\\
-
-\textbf{Time Analysis}
-
+\HRule\\
+\textbf{Problem:} \textsc{[1-In-3-Satisfiability]}\\
+\textbf{Input:} A set of clauses $C = \{c_1,\dots,c_k\}$ over $n$ boolean variables $x_1,\dots,x_n$, where every clause contains exactly three literals.\\
+\textbf{Output:} YES if there is a satisfying assignment such that every clause has exactly one true literal, i.e., if there is an assignment
+$$a: \{x_1,\dots,x_n\} \rightarrow \{0,1\}$$
+such that every clause $c_j$ is satisfied and no clause has two or three satisfied literals, and NO otherwise.\\
+\HRule\\
+Prove $\textsc{1-In-3-Satisfiability} \leq_p$ \textsc{MirrorFriendlyMinimumSpanningTree}.\\
+In order to prove this we use component design. When given an instance $(X,C)$ of \textsc{1-In-3-Satisfiability} we construct an instance $(G = (V, E,w),B)$ of MFMST. This is done by building small "component" graphs that are later connected to form the desired graph $G$. The components will have different "responsibilities". Some ensure a correct setting of the truth values, others which test satisfiability and components to connect them.
+\\[0.25cm]\textbf{Outline of the transformation}\\
+Let $X = \{x_1,\dots,x_n\}$ be the boolean variables and $C = \{c_1,\dots,c_m\}$ the clauses over $X$. We set $B = n + 2m$ for the MFMST instance. We set $w(e_i) = i$. The vertex set of $G$:
+$$V = \{x_1,\dots,x_n\} \cup \{\overline{x}_1,\dots,\overline{x}_n\} \cup \bigcup_{j=1}^{m}{\{a_1(j),a_2(j),a_3(j)\}}$$
+The truth setting components are defined to be the edges.
+\begin{center}
+$\forall x_1 \in X$ let $T_1$ be the vertex with incoming edges $x_1$ and $\overline{x}_1$
+\end{center}
+These components ensure that every spanning tree has to contain at least one of the edges $x_1$ or $\overline{x}_1$.\\
+The components for clause satisfiability are defined by the following.
+\begin{center}
+$\forall c_j \in C$: let $S_j$ be the set of vertices\\
+$S_j  = \{v_1(j),v_2(j),v_3(j)\}$
+\end{center}
+Two edges per triangle are needed to make a spanning tree. The edge not chosen is the \emph{true} literal which satisfies $c_j$.\\
+The connecting components are defined by the following. Let $c_j = l_1 \vee l_2 \vee l_3$ where $l_k$ are literals. More specifically $l_k$ is a boolean variable $x_i$ or negated boolean variable $\overline{x}_i$. For every clause $c_j$ the following three vertices are added.
+\begin{center}
+$K_j = \{(v_1(j) \vee l_1), (v_2(j) \vee l_2), (v_3(j) \vee l_3)\}$
+\end{center}
+The vertex set $V$ is therefore:
+$$V = \bigcup_{i=1}^{n}{T_i} \cup \bigcup_{j=1}^{m}{S_j} \cup \bigcup_{j=1}^{m}{K_j}$$
+The transformation $T$ can be performed in time polynomial in $n$ and $m$.
+\\[0.25cm] \textbf{Answer to $X$ is YES then answer to $T(X)$ is YES}\\
+Assume that $a: X \rightarrow \{0,1\}$ is an assignment which satisfies all clauses $c_j$. Consider the graph $G = (V,E,w)$ constructed above. We begin to construct $T \subseteq E$ by selecting $n$ edges as follows:
+\begin{center}
+$x_i \in T \Longleftrightarrow a(x_i) = 1$,\\
+$\overline{x}_i \in T \Longleftrightarrow a(x_i) = 0$.
+\end{center}
+Then all $T_i$ are covered. For every clause $c_j$ at least one connecting vertex is covered by an $l_k$ (by virtue of some literal in $c_j$ is set to 1). Assume that for clause $c_j$ this is $l_1$. We add $a_2(j)$ and $a_3(j)$ to $T$. These two edges cover the other two connecting vertices and the three vertices of the triangle $S_j$. The set $T$ is a spanning tree and has weight $B = n + 2m$.
+\\[0.25cm] \textbf{Answer to $T(X)$ is YES then answer to $X$ is YES}\\
+Lets assume that $T \subseteq E$ is a spanning tree for $G$ with a mirrored spanning tree where both have a weight less than or equal to $B$. In order to cover the vertices at least one of the edges $x_i$ or $\overline{x}_i$ has to be in $T$. In order to cover the vertices of $S_j$, the spanning tree $T$ has to contain at least two of the edges. Therefore $|T| = B = n + 2m$, and we have that $T$ contains exactly one edge from every $T_i$ and exactly two edge from every $S_j$.\\
+We define an assignment: $a(x_i) =$ 1 if $x_i \in T$ and 0 if $\overline{x}_i \in T$\\
+As $T$ contains exactly one of $x_i$ or $\overline{x}_i$ the assignment $a$ is well defined. We still need to show that the assignment satisfies all clauses $c_j$. Let $c_j = l_1 \vee l_2 \vee l_3$ be a clause where $l_k$ are literals. For every component $S_j$ exactly two edges belong to $T$, say $\{v_1(j),v_2(j)\}$ and $\{v_2(j),v_3(j)\}$. They cover also the connecting vertices $(v_1(j) \vee l_1)$ and $(v_2(j) \vee l_2)$. The third connecting vertex $(v_3(j) \vee l_3)$ attached to $S_j$ has to be covered by $l_3$. By the construction of $G$ $l_3$ corresponds to a literal in $c_j$ and by the construction of the assignment $a$, $l_3$ is set to true and clause $c_j$ is then satisfied because only one literal in a clause must be true.
 \subsection*{d) Find an algorithm which solves the optimizing version of the problem}
 
 
