@@ -189,11 +189,32 @@ Here we will describe the lifecycle of the algorithm.
 	
 	\item[Retirement] At last the algorithm solves the problem. Though it has aged quite a bit and with age comes various defects, one of which could be the ability to sort things properly. Therefore it could be an advantage to avoid looking through the powerset of exclusions based on weight in a sorted fashion, but simply pick them in a random order. Even with a life worth of knowledge it is uncertain which way would be the optimal, a sort based search or random picking based search.
 	
-	\item[Termination] One may be lucky enough to end their days when their time is due, others unfortunately terminate prematurely due to various factors, in this case one could be allowed running time. 
+	\item[Termination] One may be lucky enough to end their days when their time is due, others unfortunately terminate prematurely due to various factors, in this case one factor could be the allowed running time. Either way, the algorithm will return the spanning tree currently marked as the best MFMST along with the threshold value.
 \end{description}
 
 
 \section{Prove the worst-case running time of the algorithm}
+We've outlined the aspects of our algorithm. Now on to the running time.\\
+The core part of the algorithm is finding the MST within the current graph excluding the edges specified as the current exclusion.\\
+For every MST exploration the algorithm must:
+\begin{enumerate}
+	\item Create three arrays of size $|V|$. One of the arrays must have specified all it's values, which is a $O(|V|)$ operation.
+	\item Empty the priority queue. For each item removed from the queue a call to the $Visit$ method is made. Each vertex can be added at most once, therefore there will be $|V|$ calls to $Visit$.
+	\item Make one deletion and one insert/change operation on the priority queue per call to $Visit$. The priority queue has $O(log_2 |V|)$ insertion, change and deletion.
+	\item Calculate the weight and mirror weight, both of these action take $O(|E|)$.
+	\item Check the threshold value and maybe update the threshold value or add an exclusion to the never check again set, we claim these actions over the long run executes in constant time $O(1)$.
+\end{enumerate}
+So to sum up, for every MST exploration the running time will be
+$$O(|V| + |V|*(log_2 |V|) + |E|)$$
+\\
+After the initial MST is found, the required edges can be calculated, this takes $O(|E|)$.\\
+\\
+Now on to the powerset of exclusions. For any set of size $n$, the powerset of that set will contain $2^n$ subsets (including the empty set). So in our worst-case the set of exclusions to try would be of size $2^{|E|}$. For every exclusion in the powerset we have to run the MST exploration. The generation of each subset of the powerset is assumed to be done in constant time $O(1)$.\\
+\\
+Putting all this together gives us the following running time:
+$$O(2^{|E|}*(|V| + |V|*(log_2 |V|) + |E|) + |E|) \Rightarrow O(2^{|E|})$$
+
+Our algorithm has a polynomial bound worst-case running time of $O(2^{|E|})$.
 
 \chapter{Implementation}
 \section{Implement the algorithm developed in \ref{sec:alg1}}
