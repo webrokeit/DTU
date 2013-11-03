@@ -14,6 +14,7 @@ using MFMSTProject.Util;
  * 	Morten Eskesen (s133304)
 */
 namespace MFMSTProject.MFMST {
+	// MFMST using a priority queue for picking the edge with lowest weight
     public class MirrorFriendlyMinimumSpanningTree : IEnumerable<Edge> {
         private IndexMinPriorityQueue<int> _priorityQueue = null;
         private readonly EdgeWeightedGraph _graph = null;
@@ -67,8 +68,7 @@ namespace MFMSTProject.MFMST {
 				.ToArray();
 
             foreach (var excludes in PermutateMstEdges(edgeToClone).Where(excludes => excludes.Count > 0)) {
-				//Console.WriteLine("Trying perm: " + string.Join(", ", excludes));
-                Reset();
+				Reset();
                 MakeMst(excludes);
                 if (IsMst) {
 					// Save the weights in local variables as it's calculated using
@@ -124,11 +124,11 @@ namespace MFMSTProject.MFMST {
             var required = new int[_graph.Vertices];
             for(var i = 0; i < _graph.EdgeCount; i++) {
                 var edge = _graph[i];
-                required[edge.Vertex1]++;
-                required[edge.Vertex2]++;
+				required[edge.Vertex1] = required[edge.Vertex1] == 0 ? edge.Id : -1;
+                required[edge.Vertex2] = required[edge.Vertex2] == 0 ? edge.Id : -1;
             }
             for (var i = 0; i < required.Length; i++) {
-                if (required[i] > 1) continue;
+                if (required[i] < 1) continue;
                 set.Add(required[i]);
             }
             return set;
