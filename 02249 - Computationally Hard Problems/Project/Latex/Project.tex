@@ -1,4 +1,4 @@
-\documentclass[12pt]{article}
+\documentclass[12pt]{report}
 \usepackage{graphicx}
 \usepackage{fancyhdr}
 \usepackage{titling}
@@ -6,6 +6,7 @@
 \usepackage{amsmath}
 \usepackage{calc}
 \usepackage{amssymb}
+\usepackage{listings}
 
 \textwidth = 15.5 true cm
 \topmargin=-1.0truecm
@@ -61,6 +62,11 @@ Morten Chabert \textsc{Eskesen}\\
 \end{center}
 \end{titlepage}
 
+\tableofcontents
+
+\chapter{Introduction}
+Let's present the problem in some way?\\
+
 \HRule\\
 \textbf{Problem:} \textsc{[MirrorFriendlyMinimumSpanningTree (MFMST)]}\\
 \textbf{Input:} An undirected, connected weighted graph $G = (V,E,w)$, where $V = \{1,\dots,n\}$, $E = \{e_1,\dots,e_m\}$ and $w : E \rightarrow \mathbb{N}_0$, and a number $B \in \mathbb{N}$.\\
@@ -69,10 +75,11 @@ $$max \left\{\nsum\limits_{e_i \in T} w(e_i), \nsum\limits_{e_i \in T} w(e_{m+1-
 and NO otherwise.\\
 \HRule
 
-\subsection*{a) Description of the problem in colloquial terms}
+\chapter{NP Problems}
+\section{Description of the problem in colloquial terms}
 A minimum spanning tree is a subgraph within an undirected, connected weighted graph that is a tree and connects all the vertices together with a weight less or equal to the weight of every other spanning tree. The main difference between a minimum spanning tree and a mirror friendly minimum spanning tree is the inequality described above. In a mirror friendly minimum spanning tree the inequality must be satisfied. It should be possible to mirror the spanning tree in such a way that the maximum of the spanning tree and the mirrored spanning tree is less than or equal to a fixed value, $B$. This also means that the mirror friendly minimum spanning tree may not be equal to the minimum spanning tree in the graph, i.e. it may have a larger weight than the minimum spanning tree.
 
-\subsubsection*{Solve an example problem}
+\subsection{Solve an example problem}
 \textbf{Input:} $V = \{1,2,3\}$, $E = \{e_1 = \{1,2\},e_2 = \{2,3\},e_3 = \{1,3\}\}$, $w(e_i) = i$ for $i \in \{1,2,3\}$ and $B = 4$.
 \begin{center}
 \begin{tabular}{ l c c c }
@@ -87,42 +94,62 @@ The second pair has a spanning tree with a weight of 4 and a mirrored spanning t
 $$max\{4,4\} \leq B \rightarrow 4 \leq 4$$
 The algorithm would output YES.
 
-\subsection*{b) Show that MFMST is in $NP$}
-\subsubsection*{1. Design a deterministic algorithm $A$ which takes as input a problem instance $X$ and random sequence $R$}
+\subsection{Show that MFMST is in $NP$}
+\subsubsection{1. Design a deterministic algorithm $A$ which takes as input a problem instance $X$ and random sequence $R$}
+
 \textbf{Specify what the random sequence $R$ consists of}\\
-Let the string $R$ consist of bits: $R = r_1,r_2,\dots,r_n$.\\[0.25cm]
+Let the string $R$ consist of bits: $R = r_1,r_2,\dots,r_n$.\\
+
 \textbf{Specify how $A$ interprets $R$ as a guess}\\
-Consider the first $m$ bits. If the $i$-th bit is 1, mark the edge $e_i$.\\[0.25cm]
+Consider the first $m$ bits. If the $i$-th bit is 1, mark the edge $e_i$.\\
+
 \textbf{Specify how $A$ verifies the guess}\\
 If the marked edges create a mirror friendly minimum spanning tree with a weight less than or equal to $B$, answer YES, otherwise NO.
-\subsubsection*{2. Show that the two conditions are met}
+
+\subsubsection{2. Show that the two conditions are met}
 \textbf{If the answer to $X$ is YES, then there is a string $R^*$ with positive probability such that $A(X, R^*) = YES$}
 \begin{itemize}
-\item[] Asssume that the answer is YES
-\item[] Then there is a subset of the edges that creates a mirror friendly minimum spanning tree with a weight less than or equal to $B$.
-\item[] Let $S \subseteq \{1,\dots,m\}$ be the set that describe the edges' index
-\item[] Construct the bit string $R^* = r_1,r_2,\dots,r_m$ where $r_i = 1$ if and if only if $i \in S$
-\item[] When $A$ receives $R^*$, it will select the edges in $S$, check that the weight of the edges are less than or equal to $B$ and answer YES.
-\item[] Altogether there is a string of length at most $p(n)$ that will give YES. The probability of randomly creating it is positive.
+	\item[] Asssume that the answer is YES
+	
+	\item[] Then there is a subset of the edges that creates a mirror friendly minimum spanning tree with a weight less than or equal to $B$.
+	
+	\item[] Let $S \subseteq \{1,\dots,m\}$ be the set that describe the edges' index
+	
+	\item[] Construct the bit string $R^* = r_1,r_2,\dots,r_m$ where $r_i = 1$ if and if only if $i \in S$
+	
+	\item[] When $A$ receives $R^*$, it will select the edges in $S$, check that the weight of the edges are less than or equal to $B$ and answer YES.
+	
+	\item[] Altogether there is a string of length at most $p(n)$ that will give YES. The probability of randomly creating it is positive.
 \end{itemize}
+
 \textbf{If the answer to $X$ is NO, then $A(X, R) = NO$ for all $R$}
 \begin{itemize}
-\item[] Assume that the answer is NO
-\item[] Then no set of the edges create a mirror friendly minimum spanning tree with a weight less than or equal to $B$.
-\item[] If $R$ does not contain enough bits, the algorithm will correctly answer NO.
-\item[] Otherwise the algorithm will mark some edges and compute their weight. This will be compared to $B$. But as no set of edges has a weight less than or equal to $B$, the answer is NO.
+	\item[] Assume that the answer is NO
+	
+	\item[] Then no set of the edges create a mirror friendly minimum spanning tree with a weight less than or equal to $B$.
+	
+	\item[] If $R$ does not contain enough bits, the algorithm will correctly answer NO.
+	
+	\item[] Otherwise the algorithm will mark some edges and compute their weight. This will be compared to $B$. But as no set of edges has a weight less than or equal to $B$, the answer is NO.
 \end{itemize}
-\subsubsection*{3. Show that $A$ is $p$-bounded for some polynomial $p$}
+
+\subsubsection{3. Show that $A$ is $p$-bounded for some polynomial $p$}
 \begin{itemize}
-\item[] There are $m$ edges.
-\item[] It is checked that the string $R$ consists of at least $m$ bits. Time: $O(m)$.
-\item[] Every edge is marked or not marked. Time: $O(m)$.
-\item[] The weights of the marked edges are added. Time: $O(m)$.
-\item[] The computed total weight is compared to $B$ and the answer is returned. Time: $O(1)$.
+	\item[] There are $m$ edges.
+	
+	\item[] It is checked that the string $R$ consists of at least $m$ bits. Time: $O(m)$.
+	
+	\item[] Every edge is marked or not marked. Time: $O(m)$.
+	
+	\item[] The weights of the marked edges are added. Time: $O(m)$.
+	
+	\item[] The computed total weight is compared to $B$ and the answer is returned. Time: $O(1)$.
 \end{itemize}
+
 Altogether the time is: $O(m)$.
-\subsection*{c) Show that MFMST is $NP$-complete}
-\subsubsection*{Suitable problem $P_c$ known to be $NP$-complete}
+
+\section{Show that MFMST is $NP$-complete}
+\subsection{Suitable problem $P_c$ known to be $NP$-complete}
 
 Prove $P_c \leq_p$ \textsc{MirrorFriendlyMinimumSpanningTree}.
 
@@ -134,7 +161,9 @@ Prove $P_c \leq_p$ \textsc{MirrorFriendlyMinimumSpanningTree}.
 
 \textbf{Time Analysis}
 
-\subsection*{d) Find an algorithm which solves the optimizing version of the problem}
+\chapter{Algorithm}
+\section{Find an algorithm which solves the optimizing version of the problem}
+\label{sec:alg1}
 There are several algorithms for solving the \textsc{Minimum Spanning Tree} problem.  Kruskals, Prims and Chazelles to name a few. We've chosen to use Prims method that uses an \emph{Indexed Minimum Priority Queue}, to keep track of which edge to check next. The algorithm also makes sure not to visit edges twice.\\
 The problem we have to solve isn't solved solely by using Prims algorithm. Prims algorithm only finds the actual MST, however we need to find a mirror friendly MST, therefore we had to make modifications to the algorithm.\\
 \\
@@ -145,8 +174,8 @@ Most noticable changes to the algorithm:
 	\item[] \textbf{Mark edges as required} before trying to find the MST.
 \end{enumerate}
 
-\subsubsection*{Life of the algorithm}
-We will describe the lifecycle of the algorithm.
+\subsection{Life of the algorithm}
+Here we will describe the lifecycle of the algorithm.
 \begin{description}
 	\item[Birth] The algorithm is initialized with $G$ the undirected, connected weighted graph. All required fields are set to be of the minimum required size, which is equal to the amount of vertices in $G$ $(|V|)$.
 	
@@ -164,10 +193,58 @@ We will describe the lifecycle of the algorithm.
 \end{description}
 
 
-\subsection*{e) Prove the worst-case running time of the algorithm}
+\section{Prove the worst-case running time of the algorithm}
 
+\chapter{Implementation}
+\section{Implement the algorithm developed in \ref{sec:alg1}}
+We have chosen to make our implementation in C\#. We've included our .NET Solution in the zip.
+\subsection{Running the program}
+The program can be run in two ways.
+\begin{enumerate}
+	\item MFMSTProject.exe [max\_execution\_time] $<$ input.file
+	\item MFMSTProject.exe input.file [max\_executation\_time]
+\end{enumerate}
 
-\subsection*{f) Implement the algorithm developed in d)}
+For both, the [max\_execution\_time] is an optional parameter stating how many milliseconds the program may use in trying to find the MFMST. If none is set, the default is 20000 milliseconds as per requirement for the contest. If no input.file is specified it will look for a file with the following relative path: $TestFiles/test03.uwg$.
+
+\subsection{Example run}
+\begin{lstlisting}[basicstyle=\footnotesize]
+	MFMSTProject.exe < TestFiles/test03.uwg
+	
+	Time taken: 187 ms
+	Solution:
+	Edge 1: {1, 2}; weight: 50, mirrored weight: 51
+	Edge 2: {2, 3}; weight: 88, mirrored weight: 13
+	Edge 3: {3, 4}; weight: 66, mirrored weight: 10
+	Edge 5: {5, 6}; weight: 77, mirrored weight: 14
+	Edge 6: {6, 7}; weight: 3, mirrored weight: 52
+	Edge 7: {7, 8}; weight: 7, mirrored weight: 61
+	Edge 8: {8, 9}; weight: 18, mirrored weight: 38
+	Edge 9: {9, 10}; weight: 84, mirrored weight: 69
+	Edge 10: {10, 11}; weight: 45, mirrored weight: 61
+	Edge 13: {13, 14}; weight: 53, mirrored weight: 75
+	Edge 14: {14, 15}; weight: 5, mirrored weight: 4
+	Edge 15: {15, 16}; weight: 17, mirrored weight: 20
+	Edge 16: {16, 17}; weight: 73, mirrored weight: 57
+	Edge 17: {17, 18}; weight: 17, mirrored weight: 33
+	Edge 18: {18, 19}; weight: 57, mirrored weight: 7
+	Edge 19: {19, 20}; weight: 7, mirrored weight: 49
+	Edge 20: {20, 21}; weight: 49, mirrored weight: 7
+	Edge 21: {21, 22}; weight: 7, mirrored weight: 57
+	Edge 22: {22, 23}; weight: 33, mirrored weight: 17
+	Edge 24: {24, 25}; weight: 20, mirrored weight: 17
+	Edge 25: {25, 26}; weight: 4, mirrored weight: 5
+	Edge 29: {29, 30}; weight: 61, mirrored weight: 45
+	Edge 31: {2, 10}; weight: 38, mirrored weight: 18
+	Edge 32: {4, 12}; weight: 61, mirrored weight: 7
+	Edge 33: {5, 13}; weight: 52, mirrored weight: 3
+	Edge 34: {18, 25}; weight: 14, mirrored weight: 77
+	Edge 36: {20, 27}; weight: 10, mirrored weight: 66
+	Edge 37: {21, 28}; weight: 13, mirrored weight: 88
+	Edge 38: {22, 29}; weight: 51, mirrored weight: 50
+	
+	Solution value: 1080 / 1071
+\end{lstlisting}
 
 
 \end{document}
