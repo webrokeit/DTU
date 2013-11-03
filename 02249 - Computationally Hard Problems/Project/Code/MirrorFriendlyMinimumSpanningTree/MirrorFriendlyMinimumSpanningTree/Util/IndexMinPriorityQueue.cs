@@ -1,5 +1,11 @@
 ﻿using System;
 
+/*
+ * C# version of Indexed Minimum Priority Queue, found in Sedgewick & Wayne, Algorithms (4th ED, 2011)
+ * Written by:
+ * 	Andreas Kjeldsen (s092638),
+ * 	Morten Eskesen (s133304)
+ */
 namespace MFMSTProject.Util {
     public class IndexMinPriorityQueue<T> where T : IComparable<T> {
         private readonly int[] _priorityQueue;

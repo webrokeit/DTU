@@ -1,5 +1,11 @@
 ﻿using System;
 
+/*
+ * C# version of Edge, found in Sedgewick & Wayne, Algorithms (4th ED, 2011)
+ * Written by:
+ * 	Andreas Kjeldsen (s092638),
+ * 	Morten Eskesen (s133304)
+*/
 namespace MFMSTProject.MFMST {
     public class Edge : IComparable<Edge> {
         public int Id { get; private set; }

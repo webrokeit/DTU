@@ -9,48 +9,40 @@ using System.Collections.Generic;
 
 namespace MFMSTProject {
     class Program {
-        static void Main(string[] args) {
+        static void Main(string[] args) {;
             EdgeWeightedGraph G = null;
-            if (Console.IsInputRedirected && Console.In.Peek() > 0) {
-                G = EdgeWeightedGraph.FromStream(Console.In, true);
+			var t = new Stopwatch ();
+			t.Start ();
+			if (Console.IsInputRedirected && Console.In.Peek () > 0) {
+				G = EdgeWeightedGraph.FromStream(Console.In, true);
             } else {
-                using (var fs = new FileStream("TestFiles/test03.uwg", FileMode.Open, FileAccess.Read, FileShare.Read)) {
-                    using (var sr = new StreamReader(fs)) {
-                        G = EdgeWeightedGraph.FromStream(sr, false);
-                    }
-                }
+				var fileName = args.Length > 0 ? args [0] : "TestFiles/test03.uwg";
+				var fi = new FileInfo (fileName);
+				if (fi.Exists) {
+					using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.Read)) {
+						using (var sr = new StreamReader(fs)) {
+							G = EdgeWeightedGraph.FromStream (sr, false);
+						}
+					}
+				} else {
+					Console.WriteLine ("Usage: MFMSTProject.exe <UWG_filename>");
+					Console.WriteLine ("Tried to open file, but it did not exists: " + fi.FullName);
+					return;
+				}
             }
 
             var mst = new MirrorFriendlyMinimumSpanningTree(G);
-			var timings = new List<long> ();
+			mst.Run ();
+			t.Stop ();
 
-			for (var i = 0; i < 1000; i++) {
-				var t = new Stopwatch ();
-				t.Start ();
-				mst.Run ();
-				t.Stop ();
-				timings.Add (t.ElapsedMilliseconds);
-				Console.WriteLine ("Done with #" + (i + 1));
-			}
-
-			Console.WriteLine ("Worst running time: " + timings.Max ());
-			Console.WriteLine ("Mean running time: " + (timings.Sum () / timings.Count));
-			Console.WriteLine ("Best running time: " + timings.Min ());
-
-            //Console.WriteLine("Done, time taken: " + t.ElapsedMilliseconds + " ms");
+            Console.WriteLine("Time taken: " + t.ElapsedMilliseconds + " ms");
             Console.WriteLine("Solution:");
 			foreach (var edge in mst.OrderBy(edge => edge.Id)) {
 				Console.WriteLine(edge + ", mirrored weight: " + mst.MirrorEdge(edge).Weight);
 			}
 
-
             Console.WriteLine("");
             Console.WriteLine("Solution value: " + mst.Weight + " / " + mst.MirrorWeight);
-            if (!Console.IsInputRedirected) {
-                Console.WriteLine("");
-                Console.WriteLine("Program done, press any key to exit..");
-                Console.ReadKey(true);
-            }
         }
     }
 }

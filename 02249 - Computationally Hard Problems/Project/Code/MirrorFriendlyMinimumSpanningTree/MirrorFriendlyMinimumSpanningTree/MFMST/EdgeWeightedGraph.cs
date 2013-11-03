@@ -4,6 +4,12 @@ using System.Collections.Generic;
 using System.IO;
 using MFMSTProject.Util;
 
+/*
+ * C# version of EWG, found in Sedgewick & Wayne, Algorithms (4th ED, 2011)
+ * Written by:
+ * 	Andreas Kjeldsen (s092638),
+ * 	Morten Eskesen (s133304)
+*/
 namespace MFMSTProject.MFMST {
     public class EdgeWeightedGraph : IEnumerable<Edge> {
         public int Vertices { get; private set; }

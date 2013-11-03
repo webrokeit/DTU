@@ -5,7 +5,6 @@ using System.Diagnostics;
 using System.Linq;
 using MFMSTProject.Util;
 
-// Highly customized version of the MST algorithm by Sedgewick & Wayne (Algorithms, 4th ED, 2011)
 /*
  * Highly customized version Prims eager MST algorithm, found in Sedgewick & Wayne, Algorithms (4th ED, 2011)
  * Customized to find Mirror Friendly Minimum Spanning Trees
@@ -20,7 +19,6 @@ namespace MFMSTProject.MFMST {
         private readonly EdgeWeightedGraph _graph = null;
         private List<HashSet<int>> _breakers = null;
         private readonly int[] _baseDistTo = null;
-		private Random rand = null;
 
         public Edge[] EdgeTo { get; private set; }
         public int[] DistTo { get; private set; }
@@ -41,7 +39,6 @@ namespace MFMSTProject.MFMST {
         }
 
         public MirrorFriendlyMinimumSpanningTree(EdgeWeightedGraph graph) {
-			rand = new Random ();
             _graph = graph;
             _baseDistTo = new int[_graph.Vertices];
             for (var i = 0; i < _baseDistTo.Length; i++) _baseDistTo[i] = int.MaxValue;
@@ -55,7 +52,6 @@ namespace MFMSTProject.MFMST {
         }
 
         public void Run() {
-			Reset ();
             MakeMst(new HashSet<int>());
             var threshold = Math.Max(Weight, MirrorWeight);
 
@@ -172,29 +168,16 @@ namespace MFMSTProject.MFMST {
             if (index >= edges.Length) {
                 yield return set;
             } else {
-				if (true || rand.Next (0, 2) == 1) {
-					foreach (var perm in PermutateMstEdges(edges, index + 1, set).Where(perm => perm.Count > 0)) {
-						yield return perm;
-					}
-					set.Add (edges [index].Id);
-					if (!_breakers.Any (breakset => breakset.IsSubsetOf (set))) {
-						foreach (var perm in PermutateMstEdges(edges, index + 1, set).Where(perm => perm.Count > 0)) {
-							yield return perm;
-						}
-					}
-					set.Remove (edges [index].Id);
-				} else {
-					set.Add (edges [index].Id);
-					if (!_breakers.Any (breakset => breakset.IsSubsetOf (set))) {
-						foreach (var perm in PermutateMstEdges(edges, index + 1, set).Where(perm => perm.Count > 0)) {
-							yield return perm;
-						}
-					}
-					set.Remove (edges [index].Id);
+				foreach (var perm in PermutateMstEdges(edges, index + 1, set).Where(perm => perm.Count > 0)) {
+					yield return perm;
+				}
+				set.Add (edges [index].Id);
+				if (!_breakers.Any (breakset => breakset.IsSubsetOf (set))) {
 					foreach (var perm in PermutateMstEdges(edges, index + 1, set).Where(perm => perm.Count > 0)) {
 						yield return perm;
 					}
 				}
+				set.Remove (edges [index].Id);
             }
         }
     }

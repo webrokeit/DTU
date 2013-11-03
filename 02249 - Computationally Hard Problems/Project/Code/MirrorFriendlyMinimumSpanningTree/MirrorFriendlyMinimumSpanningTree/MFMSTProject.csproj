@@ -46,9 +46,6 @@
     <Compile Include="MFMST\Edge.cs" />
     <Compile Include="MFMST\EdgeWeightedGraph.cs" />
     <Compile Include="MFMST\MirrorFriendlyMinimumSpanningTree.cs" />
-    <Compile Include="MST\Edge.cs" />
-    <Compile Include="MST\EdgeWeightedGraph.cs" />
-    <Compile Include="MST\MinimumSpanningTree.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Util\IndexMinPriorityQueue.cs" />
