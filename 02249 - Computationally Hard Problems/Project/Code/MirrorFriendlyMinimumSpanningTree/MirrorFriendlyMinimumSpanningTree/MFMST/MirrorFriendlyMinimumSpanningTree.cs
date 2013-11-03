@@ -5,13 +5,22 @@ using System.Diagnostics;
 using System.Linq;
 using MFMSTProject.Util;
 
+// Highly customized version of the MST algorithm by Sedgewick & Wayne (Algorithms, 4th ED, 2011)
+/*
+ * Highly customized version Prims eager MST algorithm, found in Sedgewick & Wayne, Algorithms (4th ED, 2011)
+ * Customized to find Mirror Friendly Minimum Spanning Trees
+ * Customized to find the MFMST with the lowest weight (regular and mirrored)
+ * Written by:
+ * 	Andreas Kjeldsen (s092638),
+ * 	Morten Eskesen (s133304)
+*/
 namespace MFMSTProject.MFMST {
     public class MirrorFriendlyMinimumSpanningTree : IEnumerable<Edge> {
         private IndexMinPriorityQueue<int> _priorityQueue = null;
         private readonly EdgeWeightedGraph _graph = null;
-        private int _threshold = 0;
         private List<HashSet<int>> _breakers = null;
         private readonly int[] _baseDistTo = null;
+		private Random rand = null;
 
         public Edge[] EdgeTo { get; private set; }
         public int[] DistTo { get; private set; }
@@ -32,6 +41,7 @@ namespace MFMSTProject.MFMST {
         }
 
         public MirrorFriendlyMinimumSpanningTree(EdgeWeightedGraph graph) {
+			rand = new Random ();
             _graph = graph;
             _baseDistTo = new int[_graph.Vertices];
             for (var i = 0; i < _baseDistTo.Length; i++) _baseDistTo[i] = int.MaxValue;
@@ -45,24 +55,44 @@ namespace MFMSTProject.MFMST {
         }
 
         public void Run() {
+			Reset ();
             MakeMst(new HashSet<int>());
-            _threshold = Math.Max(Weight, MirrorWeight);
+            var threshold = Math.Max(Weight, MirrorWeight);
 
             _breakers = new List<HashSet<int>>(); 
             var reqEdges = GetRequiredEdgeIds();
             var edgeToRes = CloneEdgeTo();
-            var edgeToClone = edgeToRes.Where(edge => edge != null && !reqEdges.Contains(edge.Id)).OrderBy(edge => edge.Weight).ToArray();
+			var edgeToClone = edgeToRes.Where(edge => edge != null && !reqEdges.Contains(edge.Id))
+				// Order by weight in increasing order
+				.OrderBy(edge => edge.Weight)
+				// Use randomization, for the test files provided this does not make sense
+				// to use it as the algorithm only gets slower
+				// .OrderBy(x => Guid.NewGuid())
+				.ToArray();
 
             foreach (var excludes in PermutateMstEdges(edgeToClone).Where(excludes => excludes.Count > 0)) {
-                //Console.WriteLine("Trying perm: " + string.Join(", ", excludes));
+				//Console.WriteLine("Trying perm: " + string.Join(", ", excludes));
                 Reset();
                 MakeMst(excludes);
                 if (IsMst) {
-                    if (Math.Max(Weight, MirrorWeight) < _threshold) {
-                        _threshold = Math.Max(Weight, MirrorWeight);
-                        edgeToRes = CloneEdgeTo();
-                    } 
+					// Save the weights in local variables as it's calculated using
+					// enumeration which can be time consuming.
+					var weight = Weight;
+					var mirrorWeight = MirrorWeight;
+					if (Math.Max (weight, mirrorWeight) < threshold) {
+						// Update our threshold value.
+						threshold = Math.Max(weight, mirrorWeight);
+						edgeToRes = CloneEdgeTo ();
+					} else if(Math.Min(weight, mirrorWeight) >= threshold){
+						// If the current set of excludes causes the lowest weight
+						// to be larger than our current threshold then we obviously
+						// made a wrong choice excluding the edges and would like not
+						// to make the same mistakes again.
+						_breakers.Add(new HashSet<int>(excludes));
+					} 
                 } else {
+					// The current set of excludes makes it impossible for the graph
+					// to contain a MST, do not make the same mistake again.
                     _breakers.Add(new HashSet<int>(excludes));
                 }
             }
@@ -91,6 +121,8 @@ namespace MFMSTProject.MFMST {
             }
         }
 
+		// Required edges are edges that are the only link between a vertex
+		// and the rest of the graph (single path to the vertex).
         private ISet<int> GetRequiredEdgeIds() {
             var set = new HashSet<int>();
             var required = new int[_graph.Vertices];
@@ -102,7 +134,6 @@ namespace MFMSTProject.MFMST {
             for (var i = 0; i < required.Length; i++) {
                 if (required[i] > 1) continue;
                 set.Add(required[i]);
-                //Console.WriteLine("Edge was required: " + EdgeTo[i]);
             }
             return set;
         }
@@ -141,34 +172,30 @@ namespace MFMSTProject.MFMST {
             if (index >= edges.Length) {
                 yield return set;
             } else {
-                foreach (var perm in PermutateMstEdges(edges, index + 1, set).Where(perm => perm.Count > 0)) {
-                    yield return perm;
-                }
-                set.Add(edges[index].Id);
-                if (!_breakers.Any(breakset => breakset.IsSubsetOf(set))) {
-                    foreach (var perm in PermutateMstEdges(edges, index + 1, set).Where(perm => perm.Count > 0)) {
-                        yield return perm;
-                    }
-                }
-                set.Remove(edges[index].Id);
+				if (true || rand.Next (0, 2) == 1) {
+					foreach (var perm in PermutateMstEdges(edges, index + 1, set).Where(perm => perm.Count > 0)) {
+						yield return perm;
+					}
+					set.Add (edges [index].Id);
+					if (!_breakers.Any (breakset => breakset.IsSubsetOf (set))) {
+						foreach (var perm in PermutateMstEdges(edges, index + 1, set).Where(perm => perm.Count > 0)) {
+							yield return perm;
+						}
+					}
+					set.Remove (edges [index].Id);
+				} else {
+					set.Add (edges [index].Id);
+					if (!_breakers.Any (breakset => breakset.IsSubsetOf (set))) {
+						foreach (var perm in PermutateMstEdges(edges, index + 1, set).Where(perm => perm.Count > 0)) {
+							yield return perm;
+						}
+					}
+					set.Remove (edges [index].Id);
+					foreach (var perm in PermutateMstEdges(edges, index + 1, set).Where(perm => perm.Count > 0)) {
+						yield return perm;
+					}
+				}
             }
-        }
-
-        public void PrintSolution() {
-            foreach (var edge in this.OrderBy(edge => edge.Id)) {
-                Console.WriteLine(edge + ", mirrored weight: " + MirrorEdge(edge).Weight);
-            }
-        }
-
-        private static MirrorFriendlyMinimumSpanningTree _yesNoMfmst = null;
-        public static bool MirrorFriendlyMinimumSpanningTreeWithWeight(EdgeWeightedGraph graph, int weight) {
-            if (_yesNoMfmst == null || _yesNoMfmst._graph != graph) {
-                _yesNoMfmst = new MirrorFriendlyMinimumSpanningTree(graph);
-            } else {
-                _yesNoMfmst.Reset();
-            }
-            _yesNoMfmst.Run();
-            return _yesNoMfmst.Weight == weight;
         }
     }
 }

@@ -3,6 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using MFMSTProject.Util;
 
+/*
+ * C# version of Prims eager MST algorithm, found in Sedgewick & Wayne, Algorithms (4th ED, 2011)
+ * Written by:
+ * 	Andreas Kjeldsen (s092638),
+ * 	Morten Eskesen (s133304)
+*/
 namespace MFMSTProject.MST {
     public class MinimumSpanningTree : IEnumerable<Edge> {
         private IndexMinPriorityQueue<int> _priorityQueue = null;
@@ -71,17 +77,6 @@ namespace MFMSTProject.MST {
 
         IEnumerator IEnumerable.GetEnumerator() {
             return GetEnumerator();
-        }
-
-        private static MinimumSpanningTree _yesNoMST = null;
-        public static bool MinimumSpanningTreeWithWeight(EdgeWeightedGraph graph, int weight) {
-            if (_yesNoMST == null || _yesNoMST._graph != graph) {
-                _yesNoMST = new MinimumSpanningTree(graph);
-            } else {
-                _yesNoMST.Reset();
-            }
-            _yesNoMST.Run();
-            return _yesNoMST.Weight == weight;
         }
     }
 }

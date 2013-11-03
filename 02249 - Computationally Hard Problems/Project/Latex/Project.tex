@@ -1,5 +1,7 @@
 \documentclass[12pt]{article}
 \usepackage{graphicx}
+\usepackage{fancyhdr}
+\usepackage{titling}
 \usepackage[latin1]{inputenc}
 \usepackage{amsmath}
 \usepackage{calc}
@@ -11,9 +13,14 @@
 \oddsidemargin=0pt
 \parindent=0pt
 \frenchspacing
-\pagestyle{empty}
+\pagestyle{fancy}
+
+\fancyhead[L]{\slshape\footnotesize November 4, 2013\\\textsc{02249 Computationally Hard Problems}}
+\fancyhead[R]{\slshape\footnotesize \textsc{Andreas Kjeldsen (s092638)}\\\textsc{Morten Eskesen (s133304)}}
+\fancyfoot[C]{\thepage}
 
 \newcommand{\HRule}{\rule{\linewidth}{0.075mm}}
+\newcommand{\HRuleFat}{\rule{\linewidth}{0.5mm}}
 
 \newlength{\depthofsumsign}
 \setlength{\depthofsumsign}{\depthof{$\sum$}}
@@ -21,25 +28,38 @@
 
 \begin{document}
 
-\parbox[t]{8cm}{\textsf{Course 02249 Computationally Hard Problems\\
-Fall 2013, DTU Compute }}
-\hfill
-\parbox[t]{1cm}{\mbox{}\\
-\raisebox{0.0cm}[1cm][1cm]{\includegraphics[origin=lb]{dtu_logo.pdf}}}
-
-{\Large  Solution to assignment \textsc{Project}\\[4mm]
-Students' names: Andreas Hallberg Kjeldsen and Morten Chabert Eskesen\\[4mm]
-Study nr. s092638 and s133304\\[4mm]
-Date. 04\textbf{.}11\textbf{.}2013 }
-
-
-\vspace{7cm}
-
+\begin{titlepage}
 \begin{center}
-\includegraphics[scale=1.0]{Evurd.pdf}
-\end{center}
 
-\newpage
+\includegraphics[scale=2.0]{dtu_logo.pdf}\\[1cm]
+
+\textsc{\LARGE Technical University of Denmark}\\[1.25cm]
+
+\textsc{\Large 02249 Computationally Hard problems}\\[0.5cm]
+
+
+% Title
+\HRuleFat \\[0.4cm]
+{\huge \bfseries Project: Mirror Friendly Minimum Spanning Tree}\\[0.1cm]
+\HRuleFat \\[1.5cm]
+
+% Author and supervisor
+\large
+\emph{Authors:}
+\\[10pt]
+Andreas Hallberg \textsc{Kjeldsen}\\
+\emph{s092638@student.dtu.dk}
+\\[10pt]
+Morten Chabert \textsc{Eskesen}\\
+\emph{s133304@student.dtu.dk}
+
+\vfill
+
+% Bottom of the page
+{\large November 4, 2013}
+
+\end{center}
+\end{titlepage}
 
 \HRule\\
 \textbf{Problem:} \textsc{[MirrorFriendlyMinimumSpanningTree (MFMST)]}\\
