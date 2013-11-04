@@ -8,13 +8,14 @@
 \usepackage{amssymb}
 \usepackage{listings}
 \usepackage[usenames]{xcolor}
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linktoc=all,
+    linkcolor=black
+}
 
-\textwidth = 15.5 true cm
-\topmargin=-1.0truecm
-\evensidemargin=0pt
-\oddsidemargin=0pt
 \parindent=0pt
-\frenchspacing
 \pagestyle{fancy}
 
 \fancyhead[L]{\slshape\footnotesize November 4, 2013\\\textsc{02249 Computationally Hard Problems}}
@@ -33,17 +34,17 @@
 \begin{titlepage}
 \begin{center}
 
-\includegraphics[scale=2.0]{dtu_logo.pdf}\\[1cm]
+\includegraphics[scale=2.0]{dtu_logo.pdf}\\[0.70cm]
 
-\textsc{\LARGE Technical University of Denmark}\\[1.25cm]
+\textsc{\LARGE Technical University of Denmark}\\[.85cm]
 
-\textsc{\Large 02249 Computationally Hard problems}\\[0.5cm]
+\textsc{\Large 02249 Computationally Hard problems}\\[0.35cm]
 
 
 % Title
 \HRuleFat \\[0.4cm]
 {\huge \bfseries Project: Mirror Friendly Minimum Spanning Tree}\\[0.1cm]
-\HRuleFat \\[1.5cm]
+\HRuleFat \\[0.4cm]
 
 % Author and supervisor
 \large
@@ -54,8 +55,11 @@ Andreas Hallberg \textsc{Kjeldsen}\\
 \\[10pt]
 Morten Chabert \textsc{Eskesen}\\
 \emph{s133304@student.dtu.dk}
+\\[10pt]
 
 \vfill
+
+\includegraphics[scale=1]{Evurd.pdf}
 
 % Bottom of the page
 {\large November 4, 2013}
@@ -68,7 +72,6 @@ Morten Chabert \textsc{Eskesen}\\
 \chapter{Introduction}
 \label{chapt:intro}
 This report will focus on a problem called \textsc{MirrorFriendlyMinimumSpanningTree} or $MFMST$ for short. We will present the problem in colloquial terms, show that the problem is in NP and that it is NP-complete. We have also present an algorithm for solving the optimization version of the problem, while providing a description of the algorithm and proving it's worst-case running time.\\
-
 \HRule\\
 \textbf{Problem:} \textsc{[MirrorFriendlyMinimumSpanningTree (MFMST)]}\\
 \textbf{Input:} An undirected, connected weighted graph $G = (V,E,w)$, where $V = \{1,\dots,n\}$, $E = \{e_1,\dots,e_m\}$ and $w : E \rightarrow \mathbb{N}_0$, and a number $B \in \mathbb{N}$.\\
@@ -275,7 +278,7 @@ The program can be run in two ways.
 \end{enumerate}
 
 For both, the [max\_execution\_time] is an optional parameter stating how many milliseconds the program may use in trying to find the MFMST. If none is set, the default is 20000 milliseconds as per requirement for the contest. If no input.file is specified it will look for a file with the following relative path: $TestFiles/test03.uwg$.
-
+\newpage
 \subsection{Example run}
 \begin{lstlisting}[basicstyle=\footnotesize]
 	MFMSTProject.exe < TestFiles/test03.uwg
