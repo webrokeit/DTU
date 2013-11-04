@@ -1,5 +1,11 @@
 package mfmst;
 
+/*
+ * Edge, found in Sedgewick & Wayne, Algorithms (4th ED, 2011)
+ * Written by:
+ * 	Andreas Kjeldsen (s092638),
+ * 	Morten Eskesen (s133304)
+*/
 public class Edge implements Comparable<Edge> {
 	private int _id = 0;
 	private int _vertex1 = 0;
@@ -36,15 +42,16 @@ public class Edge implements Comparable<Edge> {
     	return _weight;
     }
     
-    public int OtherVertex(int vertex) {
+    public int getOtherVertex(int vertex) {
         return vertex == _vertex1 ? _vertex2 : vertex == _vertex2 ? _vertex1 : -1;
     }
 
     public int compareTo(Edge other) {
         return _weight < other._weight ? -1 : _weight > other._weight ? 1 : 0;
     }
-
+    
+    @Override
     public String toString() {
-        return String.format("Edge {0:d}: {4}{1:d}, {2:d}{5}; weight: {3:d}", _id, _vertex1+1, _vertex2+1, _weight, "{", "}");
+        return String.format("Edge %d: {%d, %d}; weight: %d", _id, _vertex1+1, _vertex2+1, _weight);
     }
 }

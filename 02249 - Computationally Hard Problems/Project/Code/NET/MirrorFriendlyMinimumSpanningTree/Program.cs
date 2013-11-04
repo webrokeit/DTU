@@ -5,13 +5,12 @@ using System.Linq;
 using MFMSTProject.MFMST;
 using MFMSTProject.Util;
 
-//using MirrorFriendlyMinimumSpanningTree.MST;
 using System.Collections.Generic;
 
 namespace MFMSTProject {
     class Program {
         static void Main(string[] args) {
-			// Default timeout of 20 seconds (based
+			// Default timeout of 20 seconds (based on the contest description)
 			var maxExecutionTime = 20000;
 
             EdgeWeightedGraph G = null;
@@ -43,13 +42,17 @@ namespace MFMSTProject {
 			t.Stop ();
 
             Console.WriteLine("Time taken: " + t.ElapsedMilliseconds + " ms" + (mst.TerminatedPrematurely ? " [TIME BOUND TERMINATION]" : ""));
-            Console.WriteLine("Solution:");
-			foreach (var edge in mst.OrderBy(edge => edge.Id)) {
-				Console.WriteLine(edge + ", mirrored weight: " + mst.MirrorEdge(edge).Weight);
-			}
+			Console.WriteLine("Solution:");
+			if (mst.IsMst) {
+				foreach (var edge in mst.OrderBy(edge => edge.Id)) {
+					Console.WriteLine (edge + ", mirrored weight: " + mst.MirrorEdge (edge).Weight);
+				}
 
-            Console.WriteLine("");
-            Console.WriteLine("Solution value: " + mst.Weight + " / " + mst.MirrorWeight);
+				Console.WriteLine ("");
+				Console.WriteLine ("Solution value: " + mst.Weight + " / " + mst.MirrorWeight);
+			} else {
+				Console.WriteLine ("No MFMST found!");
+			}
         }
     }
 }

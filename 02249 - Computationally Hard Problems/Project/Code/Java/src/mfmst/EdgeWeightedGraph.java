@@ -3,10 +3,15 @@ package mfmst;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Scanner;
-
 import util.StringFunc;
 
-public class EdgeWeightedGraph /*: IEnumerable<Edge>*/ {
+/*
+ * Inspired by the EWG found in Sedgewick & Wayne, Algorithms (4th ED, 2011)
+ * Written by:
+ * 	Andreas Kjeldsen (s092638),
+ * 	Morten Eskesen (s133304)
+*/
+public class EdgeWeightedGraph {
 	private int _vertices;
 	private LinkedList<Edge>[] _edges;
 	private ArrayList<Edge> _allEdges = new ArrayList<Edge>();
@@ -45,9 +50,9 @@ public class EdgeWeightedGraph /*: IEnumerable<Edge>*/ {
         int vertices = stream.nextInt();
         int edges = stream.nextInt();
         EdgeWeightedGraph graph = new EdgeWeightedGraph(vertices);
-        String line = "";
+        String line = stream.hasNextLine() ? stream.nextLine() : null;
 
-        while ((line = stream.nextLine()) != null) {
+        while (stream.hasNextLine() && (line = stream.nextLine()) != null) {
             String[] parts = line.split(" ");
             if (parts.length < 3) {
                 throw new IllegalArgumentException("Each line for the edges must contain three numbers: int int int");

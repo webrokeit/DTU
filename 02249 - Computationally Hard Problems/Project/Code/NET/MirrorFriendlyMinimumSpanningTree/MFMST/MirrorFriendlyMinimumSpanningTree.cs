@@ -20,7 +20,7 @@ namespace MFMSTProject.MFMST {
     public class MirrorFriendlyMinimumSpanningTree : IEnumerable<Edge> {
         private IndexMinPriorityQueue<int> _priorityQueue = null;
         private readonly EdgeWeightedGraph _graph = null;
-        private List<HashSet<int>> _breakers = null;
+        private LinkedList<HashSet<int>> _breakers = null;
         private readonly int[] _baseDistTo = null;
 
 		public bool TerminatedPrematurely { get; private set; }
@@ -72,7 +72,7 @@ namespace MFMSTProject.MFMST {
             MakeMst(new HashSet<int>());
             var threshold = Math.Max(Weight, MirrorWeight);
 
-            _breakers = new List<HashSet<int>>(); 
+            _breakers = new LinkedList<HashSet<int>>(); 
             var reqEdges = GetRequiredEdgeIds();
             var edgeToRes = CloneEdgeTo();
 			var edgeToClone = edgeToRes.Where(edge => edge != null && !reqEdges.Contains(edge.Id))
@@ -102,12 +102,12 @@ namespace MFMSTProject.MFMST {
 							// to be larger than our current threshold then we obviously
 							// made a wrong choice excluding the edges and would like not
 							// to make the same mistakes again.
-							_breakers.Add (new HashSet<int> (excludes));
+							_breakers.AddLast (new HashSet<int> (excludes));
 						} 
 					} else {
 						// The current set of excludes makes it impossible for the graph
 						// to contain a MST, do not make the same mistake again.
-						_breakers.Add (new HashSet<int> (excludes));
+						_breakers.AddLast (new HashSet<int> (excludes));
 					}
 				}
 			}

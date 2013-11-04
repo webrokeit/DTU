@@ -1,5 +1,11 @@
 package util;
 
+/*
+ * Indexed Minimum Priority Queue, found in Sedgewick & Wayne, Algorithms (4th ED, 2011)
+ * Written by:
+ * 	Andreas Kjeldsen (s092638),
+ * 	Morten Eskesen (s133304)
+ */
 public class IndexMinPriorityQueue<T extends Comparable<T>> {
 	private final int[] _priorityQueue;
     private final int[] _priorityQueueReverse;
@@ -10,7 +16,7 @@ public class IndexMinPriorityQueue<T extends Comparable<T>> {
 	public IndexMinPriorityQueue(int items) {
         _priorityQueue = new int[items + 1];
         _priorityQueueReverse = new int[items + 1];
-        _keys = (T[]) new Object[items + 1];
+        _keys = (T[]) new Comparable[items + 1];
         for (int i = 0; i <= items; i++) _priorityQueueReverse[i] = -1;
     }
     
@@ -38,11 +44,11 @@ public class IndexMinPriorityQueue<T extends Comparable<T>> {
         swim(_size);
     }
 
-    public boolean Contains(int index) {
+    public boolean contains(int index) {
         return _priorityQueueReverse[index] != -1;
     }
 
-    public void Change(int index, T item) {
+    public void change(int index, T item) {
         _keys[index] = item;
         swim(_priorityQueueReverse[index]);
         sink(_priorityQueueReverse[index]);
