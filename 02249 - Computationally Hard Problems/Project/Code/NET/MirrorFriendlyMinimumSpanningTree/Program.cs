@@ -53,6 +53,9 @@ namespace MFMSTProject {
 			} else {
 				Console.WriteLine ("No MFMST found!");
 			}
+
+            Console.WriteLine("Program done, press any key to exit..");
+            Console.ReadKey(true);
         }
     }
 }
