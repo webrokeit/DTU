@@ -80,25 +80,20 @@ The second pair has a spanning tree with a weight of 4 and a mirrored spanning t
 $$max\{4,4\} \leq B \rightarrow 4 \leq 4$$
 The algorithm would output YES.
 
-\subsection{Show that MFMST is in $NP$}
-\HRule
-\begin{center}
-\textbf{\textcolor{red}{MINDER DET HER IKKE MEGET OM SLIDES?}}
-\end{center}
-\HRule
+\subsection{Prove that the problem MFMST is in $NP$}
 \subsubsection{1. Design a deterministic algorithm $A$ which takes as input a problem instance $X$ and random sequence $R$}
 
 \textbf{Specify what the random sequence $R$ consists of}\\
 Let the string $R$ consist of bits: $R = r_1,r_2,\dots,r_n$.\\
 
 \textbf{Specify how $A$ interprets $R$ as a guess}\\
+If there are fewer bits than edges, answer NO.\\
 Consider the first $m$ bits. If the $i^{th}$ bit is 1, mark the edge $e_i$.\\
 
 \textbf{Specify how $A$ verifies the guess}\\
 If the marked edges create a mirror friendly minimum spanning tree with a weight less than or equal to $B$, answer YES, otherwise NO.
 
 \subsubsection{2. Show that the two conditions are met}
-\textbf{\textcolor{red}{$\uparrow$ Skal have en anden titel - M{\aa}ske det skal skrives om til at v{\ae}re med vores eget sprog? Carsten kan jo ikke lide n{\aa}r man er for korrekt.}}\\
 \textbf{If true the answer to $X$ is YES, then there is a string $R^*$ with positive probability such that $A(X, R^*) = YES$}
 \begin{itemize}
 	\item[] Asssume that the answer is YES
@@ -109,7 +104,7 @@ If the marked edges create a mirror friendly minimum spanning tree with a weight
 	
 	\item[] Construct the bit string $R^* = r_1,r_2,\dots,r_m$ where $r_i = 1$ if and if only if $i \in S$
 	
-	\item[] When $A$ receives $R^*$, it will select the edges in $S$, verify that the edges form a spanning tree and that the weight of the edges are less than or equal to $B$ and answer YES.
+	\item[] When $A$ receives $R^*$, it will select the edges in $S$, verify that the edges form a mirror friendly spanning tree and that the total weight of the edges forming both spanning trees are less than or equal to $B$ and answer YES.
 	
 	\item[] Altogether there is a string of length at most $p(n)$ that will give YES. The probability of randomly creating it is positive.
 \end{itemize}
@@ -158,8 +153,8 @@ We wish to prove $$\textsc{1-In-3-Satisfiability} \leq_p \textsc{MirrorFriendlyM
 In order to prove this we use component design. When given an instance $(X,C)$ of \textsc{1-In-3-Satisfiability} we construct an instance $(G = (V, E,w),B)$ of MFMST. This is done by building small "component" graphs that are later connected to form the desired graph $G$. The components will have different "responsibilities". Some ensure a correct setting of the truth values, others which test satisfiability and components to connect them.
 
 \subsubsection{Outline of the transformation}
-Let $X = \{x_1,\dots,x_n\}$ be the boolean variables and $C = \{c_1,\dots,c_m\}$ the clauses over $X$. We set $B = n + 2m$ for the MFMST instance. We set $w(e_i) = i$. The vertex set of $G$ \textcolor{red}{Maaske skal $a()$ defineres lidt foer, jeg sad og fattede ingenting, samme for $v()$}:
-$$V = \{x_1,\dots,x_n\} \cup \{\overline{x}_1,\dots,\overline{x}_n\} \cup \bigcup_{j=1}^{m}{\left\{a_1(j),a_2(j),a_3(j)\right\}}$$
+Let $X = \{x_1,\dots,x_n\}$ be the boolean variables and $C = \{c_1,\dots,c_m\}$ the clauses over $X$. We set $B = n + 2m$ for the MFMST instance. We set $w(e_i) = i$. The edge set of $G$
+$$E = \{x_1,\dots,x_n\} \cup \{\overline{x}_1,\dots,\overline{x}_n\} \cup \bigcup_{j=1}^{m}{\left\{a_1(j),a_2(j),a_3(j)\right\}}$$
 
 The truth setting components are defined to be the edges.
 \begin{center}
@@ -172,7 +167,7 @@ The components for clause satisfiability are defined by the following.
 	$\forall c_j \in C$: let $S_j$ be the set of vertices\\
 	$S_j  = \{v_1(j),v_2(j),v_3(j)\}$
 \end{center}
-Two edges per triangle are needed to make a spanning tree. The edge not chosen is the \emph{true} literal which satisfies $c_j$.\\
+Two edges per triangle are needed to make a spanning tree. The edge not chosen is the \emph{true} literal which satisfies $c_j$ (only one literal per clause can be true).\\
 \\
 The connecting components are defined by the following. Let $c_j = l_1 \vee l_2 \vee l_3$ where $l_k$ are literals. More specifically $l_k$ is a boolean variable $x_i$ or negated boolean variable $\overline{x}_i$. For every clause $c_j$ the following three vertices are added.
 $$K_j = \{(v_1(j) \vee l_1), (v_2(j) \vee l_2), (v_3(j) \vee l_3)\}$$
