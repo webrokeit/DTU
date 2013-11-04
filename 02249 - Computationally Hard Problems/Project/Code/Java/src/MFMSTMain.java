@@ -4,7 +4,6 @@ import util.*;
 import mfmst.*;
 
 public class MFMSTMain {
-
 	public static void main(String[] args) throws FileNotFoundException {
 		// Default timeout of 20 seconds (based on the contest description)
 		int maxExecutionTime = 20000;
