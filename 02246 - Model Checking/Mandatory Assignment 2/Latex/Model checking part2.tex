@@ -9,6 +9,7 @@
 \usepackage{amssymb}
 \usepackage{amsthm}
 \usepackage{amsfonts}
+\usepackage[labelfont=bf]{caption}
 \usepackage[usenames,dvipsnames,svgnames,table]{xcolor}
 \usepackage{listings}
 \parindent=0pt
@@ -20,14 +21,24 @@
 \fancyhead[R]{\slshape\footnotesize \textsc{Andreas Kjeldsen (s092638)}\\\textsc{Morten Eskesen (s133304)}}
 \fancyfoot[C]{\thepage}
 
-\lstdefinestyle{prismmodel}{
+\lstdefinestyle{logoutput}{
+	backgroundcolor=\color[RGB]{248,248,248},
 	tabsize=1,
 	captionpos=b
   	belowcaptionskip=1\baselineskip,
   	breaklines=true,
   	frame=single,
-	frameround=tttt,
+	language={},
+  	basicstyle=\footnotesize\ttfamily\color{Black}
+}
+
+\lstdefinestyle{prismmodel}{
+	tabsize=1,
 	captionpos=b,
+  	belowcaptionskip=1\baselineskip,
+  	breaklines=true,
+  	frame=single,
+	frameround=tttt,
   	language={},
   	numbers=left,
   	numbersep=5pt,
@@ -179,18 +190,72 @@ Probability: 0.2574
 
 
 \section*{A2) Theoretical Problems}
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[]{../GFX/ExerciseFigure1.pdf}
+	\end{center}
+	\caption{DTMC for questions A2.1 and A2.2}
+	\label{fig:a212}
+\end{figure}
+
 \subsection*{A2.1}
+We have to consider the DTMC in Figure \ref{fig:a212}, which is shown above and have initial state $s_0$.
 
-\subsubsection*{A2.1a)}
+\subsubsection*{A2.1a) Probability transition}
+The initial distribution for the DTMC is as follows:
+$$\iota_{init} = \left(1, 0, 0, 0\right)$$
 
+The probability transition matrix for the DTMC is as follows:
+$$\mathrm{\textbf{P}} = \left(
+\begin{array}{c c c c}
+	0 & \frac{2}{5} & 0 & \frac{3}{5}\\[0.15cm]
+	0 & \frac{1}{2} & \frac{1}{2} & 0\\[0.15cm]
+	\frac{2}{5} & 0 & \frac{1}{5} & \frac{2}{5}\\[0.15cm]
+	0 & 0 & 1 & 0
+\end{array}
+\right)$$
 
-\subsubsection*{A2.1b)}
+\subsubsection*{A2.1b) Transient distribution}
+The transient distribution, $\Theta$, up until the first three time steps is as follows:
+\begin{center}
+	\begin{tabular}{c c c c c c c c}
+	& & & $s_0$ & $s_1$ & $s_2$ & $s_3$\\
+	$\Theta_0$ & = & [ & 1.00 & 0.00 & 0.00 & 0.00 & ]\\
+	$\Theta_1$ & = & [ & 0.00 & 0.40 & 0.00 & 0.60 & ]\\
+	$\Theta_2$ & = & [ & 0.00 & 0.20 & 0.80 & 0.00 & ]\\
+	$\Theta_3$ & = & [ & 0.32 & 0.10 & 0.26 & 0.32 & ]
+	\end{tabular}
+\end{center}
 
+\subsubsection*{A2.1c) Steady state solution}
+The steady state
+0:(0)=0.1694916167456058
+1:(1)=0.1355931954330166
+2:(2)=0.42372867450100926
+3:(3)=0.2711865133203683
 
-\subsubsection*{A2.1c)}
-
+\newpage
 \subsection*{A2.2}
+The DTMC from Figure \ref{fig:a212} encoded as a PRISM module:
+\lstinputlisting[style=prismmodel,caption={PRISM module encoding the DTMC from Figure \ref{fig:a212}.}]{../Code/A2.2.pm}
 
+PRISM outputs the following transient distribution for the encoded DTMC:
+\begin{lstlisting}[style=logoutput]
+0:(0)=0.32000000000000006
+1:(1)=0.1
+2:(2)=0.26
+3:(3)=0.32000000000000006
+\end{lstlisting}
+The above matches the calculated transient distribution from A2.1b.\\
+\\
+PRISM outputs the following steady state solution for the encoded DTMC:
+\begin{lstlisting}[style=logoutput]
+0:(0)=0.1694916167456058
+1:(1)=0.1355931954330166
+2:(2)=0.42372867450100926
+3:(3)=0.2711865133203683
+\end{lstlisting}
+The above matches the calculated steady state solution from A2.1c. \Phi
 
 \subsection*{2A.3}
 
