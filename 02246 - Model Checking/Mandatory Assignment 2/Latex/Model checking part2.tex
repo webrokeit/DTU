@@ -1,0 +1,220 @@
+\documentclass[12pt]{report}
+\usepackage{graphicx}
+\usepackage{titling}
+\usepackage{fancyhdr}
+\usepackage[latin1]{inputenc}
+\usepackage{enumerate}
+\usepackage{float}
+\usepackage{latexsym}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{amsfonts}
+\usepackage[usenames,dvipsnames,svgnames,table]{xcolor}
+\usepackage{listings}
+\parindent=0pt
+\frenchspacing
+
+\pagestyle{fancy}
+
+\fancyhead[L]{\slshape\footnotesize December 3, 2013\\\textsc{02246 Model Checking}}
+\fancyhead[R]{\slshape\footnotesize \textsc{Andreas Kjeldsen (s092638)}\\\textsc{Morten Eskesen (s133304)}}
+\fancyfoot[C]{\thepage}
+
+\lstdefinestyle{prismmodel}{
+	tabsize=1,
+	captionpos=b
+  	belowcaptionskip=1\baselineskip,
+  	breaklines=true,
+  	frame=single,
+	frameround=tttt,
+	captionpos=b,
+  	language={},
+  	numbers=left,
+  	numbersep=5pt,
+  	numberstyle=\tiny\ttfamily\color{Black},
+  	basicstyle=\footnotesize\ttfamily\color{Black},
+  	keywordstyle=\bfseries\color{Black},
+	morekeywords={module, endmodule, label, init, mdp }, 
+	otherkeywords={=, :, [, ], |},
+	identifierstyle={\color{red}\let\textcolor\textcolordummy},
+	morestring=[b][\color{red}\bfseries]",
+	commentstyle=\color{Green},
+	moredelim=[s][\color{DarkOrchid}\ttfamily]{[}{]},
+	literate=%
+		*{0}{{{\color{blue}0}}}1
+	    {1}{{{\color{blue}1}}}1
+	    {2}{{{\color{blue}2}}}1
+	    {3}{{{\color{blue}3}}}1
+	    {4}{{{\color{blue}4}}}1
+	    {5}{{{\color{blue}5}}}1
+	    {6}{{{\color{blue}6}}}1
+	    {7}{{{\color{blue}7}}}1
+	    {8}{{{\color{blue}8}}}1
+	    {9}{{{\color{blue}9}}}1
+}
+
+\newcommand{\tab}{\hspace*{2em}}
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
+
+\begin{document}
+
+\begin{titlepage}
+\begin{center}
+
+\includegraphics[scale=2.0]{../GFX/dtu_logo.pdf}\\[1cm]
+
+\textsc{\LARGE Technical University of Denmark}\\[1.5cm]
+
+\textsc{\Large 02246 Model Checking}\\[0.5cm]
+
+
+% Title
+\HRule \\[0.4cm]
+{\huge \bfseries Mandatory Assignment\\Part 2: Stochastic Modelling and Verification in Discrete Time}\\[0.1cm]
+\HRule \\[1.5cm]
+
+% Author and supervisor
+\large
+\emph{Authors:}
+\\[10pt]
+Andreas Hallberg \textsc{Kjeldsen}\\
+\emph{s092638@student.dtu.dk}
+\\[10pt]
+Morten Chabert \textsc{Eskesen}\\
+\emph{s133304@student.dtu.dk}
+
+\vfill
+
+% Bottom of the page
+{\large December 3, 2013}
+
+\end{center}
+\end{titlepage}
+
+\chapter*{Introductory notes}
+This report has been written by the both of us. All parts have been worked on together and therefore our responsibility for each assignment is equal.
+\chapter*{Part A: Introductory Problems}
+\section*{A1) Practical Problems}
+
+\subsection*{A1.1}
+In this problem we will ad probabilities to the FCFS scheduler from the previous assignment, so that we construct a discrete time Markov chain.
+
+\subsubsection*{A1.1a)}
+Currently in the FCFS scheduler there are sources of non-determinism. Some of the sources are the create commands in $client_1$ and $client_2$ because there are 5 different create commands with the same guard only the update distinguishes the commands. These sources are due to local non-determinism between the commands in the modules. The other source of non-determinism is due to concurrent execution of the modules in FCFS. The shifting command in the Scheduler module is a result of non-determinism because it can happen independently of what the other modules are doing.
+
+\subsubsection*{A1.1b)}
+In order to resolve the local non-determinism we have to modify the modules to include probabilistic commands. Since the distribution of the probabilities should be uniform the new create command will look like the following:
+\begin{lstlisting}[style=prismmodel]
+[create1] state1=0 -> 0.2 :(state1'=1) & (task1'=1) +
+                      0.2 :(state1'=1) & (task1'=2) +
+                      0.2 :(state1'=1) & (task1'=3) +
+                      0.2 :(state1'=1) & (task1'=4) + 
+                      0.2 :(state1'=1) & (task1'=5);
+\end{lstlisting}
+
+\subsubsection*{A1.1c)}
+The FCFS file has been changed to have the extension .pm and the first line of the model is 'dtmc' which tells PRISM that the file describes a Discrete Time Markov Chain. Building the model causes no errors and tells us that we now have 83 reachable states in the model. Which was the same as before because PRISM resolves the local non-determinism by using a uniform distribution. If there are 5 possibilities it will choose each with probability $\frac{1}{5}$.
+
+\subsubsection*{A1.1d)}
+As explained earlier the shifting command in the Scheduler module causes some non-determinism. This non-determinism we have due to the concurrent execution of the modules is still there. If there were commands in the other commands in the modules that could happen independently of what the Scheduler module was doing all of these commands would happen with equal probability. Since there are no other commands specified that way the command in the Scheduler module happens with probability 1 when possible. PRISM enforces this.
+
+\subsubsection*{A1.1e)}
+In order to make sure that a job will almost certainly complete we specify the following PRISM properties - one for each client.
+\begin{center}
+$(task_1 > 0) \Rightarrow P_{\geq 1}(F(task_1 = 0))$\\
+$(task_2 > 0) \Rightarrow P_{\geq 1}(F(task_2 = 0))$
+\end{center}
+These properties have been verified by PRISM so we now know that a created job will almost certainly complete in this model.
+
+\subsection*{A1.2}
+This section is about using PRISM to compute numerical properties of the FCFS model.
+
+\subsubsection*{A1.2a)}
+If we calculate the steady state distribution of the model we can find the probability of having no jobs in the scheduler. We use PRISM to calculate the steady state distribution and it gives us the probability of being in each of the reachable states. Only one state has no jobs in the scheduler which is the initial:
+\begin{center}
+0:(0,0,0,0,0,0)=0.016145825133811565
+\end{center}
+The probability of having no jobs in the scheduler is therefore 0.0161.
+
+\subsubsection*{A1.2b)}
+We want to calculate the expected length of a job for $client_1$ by looking at the steady state probabilities. In order to do this computation manually we first have to sum the probabilities of the states where $client_1$ has a job of length $i$, $0 \leq i \leq 5$. These states are states 12-82.
+
+\subsubsection*{A1.2c)}
+We want to know what the probability of $client_1$ not having a job at time $t = 10$ so we calculate the transient distribution of the model at time $t = 10$. When we do this PRISM will output the probability for being in each state at this time and we sum the probabilities of being in states where $client_1$ does not have a job. States where $client_1$ does not have a job are states 0-11. We sum the probability of being in these states and get:
+\begin{center}
+Probability: 0.2574
+\end{center}
+
+\subsubsection*{A1.2d)}
+
+
+\subsection*{A1.3}
+
+
+\subsubsection*{A1.3a)}
+
+
+\subsubsection*{A1.3b)}
+
+
+\subsubsection*{A1.3c)}
+
+
+\subsubsection*{A1.3d)}
+
+
+\subsection*{A1.4}
+
+
+\subsubsection*{A1.4a)}
+
+
+\subsubsection*{A1.4b)}
+
+
+\subsubsection*{A1.4c)}
+
+
+\subsubsection*{A1.4d)}
+
+
+\section*{A2) Theoretical Problems}
+\subsection*{A2.1}
+
+\subsubsection*{A2.1a)}
+
+
+\subsubsection*{A2.1b)}
+
+
+\subsubsection*{A2.1c)}
+
+\subsection*{A2.2}
+
+
+\subsection*{2A.3}
+
+\subsubsection*{2A.3a)}
+
+\subsubsection*{2A.3b)}
+
+
+\subsubsection*{2A.3c)}
+
+
+\subsection*{2A.4}
+
+\subsubsection*{2A.4a)}
+
+\subsubsection*{2A.4b)}
+
+\chapter*{Part B: Intermediate Problems}
+\section*{B1) Practical Problems}
+
+
+\section*{B2) Theoretical Problems}
+
+\chapter*{Part C: Advanced Problems}
+\section*{Practical Problems}
+
+\end{document}
