@@ -193,14 +193,14 @@ Probability: 0.2574
 \section*{A2) Theoretical Problems}
 \begin{figure}[H]
 	\begin{center}
-		\includegraphics[]{../GFX/ExerciseFigure1.pdf}
+		\includegraphics[scale=.85]{../GFX/ExerciseFigure1.pdf}
 	\end{center}
 	\caption{DTMC for questions A2.1 and A2.2}
-	\label{fig:a212}
+	\label{fig:2a12}
 \end{figure}
 
 \subsection*{A2.1}
-We have to consider the DTMC in Figure \ref{fig:a212}, which is shown above and have initial state $s_0$.
+We have to consider the DTMC in Figure \ref{fig:2a12}, which is shown above and have initial state $s_0$.
 
 \subsubsection*{A2.1a) Probability transition}
 The initial distribution for the DTMC is as follows:
@@ -345,11 +345,9 @@ $$\left[
 	\end{matrix}
 \right]$$
 
-
-\newpage
 \subsection*{A2.2}
-The DTMC from Figure \ref{fig:a212} encoded as a PRISM module:
-\lstinputlisting[style=prismmodel,caption={PRISM module encoding the DTMC from Figure \ref{fig:a212}.}]{../Code/A2.2.pm}
+The DTMC from Figure \ref{fig:2a12} encoded as a PRISM module:
+\lstinputlisting[style=prismmodel,caption={PRISM module encoding the DTMC from Figure \ref{fig:2a12}.}]{../Code/A2.2.pm}
 
 PRISM outputs the following transient distribution for the encoded DTMC:
 \begin{lstlisting}[style=logoutput]
@@ -370,20 +368,103 @@ PRISM outputs the following steady state probabilities for the encoded DTMC:
 The above matches the calculated steady state solution from A2.1c.
 
 \subsection*{2A.3}
+\begin{figure}[H]
+	\begin{center}
+	\begin{tabular}{c c}
+		\includegraphics[scale=.85]{../GFX/ExerciseFigure2a.pdf} &
+		\includegraphics[scale=.85]{../GFX/ExerciseFigure2b.pdf}\\
+		\textbf{\Large(a)} & \textbf{\Large(b)}
+	\end{tabular}
+	\end{center}
+	\caption{DTMCs for question A2.3}
+	\label{fig:2a3}
+\end{figure}
 
-\subsubsection*{2A.3a)}
+We have to consider the DTMC in Figure \ref{fig:2a3}(a), which is shown above and have initial state $s_0$.
 
-\subsubsection*{2A.3b)}
+\subsubsection*{2A.3a) Values for $p$ which holds for $s_0 \models \mathbb{P}_{\geq \frac{1}{2}}(F^{\leq 2}\; a)$}
+We have a maximum of two steps to reach $a$ with a probability of at least $\frac{1}{2}$. In other words we have to solve:
+$$(1-p)^2 \geq \frac{1}{2} \quad | \quad 0 \leq p \leq 1$$
 
+This gives:
+$$0 \leq p \leq 0.292893$$
 
-\subsubsection*{2A.3c)}
+\subsubsection*{2A.3b) Expected number of time steps until $a$ holds in terms of $p$}
+We have to calculate the \emph{Markov chain sojourn time}. We look at the probability of leaving the initial state $s_0$, thereby reaching $a$ for some amount of steps.
 
+\begin{description}
+	\item[Define $p_s$] The probability of staying in the same state, in this case $s_0$, is defined as:
+	$$p_s = 1 - P(s_0, s_0)$$
+	
+	\item[Probability after one time step] The probability of staying in $s_0$ after one time step is:
+	$$\mathrm{\textbf{Pr}}_{s_0}(N_{s_0}=1)=p_s$$
+	
+	\item[Probability after two time steps] The probability of staying in $s_0$ after two time steps is:
+	$$\mathrm{\textbf{Pr}}_{s_0}(N_{s_0}=2)=(1-p_s) \cdot p_s$$
+	
+	\item[Probability after $n$ time steps] The probability of staying in $s_0$ after $n$ time steps is:
+	$$\mathrm{\textbf{Pr}}_{s_0}(N_{s_0}=n)=(1-p_s)^{(n-1)} \cdot p_s$$
+	
+	\item[Rewriting] The probability of staying in $s_0$ after $n$ times steps can also be written as:
+	$$\mathrm{\textbf{Pr}}_{s_0}(N_{s_0} \leq n) = \sum_{i=1}^{n} \mathrm{\textbf{Pr}}_{s_0}(N_{s_0} = i)  = 1 - (1-p_s)^n$$
+	
+	\item[Expected number of time steps spend in state $s_0$] Can be calculated using the formula below:
+	$$\begin{array}{r c l}
+	\mathrm{E}[N_{s_0}] & = & \sum_{i=1}^{n} \mathrm{\textbf{Pr}}_{s_0}(N_{s_0} = i)\cdot i\\[0.15cm]
+	& = & \sum_{n=1}^{\infty} \mathrm{\textbf{Pr}}_{s_0}(N_{s_0} \geq n)\\[0.15cm]
+	& = & \sum_{n=1}^{\infty} (1-p_s)^{n-1}\\[0.15cm]
+	& = & \frac{1}{p_s}
+	\end{array}$$
+	
+	\item[Replacing $p_s$] We have to state the expected number of time steps in terms of $p$, therefore we start by replacing $p_s$:
+	$$\mathrm{E}[N_{s_0}] = \frac{1}{1 - P(s_0,s_0)}$$
+	We then replace $P(s_0,s_0)$:
+	$$\mathrm{E}[N_{s_0}] = \frac{1}{1 - p}$$
+\end{description}
+
+%sum((1-x)^(n-1)*x, n, 1, y) = 1-(1-x)^y
+
+\subsubsection*{2A.3c) DTMC modification}
+We have to modify Figure \ref{fig:2a3}(b), without increasing the number of states, so that the following holds:
+$$s_0 \models \mathbb{P}_{\geq \frac{1}{2}}(F^{=5}\; a)$$
+$$s_1 \models \mathbb{P}_{\geq \frac{1}{2}}(F^{=10}\; b)$$
+
+\begin{description}
+	\item[Reaching $s_1$ from $s_0$] To do this in five time steps we have to calculate the probability of $s_0$ going to $s_0$, while ensuring that on average 5 time time steps will be enough to reach $s_1$. We calculate it the following way:
+	$$5 = \frac{1}{1-p} \Rightarrow \ldots \Rightarrow p = \frac{4}{5}$$
+	So to ensure that on average 5 time steps will be required to go from $s_0$ to $s_1$ we must add the following to the DTMC:
+	$$s_0 \xrightarrow{0.8} s_0$$
+	
+	\item[Reaching $s_2$ from $s_1$] To do this in 10 time steps we have to calculate the probability of $s_1$ going to $s_1$, while ensuring that on average 10 time steps will be enough to reach $s_2$. We calculate it the following way:
+	$$10 = \frac{1}{1-p} \Rightarrow \ldots \Rightarrow p = \frac{9}{10}$$
+	So to ensure that on average 10 time steps will be required to go from $s_1$ to $s_2$ we must add the following to the DTMC:
+	$$s_1 \xrightarrow{0.9} s_1$$
+	
+	\item[The modified DTMC] Below is the modified DTMC:
+	\begin{figure}[H]
+		\begin{center}
+		\includegraphics[scale=.85]{../GFX/Answer-A2-3c.pdf}
+		\end{center}
+		\caption{Modified version of the DTMC from Figure \ref{fig:2a3}.}
+	\end{figure}
+\end{description}
 
 \subsection*{2A.4}
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[scale=.85]{../GFX/ExerciseFigure3.pdf}
+	\end{center}
+	\caption{DTMC for question A2.4}
+	\label{fig:2a4}
+\end{figure}
 
-\subsubsection*{2A.4a)}
+We have to consider the DTMC in Figure \ref{fig:2a4}, which we will call $\mathcal{M} = \left(S, \mathbf{P}, s_1, AP, L\right)$, where $AP = \{b,c\}$. The initial state is $s_1$ and the labels are shown on the states.
 
-\subsubsection*{2A.4b)}
+\subsubsection*{2A.4a) Determine which states satisfy $\mathbb{P}_{\geq\frac{17}{19}}(b\;U\;c)$}
+The set of satisfying states is:
+$$\{s_3, s_4, s_6, s_7\}$$
+
+\subsubsection*{2A.4b) Determine which states satisfy $\mathbb{P}_{\geq\frac{1}{2}}\left(X\;\mathbb{P}_{>\frac{1}{3}}\left( \left(b \vee c \right) U^{\leq 2} \left( b \wedge c \right) \right) \right)$}
 
 \chapter*{Part B: Intermediate Problems}
 \section*{B1) Practical Problems}
