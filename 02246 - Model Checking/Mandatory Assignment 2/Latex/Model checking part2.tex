@@ -135,8 +135,8 @@ As explained earlier the shifting command in the Scheduler module causes some no
 \subsubsection*{A1.1e)}
 In order to make sure that a job will almost certainly complete we specify the following PRISM properties - one for each client.
 \begin{center}
-$(task_1 > 0) \Rightarrow P_{\geq 1}(F(task_1 = 0))$\\
-$(task_2 > 0) \Rightarrow P_{\geq 1}(F(task_2 = 0))$
+$(task_1 > 0) \Rightarrow \mathbb{P}_{\geq 1}(F(task_1 = 0))$\\
+$(task_2 > 0) \Rightarrow \mathbb{P}_{\geq 1}(F(task_2 = 0))$
 \end{center}
 These properties have been verified by PRISM so we now know that a created job will almost certainly complete in this model.
 
@@ -145,16 +145,16 @@ This section is about using PRISM to compute numerical properties of the FCFS mo
 
 \subsubsection*{A1.2a)}
 If we calculate the steady state distribution of the model we can find the probability of having no jobs in the scheduler. We use PRISM to calculate the steady state distribution and it gives us the probability of being in each of the reachable states. Only one state has no jobs in the scheduler which is the initial:
-\begin{center}
+\begin{lstlisting}[style=logoutput]
 0:(0,0,0,0,0,0)=0.016145825133811565
-\end{center}
+\end{lstlisting}
 The probability of having no jobs in the scheduler is therefore 0.0161.
 
 \subsubsection*{A1.2b)}
-We want to calculate the expected length of a job for $client_1$ by looking at the steady state probabilities. In order to do this computation manually we first have to sum the probabilities of the states where $client_1$ has a job of length $i$, $0 \leq i \leq 5$. These states are states 12-82.
+We want to calculate the expected length of a job for $client_1$ by looking at the steady state probabilities. In order to do this computation manually we first have to sum the probabilities of the states where $client_1$ has a job of length $i$, $0 \leq i \leq 5$. These states are states 12--82.
 
 \subsubsection*{A1.2c)}
-We want to know what the probability of $client_1$ not having a job at time $t = 10$ so we calculate the transient distribution of the model at time $t = 10$. When we do this PRISM will output the probability for being in each state at this time and we sum the probabilities of being in states where $client_1$ does not have a job. States where $client_1$ does not have a job are states 0-11. We sum the probability of being in these states and get:
+We want to know what the probability of $client_1$ not having a job at time $t = 10$ so we calculate the transient distribution of the model at time $t = 10$. When we do this PRISM will output the probability for being in each state at this time and we sum the probabilities of being in states where $client_1$ does not have a job. States where $client_1$ does not have a job are states 0--11. We sum the probability of being in these states and get:
 \begin{center}
 Probability: 0.2574
 \end{center}
@@ -538,6 +538,8 @@ There are 10 important cases of how the intervals can be constructed, let's look
 	\item[Case 10:] $]n, n'[$ where $n < n + 1 < n'$\\
 	This can be rewritten to $[n+1, n'-1]$.
 \end{description}
+
+So with the introduction of our \emph{Time Step} operator, we can model the modified version of the until operator in PCTL.
 
 \subsubsection*{B2.1b)}
 \subsubsection*{B2.1c)}
