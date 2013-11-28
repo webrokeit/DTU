@@ -424,8 +424,6 @@ We have to calculate the \emph{Markov chain sojourn time}. We look at the probab
 	$$\mathrm{E}[N_{s_0}] = \frac{1}{1 - p}$$
 \end{description}
 
-%sum((1-x)^(n-1)*x, n, 1, y) = 1-(1-x)^y
-
 \subsubsection*{A2.3c) DTMC modification}
 We have to modify Figure \ref{fig:2a3}(b), without increasing the number of states, so that the following holds:
 $$s_0 \models \mathbb{P}_{\geq \frac{1}{2}}(F^{=5}\; a)$$
@@ -478,7 +476,7 @@ $$\{s_0, s_4, s_6\}$$
 A step bounded formula $\Phi_1\;U^{\leqslant n}\;\Phi_2$ satisfies the needs for making assumptions regarding a specific type of interval, $I = [0, n]$, we would like to introduce a more generalized operator in the form of:
 $$\Phi_1\;U^{I}\;\Phi_2 \quad | \quad I \in \left\{\;[n,n'],\;[n, n'[,\;]n, n],\;]n, n'[\;\right\} \quad | \quad 0 \leq x \leq y$$
 
-\subsubsection*{B2.1a)}
+\subsubsection*{Adapting PCTL}
 To make this new operator possible using only PCTL, we have to synthesize the new operator using our currently available operators. We're not allowed to simply modify the current until operator to satisfy more cases, such a modification could be like:
 $$\Phi_1\;U^{[n, \infty[}\;\Phi_2 = \Phi_1\;U^{\geqslant n}\;\Phi_2$$
 Which would state that after $n$ steps $\Phi_1$ should hold up until at some point where $\Phi_2$ would hold.\\
@@ -501,8 +499,8 @@ There are 10 important cases of how the intervals can be constructed, let's look
 	$$\Phi_1\;U\;\Phi_2$$
 	
 	\item[Case 5:] $[n, \infty[$\\
-	Not possible as you would have to set a restriction of when the left part of the operator should apply. If we were to have a \emph{Time Step} operator, this would be possible.\\
-	Let's define a time step operator, first we need a symbol for it:
+	Not possible as you would have to set a restriction of when the left part of the operator should apply. If we were to have a \emph{Time Step} property, this would be possible.\\
+	Let's define a time step property, first we need a symbol for it:
 	$$\mathbb{T}$$
 	Then we need a syntax:
 	$$\mathbb{T}^{\leqslant n} = \left\{
@@ -519,7 +517,7 @@ There are 10 important cases of how the intervals can be constructed, let's look
 	\right.$$
 	Formally the syntax states that if the expression for $n$ satisfies for the amount of time steps passed then it returns \textbf{true}, otherwise it will return \textbf{false}.\\
 	\\
-	We can use this new operator to specify a starting point for our modified until operator. Using the new syntax we can properly write out the adapted PCTL for the case:
+	We can use this new property to specify a starting point for our modified until operator. Using the new syntax we can properly write out the adapted PCTL for the case:
 	$$\mathbb{T}^{\geqslant n} \wedge \mathbb{P}_{=1}\left(\Phi_1\;U\;\Phi_2\right)$$
 	
 	\item[Case 6:] $]0, \infty[$\\
@@ -529,7 +527,7 @@ There are 10 important cases of how the intervals can be constructed, let's look
 	This can be rewritten to $[n+1, \infty[$, which is covered by Case 5.
 	
 	\item[Case 8:] $[n, n']$\\
-	We have to make use of our \emph{Time Step} operator again. This time there's both a limitation of when to start and a limitation of when to end.
+	We have to make use of our time step property again. This time there's both a limitation of when to start and a limitation of when to end.
 	$$\mathbb{T}^{\geqslant n} \wedge \mathbb{P}_{=1}\left(\Phi_1\;U^{\leqslant n'}\;\Phi_2\right)$$
 	
 	\item[Case 9:] $]n, n']$ where $n < n'$\\
@@ -539,11 +537,12 @@ There are 10 important cases of how the intervals can be constructed, let's look
 	This can be rewritten to $[n+1, n'-1]$.
 \end{description}
 
-So with the introduction of our \emph{Time Step} operator, we can model the modified version of the until operator in PCTL.
+So with the introduction of our time step operator, we can model the modified version of the until operator in PCTL.
 
-\subsubsection*{B2.1b)}
-\subsubsection*{B2.1c)}
-\subsubsection*{B2.1d)}
+\subsubsection*{Adapting the model checking algorithm}
+We cant just introduce a new property to PCTl by specifying its syntax and how it works, we must also state how the model checking algorithm should use this new property.\\
+\\
+Basically the new time step property should be treated as \text{true} and the atomic propositions are being treated. In general the way the model checking is performed wouldn't have had any major changes, though it is important that the algorithm keeps track of time steps.
 
 \subsection*{B2.2}
 \begin{figure}[H]
@@ -551,8 +550,10 @@ So with the introduction of our \emph{Time Step} operator, we can model the modi
 		\includegraphics[scale=.85]{../GFX/ExerciseFigure4.pdf}
 	\end{center}
 	\caption{DTMC for question B2.2}
-	\ref{fig:b22}
+	\label{fig:b22}
 \end{figure}
+
+We have to consider the DTMC in Figure \ref{fig:b22}, which we will call $\mathcal{M} = \left(S, \mathbf{P}, s_0, AP, L\right)$, where $AP = \{a,b\}$. The initial state is $s_0$ and the labels are shown on the states.
 
 \subsubsection*{B2.2a)}
 \subsubsection*{B2.2b)}
