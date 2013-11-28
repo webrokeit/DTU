@@ -53,7 +53,7 @@
 	<array>
 		<dict>
 			<key>Bounds</key>
-			<string>{{111.48123867271799, 152.39056422351118}, {27, 24}}</string>
+			<string>{{111.50623762758399, 152.25056159426597}, {27, 24}}</string>
 			<key>Class</key>
 			<string>ShapedGraphic</string>
 			<key>FitText</key>
@@ -120,7 +120,7 @@
 		</dict>
 		<dict>
 			<key>Bounds</key>
-			<string>{{100.92303697822341, 70.08364916095509}, {27, 24}}</string>
+			<string>{{100.93138353767729, 70.076778737745343}, {27, 24}}</string>
 			<key>Class</key>
 			<string>ShapedGraphic</string>
 			<key>FitText</key>
@@ -522,7 +522,7 @@
 		</dict>
 		<dict>
 			<key>Bounds</key>
-			<string>{{220.14377012096509, 74.277611309723994}, {27, 24}}</string>
+			<string>{{220.1260069730366, 74.247804333696195}, {27, 24}}</string>
 			<key>Class</key>
 			<string>ShapedGraphic</string>
 			<key>FitText</key>
@@ -850,7 +850,7 @@
 {\colortbl;\red255\green255\blue255;}
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\qc
 
-\f0\fs24 \cf0 1.0}</string>
+\f0\fs24 \cf0 0.1}</string>
 			</dict>
 			<key>Wrap</key>
 			<string>NO</string>
@@ -902,8 +902,8 @@
 			<integer>139</integer>
 			<key>Points</key>
 			<array>
-				<string>{161.04225234092922, 142.38435070811428}</string>
-				<string>{88.228443210776476, 74.499264417371265}</string>
+				<string>{161.04369601465049, 142.3828043214842}</string>
+				<string>{88.237659516431208, 74.489400761661074}</string>
 			</array>
 			<key>Style</key>
 			<dict>
@@ -1116,8 +1116,8 @@
 			<integer>133</integer>
 			<key>Points</key>
 			<array>
-				<string>{93.207739197736117, 155.05428308655388}</string>
-				<string>{156.07533841327262, 155.23885491697473}</string>
+				<string>{93.207818224286299, 155.002777281753}</string>
+				<string>{156.07380949385382, 155.01231863334763}</string>
 			</array>
 			<key>Style</key>
 			<dict>
@@ -1151,8 +1151,8 @@
 			<integer>132</integer>
 			<key>Points</key>
 			<array>
-				<string>{260.91919052642567, 74.499265957889492}</string>
-				<string>{188.16401317134392, 142.44745346193679}</string>
+				<string>{260.90997422143477, 74.489402293273045}</string>
+				<string>{188.10537911912064, 142.3843491784624}</string>
 			</array>
 			<key>Style</key>
 			<dict>
@@ -1885,7 +1885,7 @@
 	<key>MasterSheets</key>
 	<array/>
 	<key>ModificationDate</key>
-	<string>2013-11-26 10:12:28 +0000</string>
+	<string>2013-11-28 00:14:09 +0000</string>
 	<key>Modifier</key>
 	<string>Andreas Kjeldsen</string>
 	<key>NotesVisible</key>

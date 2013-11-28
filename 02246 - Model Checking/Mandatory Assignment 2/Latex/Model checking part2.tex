@@ -18,6 +18,8 @@
 
 \pagestyle{fancy}
 
+\newcommand{\pctlrepeat}[1]{{\buildrel{#1}\over\curvearrowleft}}
+
 \fancyhead[L]{\slshape\footnotesize December 3, 2013\\\textsc{02246 Model Checking}}
 \fancyhead[R]{\slshape\footnotesize \textsc{Andreas Kjeldsen (s092638)}\\\textsc{Morten Eskesen (s133304)}}
 \fancyfoot[C]{\thepage}
@@ -367,7 +369,7 @@ PRISM outputs the following steady state probabilities for the encoded DTMC:
 \end{lstlisting}
 The above matches the calculated steady state solution from A2.1c.
 
-\subsection*{2A.3}
+\subsection*{A2.3}
 \begin{figure}[H]
 	\begin{center}
 	\begin{tabular}{c c}
@@ -382,14 +384,14 @@ The above matches the calculated steady state solution from A2.1c.
 
 We have to consider the DTMC in Figure \ref{fig:2a3}(a), which is shown above and have initial state $s_0$.
 
-\subsubsection*{2A.3a) Values for $p$ which holds for $s_0 \models \mathbb{P}_{\geq \frac{1}{2}}(F^{\leq 2}\; a)$}
+\subsubsection*{A2.3a) Values for $p$ which holds for $s_0 \models \mathbb{P}_{\geq \frac{1}{2}}(F^{\leq 2}\; a)$}
 We have a maximum of two steps to reach $a$ with a probability of at least $\frac{1}{2}$. In other words we have to solve:
 $$(1-p)^2 \geq \frac{1}{2} \quad | \quad 0 \leq p \leq 1$$
 
 This gives:
 $$0 \leq p \leq 0.292893$$
 
-\subsubsection*{2A.3b) Expected number of time steps until $a$ holds in terms of $p$}
+\subsubsection*{A2.3b) Expected number of time steps until $a$ holds in terms of $p$}
 We have to calculate the \emph{Markov chain sojourn time}. We look at the probability of leaving the initial state $s_0$, thereby reaching $a$ for some amount of steps.
 
 \begin{description}
@@ -424,7 +426,7 @@ We have to calculate the \emph{Markov chain sojourn time}. We look at the probab
 
 %sum((1-x)^(n-1)*x, n, 1, y) = 1-(1-x)^y
 
-\subsubsection*{2A.3c) DTMC modification}
+\subsubsection*{A2.3c) DTMC modification}
 We have to modify Figure \ref{fig:2a3}(b), without increasing the number of states, so that the following holds:
 $$s_0 \models \mathbb{P}_{\geq \frac{1}{2}}(F^{=5}\; a)$$
 $$s_1 \models \mathbb{P}_{\geq \frac{1}{2}}(F^{=10}\; b)$$
@@ -449,7 +451,7 @@ $$s_1 \models \mathbb{P}_{\geq \frac{1}{2}}(F^{=10}\; b)$$
 	\end{figure}
 \end{description}
 
-\subsection*{2A.4}
+\subsection*{A2.4}
 \begin{figure}[H]
 	\begin{center}
 		\includegraphics[scale=.85]{../GFX/ExerciseFigure3.pdf}
@@ -465,12 +467,97 @@ The set of satisfying states is:
 $$\{s_3, s_4, s_6, s_7\}$$
 
 \subsubsection*{2A.4b) Determine which states satisfy $\mathbb{P}_{\geq\frac{1}{2}}\left(X\;\mathbb{P}_{>\frac{1}{3}}\left( \left(b \vee c \right) U^{\leq 2} \left( b \wedge c \right) \right) \right)$}
+The set of satisfying states is:
+$$\{s_0, s_4, s_6\}$$
 
 \chapter*{Part B: Intermediate Problems}
 \section*{B1) Practical Problems}
 
-
 \section*{B2) Theoretical Problems}
+\subsection*{B2.1}
+A step bounded formula $\Phi_1\;U^{\leqslant n}\;\Phi_2$ satisfies the needs for making assumptions regarding a specific type of interval, $I = [0, n]$, we would like to introduce a more generalized operator in the form of:
+$$\Phi_1\;U^{I}\;\Phi_2 \quad | \quad I \in \left\{\;[n,n'],\;[n, n'[,\;]n, n],\;]n, n'[\;\right\} \quad | \quad 0 \leq x \leq y$$
+
+\subsubsection*{B2.1a)}
+To make this new operator possible using only PCTL, we have to synthesize the new operator using our currently available operators. We're not allowed to simply modify the current until operator to satisfy more cases, such a modification could be like:
+$$\Phi_1\;U^{[n, \infty[}\;\Phi_2 = \Phi_1\;U^{\geqslant n}\;\Phi_2$$
+Which would state that after $n$ steps $\Phi_1$ should hold up until at some point where $\Phi_2$ would hold.\\
+\\
+There are 10 important cases of how the intervals can be constructed, let's look at them case by case:
+\begin{description}
+	\item[Case 1:] $[0, 0]$\\
+	This is the same as skipping the left part of the operator:
+	$$\Phi_2$$
+
+	\item[Case 2:] $[0, n]$\\
+	This is the same as the current bounded until operator:
+	$$\Phi_1\;U^{\leqslant n}\;\Phi_2$$
+	
+	\item[Case 3:] $[0,n[$ where $0 < n$\\
+	This is the same as an interval of $[0, n-1]$, therefore it will either match \textbf{Case 1} or \textbf{Case 2}.
+	
+	\item[Case 4:] $[0, \infty[$\\
+	This is the same as the unbounded until operator, so we would write this as:
+	$$\Phi_1\;U\;\Phi_2$$
+	
+	\item[Case 5:] $[n, \infty[$\\
+	Not possible as you would have to set a restriction of when the left part of the operator should apply. If we were to have a \emph{Time Step} operator, this would be possible.\\
+	Let's define a time step operator, first we need a symbol for it:
+	$$\mathbb{T}$$
+	Then we need a syntax:
+	$$\mathbb{T}^{\leqslant n} = \left\{
+		\begin{array}{c l}
+			\text{true} & \text{if } n \leq \text{amount of time steps passed}\\
+			\text{false} & \text{if } n > \text{amount of time steps passed}
+		\end{array}
+	\right.$$
+	$$\mathbb{T}^{\geqslant n} = \left\{
+		\begin{array}{c l}
+			\text{true} & \text{if } n \geq \text{amount of time steps passed}\\
+			\text{false} & \text{if } n < \text{amount of time steps passed}
+		\end{array}
+	\right.$$
+	Formally the syntax states that if the expression for $n$ satisfies for the amount of time steps passed then it returns \textbf{true}, otherwise it will return \textbf{false}.\\
+	\\
+	We can use this new operator to specify a starting point for our modified until operator. Using the new syntax we can properly write out the adapted PCTL for the case:
+	$$\mathbb{T}^{\geqslant n} \wedge \mathbb{P}_{=1}\left(\Phi_1\;U\;\Phi_2\right)$$
+	
+	\item[Case 6:] $]0, \infty[$\\
+	This can be rewritten to $[1, \infty[$, which can be interpreted as $[n, \infty[$. See Case 5.
+	
+	\item[Case 7:] $]n, \infty[$ where $0 < n$\\
+	This can be rewritten to $[n+1, \infty[$, which is covered by Case 5.
+	
+	\item[Case 8:] $[n, n']$\\
+	We have to make use of our \emph{Time Step} operator again. This time there's both a limitation of when to start and a limitation of when to end.
+	$$\mathbb{T}^{\geqslant n} \wedge \mathbb{P}_{=1}\left(\Phi_1\;U^{\leqslant n'}\;\Phi_2\right)$$
+	
+	\item[Case 9:] $]n, n']$ where $n < n'$\\
+	This can be rewritten to $[n+1, n']$
+	
+	\item[Case 10:] $]n, n'[$ where $n < n + 1 < n'$\\
+	This can be rewritten to $[n+1, n'-1]$.
+\end{description}
+
+\subsubsection*{B2.1b)}
+\subsubsection*{B2.1c)}
+\subsubsection*{B2.1d)}
+
+\subsection*{B2.2}
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[scale=.85]{../GFX/ExerciseFigure4.pdf}
+	\end{center}
+	\caption{DTMC for question B2.2}
+	\ref{fig:b22}
+\end{figure}
+
+\subsubsection*{B2.2a)}
+\subsubsection*{B2.2b)}
+\subsubsection*{B2.2c)}
+\subsubsection*{B2.2d)}
+\subsubsection*{B2.2e)}
+\subsubsection*{B2.2f)}
 
 \chapter*{Part C: Advanced Problems}
 \section*{Practical Problems}
