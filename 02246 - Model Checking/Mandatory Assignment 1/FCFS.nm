@@ -1,4 +1,4 @@
-dtmc
+mdp
 
 module client1
   state1 : [0..1] init 0; // State of the job (inactive/active)

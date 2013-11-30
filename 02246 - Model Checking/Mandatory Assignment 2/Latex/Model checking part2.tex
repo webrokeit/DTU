@@ -10,6 +10,7 @@
 \usepackage{amsthm}
 \usepackage{amsfonts}
 \usepackage{amsmath}
+\usepackage[labelfont=bf]{caption}
 \usepackage[usenames,dvipsnames,svgnames,table]{xcolor}
 \usepackage{listings}
 \parindent=0pt
@@ -17,18 +18,30 @@
 
 \pagestyle{fancy}
 
+\newcommand{\pctlrepeat}[1]{{\buildrel{#1}\over\curvearrowleft}}
+
 \fancyhead[L]{\slshape\footnotesize December 3, 2013\\\textsc{02246 Model Checking}}
 \fancyhead[R]{\slshape\footnotesize \textsc{Andreas Kjeldsen (s092638)}\\\textsc{Morten Eskesen (s133304)}}
 \fancyfoot[C]{\thepage}
 
-\lstdefinestyle{prismmodel}{
+\lstdefinestyle{logoutput}{
+	backgroundcolor=\color[RGB]{248,248,248},
 	tabsize=1,
 	captionpos=b
   	belowcaptionskip=1\baselineskip,
   	breaklines=true,
   	frame=single,
-	frameround=tttt,
+	language={},
+  	basicstyle=\footnotesize\ttfamily\color{Black}
+}
+
+\lstdefinestyle{prismmodel}{
+	tabsize=1,
 	captionpos=b,
+  	belowcaptionskip=1\baselineskip,
+  	breaklines=true,
+  	frame=single,
+	frameround=tttt,
   	language={},
   	numbers=left,
   	numbersep=5pt,
@@ -122,8 +135,8 @@ As explained earlier the shifting command in the Scheduler module causes some no
 \subsubsection*{A1.1e)}
 In order to make sure that a job will almost certainly complete we specify the following PRISM properties - one for each client.
 \begin{center}
-$(task_1 > 0) \Rightarrow P_{\geq 1}(F(task_1 = 0))$\\
-$(task_2 > 0) \Rightarrow P_{\geq 1}(F(task_2 = 0))$
+$(task_1 > 0) \Rightarrow \mathbb{P}_{\geq 1}(F(task_1 = 0))$\\
+$(task_2 > 0) \Rightarrow \mathbb{P}_{\geq 1}(F(task_2 = 0))$
 \end{center}
 These properties have been verified by PRISM so we now know that a created job will almost certainly complete in this model.
 
@@ -132,9 +145,9 @@ This section is about using PRISM to compute numerical properties of the FCFS mo
 
 \subsubsection*{A1.2a)}
 If we calculate the steady state distribution of the model we can find the probability of having no jobs in the scheduler. We use PRISM to calculate the steady state distribution and it gives us the probability of being in each of the reachable states. Only one state has no jobs in the scheduler which is the initial:
-\begin{center}
+\begin{lstlisting}[style=logoutput]
 0:(0,0,0,0,0,0)=0.016145825133811565
-\end{center}
+\end{lstlisting}
 The probability of having no jobs in the scheduler is therefore 0.0161.
 
 \subsubsection*{A1.2b)}
@@ -145,6 +158,7 @@ Probability: 0.75
 
 $$\frac{0 * 0.0911 + 1 * 0.1675 + 2 * 0.1506\\+ 3 * 0.1331 + 4 * 0.1142 + 5 * 0.0935}{0.75} = 2.39$$
 The expected length of a job for $client_1$ is 2.39.
+We want to calculate the expected length of a job for $client_1$ by looking at the steady state probabilities. In order to do this computation manually we first have to sum the probabilities of the states where $client_1$ has a job of length $i$, $0 \leq i \leq 5$. These states are states 12--82.
 
 \subsubsection*{A1.2c)}
 We want to know what the probability of $client_1$ not having a job at time $t = 10$ so we calculate the transient distribution of the model at time $t = 10$. When we do this PRISM will output the probability for being in each state at this time and we sum the probabilities of being in states where $client_1$ does not have a job. States where $client_1$ does not have a job are states 0-11. We sum the probability of being in these states and get:
@@ -198,8 +212,14 @@ $$Sat_{TS(M)}(\Psi),$$
 where TS(M) is the transition system obtained by throwing away the probabilities in Markov Chain $M$ and $\Psi$ is the CTL formula.
 
 \subsubsection*{A1.4b)}
-Considering the CTL formula $EG s_0$ and the PCTL formula $\neg P_{\leq 0}(G s_0)$. In the figure below a DTMC is described where the CTL formula holds but the PCTL formula does not hold.
-%%%%FIGUR
+Considering the CTL formula $EG \Phi$ and the PCTL formula $\neg P_{\leq 0}(G \Phi)$. In the figure below a DTMC is described where the CTL formula holds but the PCTL formula does not hold.
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[scale=.85]{../GFX/Answer-A1-4b.pdf}
+	\end{center}
+	\caption{DTMC for question A1.4b}
+	\label{fig:1a14b}
+\end{figure}
 
 \subsubsection*{A1.4c)}
 The CTL formula holds because there exists a path from $s_0$ where for the rest of time $s_0$ will be satisfied which is because it will loop forever. Where as the PCTL formula has probability and it is therefore unlikely that it will loop forever.
@@ -208,34 +228,280 @@ The CTL formula holds because there exists a path from $s_0$ where for the rest 
 The quantifier $E$ is required in order for the semantics of these formulae to be the same. Because since there are probabilities involved there will aways be a chance that it will step out of the loop. Meanwhile in CTL there should just be a path that satisfies the specified property.
 
 \section*{A2) Theoretical Problems}
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[scale=.85]{../GFX/ExerciseFigure1.pdf}
+	\end{center}
+	\caption{DTMC for questions A2.1 and A2.2}
+	\label{fig:2a12}
+\end{figure}
+
 \subsection*{A2.1}
+We have to consider the DTMC in Figure \ref{fig:2a12}, which is shown above and have initial state $s_0$.
 
-\subsubsection*{A2.1a)}
+\subsubsection*{A2.1a) Probability transition}
+The initial distribution for the DTMC is as follows:
+$$\iota_{init} = \left(1, 0, 0, 0\right)$$
 
+The probability transition matrix for the DTMC is as follows:
+$$\mathrm{\textbf{P}} = \left(
+\begin{array}{c c c c}
+	0 & 0.4 & 0 & 0.6\\
+	0 & 0.5 & 0.5 & 0\\
+	0.4 & 0 & 0.2 & 0.4\\
+	0 & 0 & 1 & 0
+\end{array}
+\right)$$
 
-\subsubsection*{A2.1b)}
+\subsubsection*{A2.1b) Transient distribution}
+The transient distribution, $\Theta$, up until the first three time steps is as follows:
+\begin{center}
+	\begin{tabular}{c c c c c c c c}
+	& & & $s_0$ & $s_1$ & $s_2$ & $s_3$\\
+	$\Theta_0$ & = & [ & 1.00 & 0.00 & 0.00 & 0.00 & ]\\
+	$\Theta_1$ & = & [ & 0.00 & 0.40 & 0.00 & 0.60 & ]\\
+	$\Theta_2$ & = & [ & 0.00 & 0.20 & 0.80 & 0.00 & ]\\
+	$\Theta_3$ & = & [ & 0.32 & 0.10 & 0.26 & 0.32 & ]
+	\end{tabular}
+\end{center}
 
+\subsubsection*{A2.1c) Steady state solution}
+We have to calculate the steady state solution. First off, let's write down the equation matrix.
+$$
+	\left[
+	\begin{matrix}
+		P_1 & P_2 & P_3 & P_4
+	\end{matrix}
+	\right] \left[
+	\begin{matrix}
+		0 & 0.4 & 0 & 0.6\\
+		0 & 0.5 & 0.5 & 0\\
+		0.4 & 0 & 0.2 & 0.4\\
+		0 & 0 & 1 & 0
+	\end{matrix}
+	\right] = \left[
+	\begin{matrix}
+		P_1 & P_2 & P_3 & P_4
+	\end{matrix}
+	\right]
+$$
+Now let's solve the equation.
+\begin{description}
+	\item[Step 1] Writing up the equations.
+	$$\begin{array}{r c l c}
+		P_1 & = & 0P_1 + 0P_2 + 0.4P_3 + 0P_4 & \Rightarrow\\
+		P_1 & = & 0.4P_3\\
+		\\
+		P_2 & = & 0.4P_1 + 0.5P_2 + 0P_3 + 0P_3 & \Rightarrow\\
+		P_2& = & 0.4P_1 + 0.5P_2\\
+		\\
+		P_3 & = & 0P_1 + 0.5P_2 + 0.2P_3 + P_4 & \Rightarrow\\
+		P_3 & = & 0.5P_2 + 0.2P_3 + P_4\\
+		\\
+		P_4 & = & 0.6P_1 + 0P_2 + 0.4P_3 + 0P_4 & \Rightarrow\\
+		P_4 & = & 0.6P_1 + 0.4P_3\\
+		\\
+		1 & = & P_1 + P_2 + P_3 + P_4
+	\end{array}$$
+	
+	\item[Step 2] Reducing the equations.
+	$$\begin{array}{r c l c}
+		P_1 & = & 0.4P_3\\
+		\\
+		P_2 & = & 0.4P_1 + 0.5P_2 & \Rightarrow\\
+		0.5P_2 & = & 0.4P_1 & \Rightarrow\\
+		P_2 & = & 0.8P_1\\
+		\\
+		P_3 & = & 0.5P_2 + 0.2P_3 + P_4 & \Rightarrow\\
+		0.8P_3 & = & 0.5P_2 + P_4 & \Rightarrow\\
+		P_3 & = & 0.625P_2 + 1.25P_4\\
+		\\
+		P_4 & = & 0.6P_1 + 0.4P_3
+	\end{array}$$
+	
+	\item[Step 3] Substituting $P_1$.
+	$$\begin{array}{r c l c}
+		P_2 & = & 0.8(0.4P_3) & \Rightarrow\\
+		P_2 & = & 0.32P_3\\
+		\\
+		P_4 & = & 0.6(0.4P_3) + 0.4P_3 & \Rightarrow\\
+		P_4 & = & 0.24P_3 + 0.4P_3 & \Rightarrow\\
+		P_4 & = & 0.64P3\\
+		\\
+		1 & = & 0.4P_3 + P_2 + P_3 + P_4 & \Rightarrow\\
+		1 & = & P_2 + 1.4P_3 + P_4
+	\end{array}$$
+	
+	\item[Step 4] Substituting $P_2$.
+	$$\begin{array}{r c l c}
+		P_3 & = & 0.625(0.32P_3) + 1.25P_4 & \Rightarrow\\
+		P_3 & = & 0.2P_3 + 1.25P_4 & \Rightarrow\\
+		0.8P_3 & = & 1.25P_4 & \Rightarrow\\
+		P_3 & = & 1.5625P_4\\
+		\\
+		1 & = & 0.32P_3 + 1.4P_3 + P_4 & \Rightarrow\\
+		1 & = & 1.72P_3 + P_4
+	\end{array}$$
+	
+	\item[Step 5] Calculating $P_3$.
+	$$\begin{array}{r c l c}
+		1 & = & 1.72P_3 + 0.64P_3 & \Rightarrow\\
+		1 & = & 2.36P_4 & \Rightarrow\\
+		P_3 & = & \frac{1}{2.36} & \Rightarrow\\
+		P_3 & = & 0.42372881355 
+	\end{array}$$
+	
+	\item[Step 5] Calculating $P_4$.
+	$$\begin{array}{r c l c}
+		1 & = & 1.72(1.5626P_4) + 1P_4 & \Rightarrow\\
+		1 & = & 2.687672P_4 + 1P_4 & \Rightarrow\\
+		1 & = & 3.687662P_4 & \Rightarrow\\
+		P_4 & = & \frac{1}{3.687662} & \Rightarrow\\
+		P_4 & = & 0.27117452738 
+	\end{array}$$
+	
+	\item[Step 6] Calculating $P_1$.
+	$$\begin{array}{r c l c}
+		P_1 & = & 0.4P_3 & \Rightarrow\\
+		P_1 & = & 0.4(0.42372881355) & \Rightarrow\\
+		P_1 & = & 0.16949152542
+	\end{array}$$
+	
+	\item[Step 7] Calculating $P_2$.
+	$$\begin{array}{r c l c}
+		P_2 & = & 0.8P_1 & \Rightarrow\\
+		P_2 & = & 0.8(0.16949152542) & \Rightarrow\\
+		P_2 & = & 0.13559322033
+	\end{array}$$
+\end{description}
 
-\subsubsection*{A2.1c)}
+So to sum up we have the following steady state probabilities for the DTMC:
+$$\left[
+	\begin{matrix}
+		0.16949152542 & 0.13559322033 & 0.42372881355 & 0.27117452738
+	\end{matrix}
+\right]$$
 
 \subsection*{A2.2}
+The DTMC from Figure \ref{fig:2a12} encoded as a PRISM module:
+\lstinputlisting[style=prismmodel,caption={PRISM module encoding the DTMC from Figure \ref{fig:2a12}.}]{../Code/A2.2.pm}
 
+PRISM outputs the following transient distribution for the encoded DTMC:
+\begin{lstlisting}[style=logoutput]
+0:(0)=0.32000000000000006
+1:(1)=0.1
+2:(2)=0.26
+3:(3)=0.32000000000000006
+\end{lstlisting}
+The above matches the calculated transient distribution from A2.1b.\\
+\\
+PRISM outputs the following steady state probabilities for the encoded DTMC:
+\begin{lstlisting}[style=logoutput]
+0:(0)=0.1694916167456058
+1:(1)=0.1355931954330166
+2:(2)=0.42372867450100926
+3:(3)=0.2711865133203683
+\end{lstlisting}
+The above matches the calculated steady state solution from A2.1c.
 
-\subsection*{2A.3}
+\subsection*{A2.3}
+\begin{figure}[H]
+	\begin{center}
+	\begin{tabular}{c c}
+		\includegraphics[scale=.85]{../GFX/ExerciseFigure2a.pdf} &
+		\includegraphics[scale=.85]{../GFX/ExerciseFigure2b.pdf}\\
+		\textbf{\Large(a)} & \textbf{\Large(b)}
+	\end{tabular}
+	\end{center}
+	\caption{DTMCs for question A2.3}
+	\label{fig:2a3}
+\end{figure}
 
-\subsubsection*{2A.3a)}
+We have to consider the DTMC in Figure \ref{fig:2a3}(a), which is shown above and have initial state $s_0$.
 
-\subsubsection*{2A.3b)}
+\subsubsection*{A2.3a) Values for $p$ which holds for $s_0 \models \mathbb{P}_{\geq \frac{1}{2}}(F^{\leq 2}\; a)$}
+We have a maximum of two steps to reach $a$ with a probability of at least $\frac{1}{2}$. In other words we have to solve:
+$$(1-p)^2 \geq \frac{1}{2} \quad | \quad 0 \leq p \leq 1$$
 
+This gives:
+$$0 \leq p \leq 0.292893$$
 
-\subsubsection*{2A.3c)}
+\subsubsection*{A2.3b) Expected number of time steps until $a$ holds in terms of $p$}
+We have to calculate the \emph{Markov chain sojourn time}. We look at the probability of leaving the initial state $s_0$, thereby reaching $a$ for some amount of steps.
 
+\begin{description}
+	\item[Define $p_s$] The probability of staying in the same state, in this case $s_0$, is defined as:
+	$$p_s = 1 - P(s_0, s_0)$$
+	
+	\item[Probability after one time step] The probability of staying in $s_0$ after one time step is:
+	$$\mathrm{\textbf{Pr}}_{s_0}(N_{s_0}=1)=p_s$$
+	
+	\item[Probability after two time steps] The probability of staying in $s_0$ after two time steps is:
+	$$\mathrm{\textbf{Pr}}_{s_0}(N_{s_0}=2)=(1-p_s) \cdot p_s$$
+	
+	\item[Probability after $n$ time steps] The probability of staying in $s_0$ after $n$ time steps is:
+	$$\mathrm{\textbf{Pr}}_{s_0}(N_{s_0}=n)=(1-p_s)^{(n-1)} \cdot p_s$$
+	
+	\item[Rewriting] The probability of staying in $s_0$ after $n$ times steps can also be written as:
+	$$\mathrm{\textbf{Pr}}_{s_0}(N_{s_0} \leq n) = \sum_{i=1}^{n} \mathrm{\textbf{Pr}}_{s_0}(N_{s_0} = i)  = 1 - (1-p_s)^n$$
+	
+	\item[Expected number of time steps spend in state $s_0$] Can be calculated using the formula below:
+	$$\begin{array}{r c l}
+	\mathrm{E}[N_{s_0}] & = & \sum_{i=1}^{n} \mathrm{\textbf{Pr}}_{s_0}(N_{s_0} = i)\cdot i\\[0.15cm]
+	& = & \sum_{n=1}^{\infty} \mathrm{\textbf{Pr}}_{s_0}(N_{s_0} \geq n)\\[0.15cm]
+	& = & \sum_{n=1}^{\infty} (1-p_s)^{n-1}\\[0.15cm]
+	& = & \frac{1}{p_s}
+	\end{array}$$
+	
+	\item[Replacing $p_s$] We have to state the expected number of time steps in terms of $p$, therefore we start by replacing $p_s$:
+	$$\mathrm{E}[N_{s_0}] = \frac{1}{1 - P(s_0,s_0)}$$
+	We then replace $P(s_0,s_0)$:
+	$$\mathrm{E}[N_{s_0}] = \frac{1}{1 - p}$$
+\end{description}
 
-\subsection*{2A.4}
+\subsubsection*{A2.3c) DTMC modification}
+We have to modify Figure \ref{fig:2a3}(b), without increasing the number of states, so that the following holds:
+$$s_0 \models \mathbb{P}_{\geq \frac{1}{2}}(F^{=5}\; a)$$
+$$s_1 \models \mathbb{P}_{\geq \frac{1}{2}}(F^{=10}\; b)$$
 
-\subsubsection*{2A.4a)}
+\begin{description}
+	\item[Reaching $s_1$ from $s_0$] To do this in five time steps we have to calculate the probability of $s_0$ going to $s_0$, while ensuring that on average 5 time time steps will be enough to reach $s_1$. We calculate it the following way:
+	$$5 = \frac{1}{1-p} \Rightarrow \ldots \Rightarrow p = \frac{4}{5}$$
+	So to ensure that on average 5 time steps will be required to go from $s_0$ to $s_1$ we must add the following to the DTMC:
+	$$s_0 \xrightarrow{0.8} s_0$$
+	
+	\item[Reaching $s_2$ from $s_1$] To do this in 10 time steps we have to calculate the probability of $s_1$ going to $s_1$, while ensuring that on average 10 time steps will be enough to reach $s_2$. We calculate it the following way:
+	$$10 = \frac{1}{1-p} \Rightarrow \ldots \Rightarrow p = \frac{9}{10}$$
+	So to ensure that on average 10 time steps will be required to go from $s_1$ to $s_2$ we must add the following to the DTMC:
+	$$s_1 \xrightarrow{0.9} s_1$$
+	
+	\item[The modified DTMC] Below is the modified DTMC:
+	\begin{figure}[H]
+		\begin{center}
+		\includegraphics[scale=.85]{../GFX/Answer-A2-3c.pdf}
+		\end{center}
+		\caption{Modified version of the DTMC from Figure \ref{fig:2a3}.}
+	\end{figure}
+\end{description}
 
-\subsubsection*{2A.4b)}
+\subsection*{A2.4}
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[scale=.85]{../GFX/ExerciseFigure3.pdf}
+	\end{center}
+	\caption{DTMC for question A2.4}
+	\label{fig:2a4}
+\end{figure}
+
+We have to consider the DTMC in Figure \ref{fig:2a4}, which we will call $\mathcal{M} = \left(S, \mathbf{P}, s_1, AP, L\right)$, where $AP = \{b,c\}$. The initial state is $s_1$ and the labels are shown on the states.
+
+\subsubsection*{2A.4a) Determine which states satisfy $\mathbb{P}_{\geq\frac{17}{19}}(b\;U\;c)$}
+The set of satisfying states is:
+$$\{s_3, s_4, s_6, s_7\}$$
+
+\subsubsection*{2A.4b) Determine which states satisfy $\mathbb{P}_{\geq\frac{1}{2}}\left(X\;\mathbb{P}_{>\frac{1}{3}}\left( \left(b \vee c \right) U^{\leq 2} \left( b \wedge c \right) \right) \right)$}
+The set of satisfying states is:
+$$\{s_0, s_4, s_6\}$$
 
 \chapter*{Part B: Intermediate Problems}
 \section*{B1) Practical Problems}
@@ -302,15 +568,99 @@ We want to increase the number of clients in our model until we reach the maximu
 In general having a scheduler that uses priority based scheduling or a shortest time based scheduling will make the scheduler vulnerable to denial of service attack. Because in our model  if a client tries to perform long jobs but all the other clients generate very short jobs. The short jobs will move ahead of the queue and the long jobs will never be served if there always will be generated more short jobs. It would be desirable to express denial of service as a PCTL property but this is not possible for our model. This is because in our model the job will always complete it is just a question of time. We cannot express a PCTL property that will create a job every time the old short job finished.
 
 \section*{B2) Theoretical Problems}
+\subsection*{B2.1}
+A step bounded formula $\Phi_1\;U^{\leqslant n}\;\Phi_2$ satisfies the needs for making assumptions regarding a specific type of interval, $I = [0, n]$, we would like to introduce a more generalized operator in the form of:
+$$\Phi_1\;U^{I}\;\Phi_2 \quad | \quad I \in \left\{\;[n,n'],\;[n, n'[,\;]n, n],\;]n, n'[\;\right\} \quad | \quad 0 \leq x \leq y$$
+
+\subsubsection*{Adapting PCTL}
+To make this new operator possible using only PCTL, we have to synthesize the new operator using our currently available operators. We're not allowed to simply modify the current until operator to satisfy more cases, such a modification could be like:
+$$\Phi_1\;U^{[n, \infty[}\;\Phi_2 = \Phi_1\;U^{\geqslant n}\;\Phi_2$$
+Which would state that after $n$ steps $\Phi_1$ should hold up until at some point where $\Phi_2$ would hold.\\
+\\
+There are 10 important cases of how the intervals can be constructed, let's look at them case by case:
+\begin{description}
+	\item[Case 1:] $[0, 0]$\\
+	This is the same as skipping the left part of the operator:
+	$$\Phi_2$$
+
+	\item[Case 2:] $[0, n]$\\
+	This is the same as the current bounded until operator:
+	$$\Phi_1\;U^{\leqslant n}\;\Phi_2$$
+	
+	\item[Case 3:] $[0,n[$ where $0 < n$\\
+	This is the same as an interval of $[0, n-1]$, therefore it will either match \textbf{Case 1} or \textbf{Case 2}.
+	
+	\item[Case 4:] $[0, \infty[$\\
+	This is the same as the unbounded until operator, so we would write this as:
+	$$\Phi_1\;U\;\Phi_2$$
+	
+	\item[Case 5:] $[n, \infty[$\\
+	Not possible as you would have to set a restriction of when the left part of the operator should apply. If we were to have a \emph{Time Step} property, this would be possible.\\
+	Let's define a time step property, first we need a symbol for it:
+	$$\mathbb{T}$$
+	Then we need a syntax:
+	$$\mathbb{T}^{\leqslant n} = \left\{
+		\begin{array}{c l}
+			\text{true} & \text{if } n \leq \text{amount of time steps passed}\\
+			\text{false} & \text{if } n > \text{amount of time steps passed}
+		\end{array}
+	\right.$$
+	$$\mathbb{T}^{\geqslant n} = \left\{
+		\begin{array}{c l}
+			\text{true} & \text{if } n \geq \text{amount of time steps passed}\\
+			\text{false} & \text{if } n < \text{amount of time steps passed}
+		\end{array}
+	\right.$$
+	Formally the syntax states that if the expression for $n$ satisfies for the amount of time steps passed then it returns \textbf{true}, otherwise it will return \textbf{false}.\\
+	\\
+	We can use this new property to specify a starting point for our modified until operator. Using the new syntax we can properly write out the adapted PCTL for the case:
+	$$\mathbb{T}^{\geqslant n} \wedge \mathbb{P}_{=1}\left(\Phi_1\;U\;\Phi_2\right)$$
+	
+	\item[Case 6:] $]0, \infty[$\\
+	This can be rewritten to $[1, \infty[$, which can be interpreted as $[n, \infty[$. See Case 5.
+	
+	\item[Case 7:] $]n, \infty[$ where $0 < n$\\
+	This can be rewritten to $[n+1, \infty[$, which is covered by Case 5.
+	
+	\item[Case 8:] $[n, n']$\\
+	We have to make use of our time step property again. This time there's both a limitation of when to start and a limitation of when to end.
+	$$\mathbb{T}^{\geqslant n} \wedge \mathbb{P}_{=1}\left(\Phi_1\;U^{\leqslant n'}\;\Phi_2\right)$$
+	
+	\item[Case 9:] $]n, n']$ where $n < n'$\\
+	This can be rewritten to $[n+1, n']$
+	
+	\item[Case 10:] $]n, n'[$ where $n < n + 1 < n'$\\
+	This can be rewritten to $[n+1, n'-1]$.
+\end{description}
+
+So with the introduction of our time step operator, we can model the modified version of the until operator in PCTL.
+
+\subsubsection*{Adapting the model checking algorithm}
+We cant just introduce a new property to PCTl by specifying its syntax and how it works, we must also state how the model checking algorithm should use this new property.\\
+\\
+Basically the new time step property should be treated as \text{true} and the atomic propositions are being treated. In general the way the model checking is performed wouldn't have had any major changes, though it is important that the algorithm keeps track of time steps.
 
 \subsection*{Bisimulation relations}
-We have to consider the DTMC in the figure above, where $s_0$ is the initial state, and the labels are shown on the states. We will call this $M = (S, P, s_0, AP, L)$, where $AP = \{a, b\}$.\\
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[scale=.85]{../GFX/ExerciseFigure4.pdf}
+	\end{center}
+	\caption{DTMC for question B2.2}
+	\label{fig:b22}
+\end{figure}
+
+We have to consider the DTMC in Figure \ref{fig:b22}, which we will call $\mathcal{M} = \left(S, \mathbf{P}, s_0, AP, L\right)$, where $AP = \{a,b\}$. The initial state is $s_0$ and the labels are shown on the states.
 We write down the coarsest probabilistic bisimuliation relation between the states of $M: R \subseteq S \times S$.
 $$R = \{ (s_0, s_0), (s_0,s_5), (s_1,s_1), (s_1,s_4),(s_2,s_2),(s_2,s_3),(s_3,s_3)$$ $$(s_3,s_2),(s_4,s_4),(s_4,s_1),(s_5,s_5),(s_5,s_0)\}$$
 
 This relation is a probabilistic bismulation. This can be seen as follows. States $s_0$ and $s_5$ can move to a state with label $a$ with probability 1. States $s_1$ and $s_4$ can both move to a state with label $b$ with probability 0.8 and to a state with label $a$ with probabilty 0.2. States $s_2$ and $s_3$ can move to a state with label $b$ with probability 0.7 and to a state with label $a$ with probability 0.3.\\
 We have constructed the bisimulation quotient $M / \sim$ of $M$. This can be seen in the figure below.\\
 %%Indsæt figur tegnet af Andreas her
+
+\subsubsection*{B2.2c)}
+\subsubsection*{B2.2d)}
+\subsubsection*{B2.2e)}
+\subsubsection*{B2.2f)}
 
 \chapter*{Part C: Advanced Problems}
 \section*{Practical Problems}
