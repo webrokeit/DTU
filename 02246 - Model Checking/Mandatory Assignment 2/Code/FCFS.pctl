@@ -2,3 +2,13 @@ task1>0=>P>=1 [ F task1=0 ]
 
 task2>0=>P>=1 [ F task2=0 ]
 
+P>0.2[X task1 > 2]
+
+P<0.5 [ G<=10 (task2=5) ]
+
+P=?[X task1 > 2]
+
+P=?[F<=10 (task2=5) ]
+
+P=?[G state1=1]
+
