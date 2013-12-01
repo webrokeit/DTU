@@ -48,7 +48,7 @@ module scheduler
   [server1job1] job1=true & ticket1>=ticket2 & ticket1>=ticket3 & useserver=1 -> (useserver'=0);
   [server1job2] job2=true & ticket2>=ticket1 & ticket2>=ticket3 & useserver=1 -> (useserver'=0);
   [server1job3] job3=true & ticket3>=ticket1 & ticket3>=ticket2 & useserver=1 -> (useserver'=0);
-
+ 
   [server2job1] job1=true & ticket1>=ticket2 & ticket1>=ticket3 & useserver=2 -> (useserver'=0);
   [server2job2] job2=true & ticket2>=ticket1 & ticket2>=ticket3 & useserver=2 -> (useserver'=0);
   [server2job3] job3=true & ticket3>=ticket1 & ticket3>=ticket2 & useserver=2 -> (useserver'=0);
@@ -62,33 +62,36 @@ endmodule
 
 module server1
   jobserving : [0..3] init 0;
+  serving : bool init false;
 
-  [] jobserving>0 -> (jobserving'=0);
+  [] serving=true -> (jobserving'=0) & (serving'=false); 
 
-  [serve1] jobserving=1 -> (jobserving'=4);
-  [serve2] jobserving=2 -> (jobserving'=4);
-  [serve3] jobserving=3 -> (jobserving'=4);
+  [serve1] jobserving=1 -> (serving'=true);
+  [serve2] jobserving=2 -> (serving'=true);
+  [serve3] jobserving=3 -> (serving'=true);
 
-  [server1job1] jobserving=0 -> (jobserving'=1);
-  [server1job2] jobserving=0 -> (jobserving'=2);
-  [server1job3] jobserving=0 -> (jobserving'=3);
+  [server1job1] serving=false -> (jobserving'=1);
+  [server1job2] serving=false -> (jobserving'=2);
+  [server1job3] serving=false -> (jobserving'=3);
 
 endmodule
 
 module server2
   servejob : [0..3] init 0;
+  toserve : bool init false;
 
-  [] servejob>0 -> (servejob'=0);
+  [] toserve=true -> (servejob'=0) & (toserve'=false);
 
-  [serve1] servejob=1 -> true;
-  [serve2] servejob=2 -> true;
-  [serve3] servejob=3 -> true;
+  [serve1] servejob=1 -> (toserve'=true);
+  [serve2] servejob=2 -> (toserve'=true);
+  [serve3] servejob=3 -> (toserve'=true);
 
-  [server2job1] servejob=0 -> (servejob'=1);
-  [server2job2] servejob=0 -> (servejob'=2);
-  [server2job3] servejob=0 -> (servejob'=3);
+  [server2job1] toserve=false -> (servejob'=1);
+  [server2job2] toserve=false -> (servejob'=2);
+  [server2job3] toserve=false -> (servejob'=3);
 
 endmodule
+
 
 module monitor
   finished : bool init false;

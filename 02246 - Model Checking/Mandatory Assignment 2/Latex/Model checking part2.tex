@@ -667,9 +667,30 @@ We have constructed the bisimulation quotient $M / \sim$ of $M$. This can be see
 In this part we wish to extend our Priority Lottery Scheduler from part B1, where there are multiple servers. This means that we have to seperate the functionality of the scheduler from the execution of the tasks which previously have been combined in the module Scheduler. The scheduler has to decide the order of which the tasks execute and which server executes them. We will modify our lottery scheduler to model a system with two servers. In the following subsections we will describe how the scheduler chooses the order of executing tasks and and which server executes them in different scenarios. For each scenario we will investigate the relative responsiveness.
 
 \subsection*{Probabilistically choice}
-We have extended the priority lottery scheduler so that it chooses between the two servers with an equal probability. This extension can be found in the file PLS-2serversP.pm. 
+We have extended the priority lottery scheduler so that it chooses between the two servers with an equal probability. This extension can be found in the file PLS-2serversP.pm. This extension has been done by making two modules called \emph{server1} and \emph{server2}. The scheduler is extended with new commands that will synchronise with either server1 or server2 which will be determined by the variable \emph{useserver}. Whenever useserver is 0 then it will be assigned to 1 with probability 0.5 and assigned to 2 with probability 0.5. The value 1 will cause the server1 to be used and likewise for server2. The scheduler is responsible for the priority of the tasks which will be used to determine which job will be served. The priority of the task are assigned to approximate a Shortest Remaining Time scheduler. The more ticket a job has the higher priority the job has. The scheduler module and the server modules synchronize over commands that specify that the task must have a high priority to be served and the specific server must be chosen by the useserver variable. The servers will use a variable changed by the synchronized commands with the scheduler to specify what job should be served and serve them by using the corresponding serve commands for the job. We now have to investigate how the probability of finishing the first task from $client_1$ evolve over time. We use PRISM to make an experiment with the following PCTL property:
+$$P=? ( F^{\leq t} finished=true)$$
+Recall from earlier in the report that finished is a variable that will be assigned to true when the finish1 command is triggered. By using this PCTL property we have created a graph for $0 \leq t \leq 200$.
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[scale=0.75]{../GFX/C1.png}
+	\end{center}
+	\caption{Graph for 2 servers with probabilistically choice}
+\end{figure}
+We can see by the graph how the probability of the first job from $client_1$ grows over time. At time step 200 it will have a probability of 0.8 of being finished which is quite high considering there are 84231 reachable states in the model.
 
 \subsection*{High priority tasks}
-We have extended the priority lottery scheduler so that one server is reserved for high priority tasks. This extension can be found in the file PLS-2servers-Priority.pm.
+We have extended the priority lottery scheduler so that one server is reserved for high priority tasks. This extension can be found in the file PLS-2servers-
+Priority.pm. This extension also has two modules called server1 and server2, where server1 is reserved for high priority tasks. We use the notion that a task has high priority when it has 3 or more tickets. A task has at most 4 tickets. Server1 will only serve jobs with 3 or more tickets and server2 will just serve the tasks currently in the scheduler with the highest priority as before. This means that we no longer need a variable to keep track of what server to use next. It will just choose server1 if the task has 3 or more tickets. Nothing else has been changed from the previous extension with probabilistic choice. 
+\\
+We want to investigate how the probability of finishing the first task from $client_1$ evolve over time. We use PRISM to make an experiment with the same PCTL property as before.
+$$P=? ( F^{\leq t} finished=true)$$
+By using this PCTL property we have created a graph for $0 \leq t \leq 200$. 337
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[scale=0.75]{../GFX/C2.png}
+	\end{center}
+	\caption{Graph for 2 servers with one server reserved for high priority tasks}
+\end{figure}
+We can see by the graph how the probability of finishing the first job from $client_1$ grows over time. At time step 200 it will have a probability of being finished. In a model with 134967 reachable states this is again quite high. It would be desirable to compare the two extensions to each other but this is difficult because of the big difference in reachable states. But the extensions however will never suffer from starvation and have a sensible probability of finishing jobs fast.
 
 \end{document}

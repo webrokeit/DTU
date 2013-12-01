@@ -89,18 +89,20 @@ module scheduler
   [create5] job5=false & ticket5=5 -> (job5'=true) & (ticket5'=ticket5-task5);
   [create6] job6=false & ticket6=5 -> (job6'=true) & (ticket6'=ticket6-task6);
   [create7] job7=false & ticket7=5 -> (job7'=true) & (ticket7'=ticket7-task7);
-  [create8] job8=false & ticket8=5 -> (job8'=true) & (ticket8'=ticket8-task8);
+  [create8] job8=false & ticket8=5 -> (job8'=true) & (ticket8'=ticket8-task7);
+
 
 
   // Serve the jobs
   [serve1] job1=true & ticket1>=ticket2 & ticket1>=ticket3 & ticket1>=ticket4 & ticket1>=ticket5 & ticket1>=ticket6 & ticket1>=ticket7 & ticket1>=ticket8 -> true;
-  [serve2] job2=true & ticket2>=ticket1 & ticket2>=ticket3 & ticket2>=ticket4 & ticket2>=ticket5 & ticket2>=ticket6 & ticket2>=ticket7 & ticket2>=ticket8 -> true;
-  [serve3] job3=true & ticket3>=ticket1 & ticket3>=ticket2 & ticket3>=ticket4 & ticket3>=ticket5 & ticket3>=ticket6 & ticket3>=ticket7 & ticket3>=ticket8 -> true;
-  [serve4] job4=true & ticket4>=ticket2 & ticket4>=ticket3 & ticket4>=ticket1 & ticket4>=ticket5 & ticket4>=ticket6 & ticket4>=ticket7 & ticket4>=ticket8 -> true;
-  [serve5] job5=true & ticket5>=ticket1 & ticket5>=ticket3 & ticket5>=ticket4 & ticket5>=ticket2 & ticket5>=ticket6 & ticket5>=ticket7 & ticket5>=ticket8 -> true;
-  [serve6] job6=true & ticket6>=ticket1 & ticket6>=ticket2 & ticket6>=ticket4 & ticket6>=ticket5 & ticket6>=ticket3 & ticket6>=ticket7 & ticket6>=ticket8 -> true;        
-  [serve7] job7=true & ticket7>=ticket1 & ticket7>=ticket2 & ticket7>=ticket4 & ticket7>=ticket5 & ticket7>=ticket3 & ticket7>=ticket6 & ticket7>=ticket8 -> true;        
-  [serve8] job8=true & ticket8>=ticket1 & ticket8>=ticket2 & ticket8>=ticket4 & ticket8>=ticket5 & ticket8>=ticket3 & ticket8>=ticket6 & ticket8>=ticket7 -> true;        
+  [serve2] job2=true & ticket2>=ticket1 & ticket2>=ticket3 & ticket2>=ticket4 & ticket2>=ticket5 & ticket2>=ticket6 & ticket2>=ticket7 & ticket2>=ticket8-> true;
+  [serve3] job3=true & ticket3>=ticket1 & ticket3>=ticket2 & ticket3>=ticket4 & ticket3>=ticket5 & ticket3>=ticket6 & ticket3>=ticket7 & ticket3>=ticket8-> true;
+  [serve4] job4=true & ticket4>=ticket2 & ticket4>=ticket3 & ticket4>=ticket1 & ticket4>=ticket5 & ticket4>=ticket6 & ticket4>=ticket7 & ticket4>=ticket8-> true;
+  [serve5] job5=true & ticket5>=ticket1 & ticket5>=ticket3 & ticket5>=ticket4 & ticket5>=ticket2 & ticket5>=ticket6 & ticket5>=ticket7 & ticket5>=ticket8-> true;
+  [serve6] job6=true & ticket6>=ticket1 & ticket6>=ticket2 & ticket6>=ticket4 & ticket6>=ticket5 & ticket6>=ticket3 & ticket6>=ticket7 & ticket6>=ticket8-> true;        
+  [serve7] job7=true & ticket7>=ticket1 & ticket7>=ticket2 & ticket7>=ticket4 & ticket7>=ticket5 & ticket7>=ticket3 & ticket7>=ticket6 & ticket7>=ticket8-> true;        
+  [serve8] job8=true & ticket8>=ticket1 & ticket8>=ticket2 & ticket8>=ticket4 & ticket8>=ticket5 & ticket8>=ticket3 & ticket8>=ticket6 & ticket8>=ticket7-> true;        
+
 
   // Complete any job that has finished
   [finish1] job1=true -> (job1'=false) & (ticket1'=5);
