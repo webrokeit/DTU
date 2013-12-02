@@ -506,7 +506,7 @@ $$\{s_0, s_4, s_6\}$$
 \chapter*{Part B: Intermediate Problems}
 \section*{B1) Practical Problems}
 \subsection*{Lottery scheduler}
-In this part we will model a Lottery Scheduler (found in the LotteryScheduler.pm file). In Lottery Scheduling each task is assigned a number of tickets. When the scheduler has to decide which task to execute, the scheduler selects a ticket under a uniform distribution, and the task owning the ticket is allowed to execute. Our Lottery Scheduler is \emph{pre-emptive} which means that a task can only execute for a certain amount of time before being interrupted. In our scheduler the amount of time is one time unit.  Our Lottery Scheduler has three clients with one task each. Each task has a single ticket. We have modeled the tickets as a single variable in the scheduler module. The variable called \emph{ticket} has a range of 0 to 3 and it is initialized as 0. The serving of the jobs is as follows: Whenever a task is in the scheduler it is allowed to execute for one time unit given that the ticket has a value equal to the client's number. After the job has executed for one time unit the variable ticket is assigned to 0. The exciting part is assigning the value of the ticket.
+In this part we will model a Lottery Scheduler (found in the \emph{LotteryScheduler.pm} file). In Lottery Scheduling each task is assigned a number of tickets. When the scheduler has to decide which task to execute, the scheduler selects a ticket under a uniform distribution, and the task owning the ticket is allowed to execute. Our Lottery Scheduler is \emph{pre-emptive} which means that a task can only execute for a certain amount of time before being interrupted. In our scheduler the amount of time is one time unit.  Our Lottery Scheduler has three clients with one task each. Each task has a single ticket. We have modeled the tickets as a single variable in the scheduler module. The variable called \emph{ticket} has a range of 0 to 3 and it is initialized as 0. The serving of the jobs is as follows: Whenever a task is in the scheduler it is allowed to execute for one time unit given that the ticket has a value equal to the client's number. After the job has executed for one time unit the variable ticket is assigned to 0. The exciting part is assigning the value of the ticket.
 
 \begin{lstlisting}[style=prismmodel]
   [] ticket=0 -> 0.333333333333333333333333:(ticket'=1) + 0.333333333333333333333333:(ticket'=2) + 0.333333333333333333333333:(ticket'=3);
@@ -519,11 +519,11 @@ Whenever the ticket is 0 there should be an equal probability of choosing one of
 \subsubsection*{Executing time for $client_1$}
 We are interested in the time taken for the first task from $client_1$ to complete. In order to do this we introduce a new module called \emph{Monitor}. Monitor has only one variable called finished which is a boolean value. It is initialized as false. When the finish1 command is executed meaning the first job from $client_1$ has completed the finished variable will be set to true. For subsequent actions it remains in this state.\\
 We write a PCTL formula using the '$\mathbb{P}_{=?}$' syntax expressing that the first task from $client_1$ completes within in $t$ time units. $t$ is defined as an integer constant without a value. We will use the experimentation feature of PRISM to plot a graph of this probability for $0 \leq t \leq 20$.\\
-The PCTL formula: $\mathbb{P}_{=?}(\diamondsuit^{\leq t} finished=true)$\\
+The PCTL formula: $\mathbb{P}_{=?}(\diamondsuit^{\leq t} finished=true)$
 \begin{figure}[H]
 	\centering
-	\includegraphics[scale=0.75]{../GFX/B1-1c.png}\\
-	Figure B1.1: The graph plotting the probability for $0 \leq t \leq 20$ with one time unit
+	\includegraphics[scale=0.75]{../GFX/B1-1c.png}
+	\caption{A graph plotting the probability for $0 \leq t \leq 20$ with one time unit for $\mathbb{P}_{=?}(\diamondsuit^{\leq t} finished=true)$}
 \end{figure}
 
 \subsubsection*{Starvation}
@@ -536,23 +536,23 @@ $(task3 > 0) \Rightarrow \mathbb{P}_{\geq 1} (F(task3 = 0))$
 These properties have been verified by PRISM so it is not possible in our model that our lottery scheduler will suffer from starvation.
 
 \subsubsection*{Two time units modification}
-We wish to modify our allowed time for execution for each task so that is two time units (found in the file LS-2units.pm). We do this by defining an integer variable called \emph{time} with a range between 0 and 2. Whenever the variable ticket is 0 then it will assign ticket to a value according to each client with an equal probability as before but now it will also set the variable time to 2. The guards for the serve commands now have an additional condition which is that time must be greater than 0. Meanwhile whenever time is 0 and ticket is above 0 ticket will be reset to 0 so a new job can be served. Furthermore whenever finish for a job is activated it will reset time to 0. The interesting part is how this affects the time taken to complete a task from $client_1$. We will do the same as before and make a graph.\\
+We wish to modify our allowed time for execution for each task so that is two time units (found in the file \emph{LS-2units.pm}). We do this by defining an integer variable called \emph{time} with a range between 0 and 2. Whenever the variable ticket is 0 then it will assign ticket to a value according to each client with an equal probability as before but now it will also set the variable time to 2. The guards for the serve commands now have an additional condition which is that time must be greater than 0. Meanwhile whenever time is 0 and ticket is above 0 ticket will be reset to 0 so a new job can be served. Furthermore whenever finish for a job is activated it will reset time to 0. The interesting part is how this affects the time taken to complete a task from $client_1$. We will do the same as before and make a graph.
 \begin{figure}[H]
 	\centering
-	\includegraphics[scale=0.75]{../GFX/B1-1e.png}\\
-	Figure B1.2: The graph plotting the probability for $0 \leq t \leq 20$ with two time units
+	\includegraphics[scale=0.75]{../GFX/B1-1e.png}
+	\caption{A graph plotting the proprobability for $0 \leq t \leq 20$ with two time units}
 \end{figure}
 As we can see by the graph it does not affect the total probability much but the graph has larger spikes in probability because the time unit is now increased by 1.
 
 \subsection*{Priority Lottery Scheduler}
-Instead of assigning the same number of tickets to each task we now give varying priority to different tasks by assigning them different numbers of tickets. This variant of the lottery scheduler can be found in the file PLS.pm. We will approximate a Shortest Remaining Time scheduler by using this kind of lottery scheduling. This means that small tasks will be assigned more tickets than a large task. We have done this approximation by creating three integer variables with range from 0 to 5 and they are initialized as 5. These three variables are called ticket1, ticket2 and ticket3 - one for each client. When a client creates a job the client must not have a job in the scheduler already or the client's corresponding ticket may not be any other value than 5. This is because the ticket belonging to the client will get its value by subtracting the length of its job from the ticket's value. Meaning that a job of length 5 will be assigned a ticket value of 0. When the jobs in the scheduler are finished their ticket values will be reset to 5. The serving of the jobs have a guard that specifies that its ticket value must be greater or equal to the other tickets in order to be served.
+Instead of assigning the same number of tickets to each task we now give varying priority to different tasks by assigning them different numbers of tickets. This variant of the lottery scheduler can be found in the file \emph{PLS.pm}. We will approximate a Shortest Remaining Time scheduler by using this kind of lottery scheduling. This means that small tasks will be assigned more tickets than a large task. We have done this approximation by creating three integer variables with range from 0 to 5 and they are initialized as 5. These three variables are called ticket1, ticket2 and ticket3 - one for each client. When a client creates a job the client must not have a job in the scheduler already or the client's corresponding ticket may not be any other value than 5. This is because the ticket belonging to the client will get its value by subtracting the length of its job from the ticket's value. Meaning that a job of length 5 will be assigned a ticket value of 0. When the jobs in the scheduler are finished their ticket values will be reset to 5. The serving of the jobs have a guard that specifies that its ticket value must be greater or equal to the other tickets in order to be served.
 
 \subsubsection*{Time taken and Starvation}
 We wish to find out how this affects the time taken to complete a task from $client_1$. We will once again plot a graph for the probability.
 \begin{figure}[H]
 	\centering
-	\includegraphics[scale=0.75]{../GFX/B1-2b.png}\\
-	Figure B1.3: The graph plotting the probability for $0 \leq t \leq 20$ with priorities
+	\includegraphics[scale=0.75]{../GFX/B1-2b.png}
+	\caption{A graph plotting the probability for $0 \leq t \leq 20$ with priorities}
 \end{figure}
 As we can see by the graph adding priorities will affect the time taken to complete a task from $client_1$. It now has a higher probability of finishing a job within 20 time steps because all the small jobs will be served first by the scheduler.
 \\Also we would like to find out if starvation is possible in our model. We therefore use the following PCTL formula to verify the properties in PRISM.
@@ -682,7 +682,9 @@ $$\begin{array}{l c l}
 	s'_1 & = & 0.6363636180884598\\
 	s'_2 & = & 0.1818181312072233
 \end{array}$$
+The steady state probabilities for $\mathcal{M}$ relates to the steady state probabilities of $\mathcal{M} / \sim$. $s_1, s_4$ which corresponds to $s'_1$ are the highest.
 
+\subsubsection*{Relabeling}
 If we would could choose a labeling function $L$ for the DTMC $\mathcal{M}$ that would help make the coarsest possible probabilistic bisimulation, then the function would be:
 $$L = \left\{\begin{array}{l c r}
 s_0 & = & a\\
@@ -692,7 +694,6 @@ s_3 & = & a\\
 s_4 & = & a\\
 s_5 & = & a
 \end{array}\right\}$$
-
 
 This would result in the coarsest possible probabilistic bisimulation being:
 $$R = \left\{\begin{array}{c}
@@ -705,18 +706,31 @@ $$R = \left\{\begin{array}{c}
 \end{array}\right\}$$
 All states have equal probability of 1 of reaching a state with label $a$. 
 
+\subsubsection*{Lumpability}
+Probabilistic bisumilation has an equivalent formulation called \emph{lumpability}. A partitioning of the state space os a DTMC (i.e. a labelling function $L$ such that $|L(s)| = 1$ for all $s$) is said to be lumpable if for all pairs of states $s_1,s_2 \in S$ such that $L(s_1) = L(s_2)$, and all atomic propositions $a \in AP$:
+$$\sum_{s' \in L^{-1}(a)} \mathbf{P}(s_1,s') = \sum_{s' \in L^{-1}(a)} \mathbf{P}(s_2,s')$$
 
-\subsubsection*{B2.2c)}
-\subsubsection*{B2.2d)}
-\subsubsection*{B2.2e)}
-\subsubsection*{B2.2f)}
+It can be proven that probabilistic bisimulation implies lumpability. For a pair of states $s_1, s_2 \in \mathcal{R}$, the probabilistic bisimulation, the following must be true:
+\begin{enumerate}
+	\item $L(s_1) = L(s_2)$
+	\item $\mathbf{P}(s_1, T) = \mathbf{P}(s_2, T)$ for each equivalence class $T \in S / \mathcal{R}$
+\end{enumerate}
+
+Both probabilistic bisimulation and lumpability requires that the probability of moving by a single transition to some equivalence class is equal. Further probabilistic bisimulation requires that the labeling for the states are equal. As stated earlier the labeling function can be used for partitioning the state space. Therefore probabilistic bisimulation is a specific case of lumpability, which means that probabilistic bisimulation implies lumpability.\\
+\\
+If we wanted to distinguish between the two states of a lumpable partition using PCTL*, assuming the same labeling function has been used for both instances, then we will be having a pretty hard time. There are severals reason for that:
+\begin{enumerate}
+	\item It's not possible to distinguish the states by their label. It's a requirement that for two states to be in a lumpable partition, their labeling must be equal.
+	\item It's not possible to distinguish the states by requiring the next state to be of a specific label. For two states to be in a lumpable parition, the probability of reaching a state with a specific label must be the same for both states, therefore you cannot use a PCTL* formula like $s \wedge \mathbb{P}_{=1}(\bigcirc \; a)$ to distinguish between the states, as the formula has to be true for both $s_1$ and $s_2$.
+\end{enumerate}
+
 
 \chapter*{Part C: Advanced Problems}
 \section*{Practical Problems}
 In this part we wish to extend our Priority Lottery Scheduler from part B1, where there are multiple servers. This means that we have to seperate the functionality of the scheduler from the execution of the tasks which previously have been combined in the module Scheduler. The scheduler has to decide the order of which the tasks execute and which server executes them. We will modify our lottery scheduler to model a system with two servers. In the following subsections we will describe how the scheduler chooses the order of executing tasks and and which server executes them in different scenarios. For each scenario we will investigate the relative responsiveness.
 
 \subsection*{Probabilistically choice}
-We have extended the priority lottery scheduler so that it chooses between the two servers with an equal probability. This extension can be found in the file PLS-2serversP.pm. This extension has been done by making two modules called \emph{server1} and \emph{server2}. The scheduler is extended with new commands that will synchronise with either server1 or server2 which will be determined by the variable \emph{useserver}. Whenever useserver is 0 then it will be assigned to 1 with probability 0.5 and assigned to 2 with probability 0.5. The value 1 will cause the server1 to be used and likewise for server2. The scheduler is responsible for the priority of the tasks which will be used to determine which job will be served. The priority of the task are assigned to approximate a Shortest Remaining Time scheduler. The more ticket a job has the higher priority the job has. The scheduler module and the server modules synchronize over commands that specify that the task must have a high priority to be served and the specific server must be chosen by the useserver variable. The servers will use a variable changed by the synchronized commands with the scheduler to specify what job should be served and serve them by using the corresponding serve commands for the job. We now have to investigate how the probability of finishing the first task from $client_1$ evolve over time. We use PRISM to make an experiment with the following PCTL property:
+We have extended the priority lottery scheduler so that it chooses between the two servers with an equal probability. This extension can be found in the file \emph{PLS-2serversP.pm}. This extension has been done by making two modules called \emph{server1} and \emph{server2}. The scheduler is extended with new commands that will synchronise with either server1 or server2 which will be determined by the variable \emph{useserver}. Whenever useserver is 0 then it will be assigned to 1 with probability 0.5 and assigned to 2 with probability 0.5. The value 1 will cause the server1 to be used and likewise for server2. The scheduler is responsible for the priority of the tasks which will be used to determine which job will be served. The priority of the task are assigned to approximate a Shortest Remaining Time scheduler. The more ticket a job has the higher priority the job has. The scheduler module and the server modules synchronize over commands that specify that the task must have a high priority to be served and the specific server must be chosen by the useserver variable. The servers will use a variable changed by the synchronized commands with the scheduler to specify what job should be served and serve them by using the corresponding serve commands for the job. We now have to investigate how the probability of finishing the first task from $client_1$ evolve over time. We use PRISM to make an experiment with the following PCTL property:
 $$\mathbb{P}_{=?}( F^{\leq t} finished=true)$$
 Recall from earlier in the report that finished is a variable that will be assigned to true when the finish1 command is triggered. By using this PCTL property we have created a graph for $0 \leq t \leq 200$.
 \begin{figure}[H]
@@ -728,8 +742,7 @@ Recall from earlier in the report that finished is a variable that will be assig
 We can see by the graph how the probability of the first job from $client_1$ grows over time. At time step 200 it will have a probability of 0.8 of being finished which is quite high considering there are 84231 reachable states in the model.
 
 \subsection*{High priority tasks}
-We have extended the priority lottery scheduler so that one server is reserved for high priority tasks. This extension can be found in the file PLS-2servers-
-Priority.pm. This extension also has two modules called server1 and server2, where server1 is reserved for high priority tasks. We use the notion that a task has high priority when it has 3 or more tickets. A task has at most 4 tickets. Server1 will only serve jobs with 3 or more tickets and server2 will just serve the tasks currently in the scheduler with the highest priority as before. This means that we no longer need a variable to keep track of what server to use next. It will just choose server1 if the task has 3 or more tickets. Nothing else has been changed from the previous extension with probabilistic choice. 
+We have extended the priority lottery scheduler so that one server is reserved for high priority tasks. This extension can be found in the file \emph{PLS-2servers-Priority.pm}. This extension also has two modules called server1 and server2, where server1 is reserved for high priority tasks. We use the notion that a task has high priority when it has 3 or more tickets. A task has at most 4 tickets. Server1 will only serve jobs with 3 or more tickets and server2 will just serve the tasks currently in the scheduler with the highest priority as before. This means that we no longer need a variable to keep track of what server to use next. It will just choose server1 if the task has 3 or more tickets. Nothing else has been changed from the previous extension with probabilistic choice. 
 \\
 We want to investigate how the probability of finishing the first task from $client_1$ evolve over time. We use PRISM to make an experiment with the same PCTL property as before.
 $$\mathbb{P}_{=?}( F^{\leq t} finished=true)$$
