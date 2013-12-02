@@ -38,9 +38,10 @@ module scheduler
   useserver : [0..2] init 0;
 
   // Record that there is a waiting job
-  [create1] job1=false & ticket1=5 -> (job1'=true) & (ticket1'=ticket1-task1);
-  [create2] job2=false & ticket2=5 -> (job2'=true) & (ticket2'=ticket2-task2);
-  [create3] job3=false & ticket3=5 -> (job3'=true) & (ticket3'=ticket3-task3);
+  [create1] job1=false -> (job1'=true) & (ticket1'=5-task1);
+  [create2] job2=false -> (job2'=true) & (ticket2'=5-task2);
+  [create3] job3=false -> (job3'=true) & (ticket3'=5-task3);
+
 
   // Serve the jobs
   [] useserver=0 -> 0.5:(useserver'=1) + 0.5:(useserver'=2);
@@ -54,9 +55,9 @@ module scheduler
   [server2job3] job3=true & ticket3>=ticket1 & ticket3>=ticket2 & useserver=2 -> (useserver'=0);
 
   // Complete any job that has finished
-  [finish1] job1=true -> (job1'=false) & (ticket1'=5);
-  [finish2] job2=true -> (job2'=false) & (ticket2'=5);
-  [finish3] job3=true -> (job3'=false) & (ticket3'=5);
+  [finish1] job1=true -> (job1'=false) & (ticket1'=0);
+  [finish2] job2=true -> (job2'=false) & (ticket2'=0);
+  [finish3] job3=true -> (job3'=false) & (ticket3'=0);
 
 endmodule
 

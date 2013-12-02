@@ -545,7 +545,7 @@ We wish to modify our allowed time for execution for each task so that is two ti
 As we can see by the graph it does not affect the total probability much but the graph has larger spikes in probability because the time unit is now increased by 1.
 
 \subsection*{Priority Lottery Scheduler}
-Instead of assigning the same number of tickets to each task we now give varying priority to different tasks by assigning them different numbers of tickets. This variant of the lottery scheduler can be found in the file \emph{PLS.pm}. We will approximate a Shortest Remaining Time scheduler by using this kind of lottery scheduling. This means that small tasks will be assigned more tickets than a large task. We have done this approximation by creating three integer variables with range from 0 to 5 and they are initialized as 5. These three variables are called ticket1, ticket2 and ticket3 - one for each client. When a client creates a job the client must not have a job in the scheduler already or the client's corresponding ticket may not be any other value than 5. This is because the ticket belonging to the client will get its value by subtracting the length of its job from the ticket's value. Meaning that a job of length 5 will be assigned a ticket value of 0. When the jobs in the scheduler are finished their ticket values will be reset to 5. The serving of the jobs have a guard that specifies that its ticket value must be greater or equal to the other tickets in order to be served.
+Instead of assigning the same number of tickets to each task we now give varying priority to different tasks by assigning them different numbers of tickets. This variant of the lottery scheduler can be found in the file \emph{PLS.pm}. We will approximate a Shortest Remaining Time scheduler by using this kind of lottery scheduling. This means that small tasks will be assigned more tickets than a large task. We have done this approximation by creating three integer variables with range from 0 to 5 and they are initialized as 0. These three variables are called ticket1, ticket2 and ticket3 - one for each client. When a client creates a job the client must not have a job in the scheduler already or the client's corresponding ticket may not be any other value than 0. This is because the ticket belonging to the client will get its value by subtracting the length of its job from the maximum length of a job (5). Meaning that a job of length 5 will be assigned a ticket value of 0. When the jobs in the scheduler are finished their ticket values will be reset to 0. The serving of the jobs have a guard that specifies that its ticket value must be greater or equal to the other tickets in order to be served.
 
 \subsubsection*{Time taken and Starvation}
 We wish to find out how this affects the time taken to complete a task from $client_1$. We will once again plot a graph for the probability.
@@ -739,7 +739,15 @@ Recall from earlier in the report that finished is a variable that will be assig
 	\end{center}
 	\caption{Graph for 2 servers with probabilistically choice}
 \end{figure}
-We can see by the graph how the probability of the first job from $client_1$ grows over time. At time step 200 it will have a probability of 0.8 of being finished which is quite high considering there are 84231 reachable states in the model.
+We can see by the graph how the probability of the first job from $client_1$ grows over time. At time step 200 it will have a probability of 0.8 of being finished which is quite high considering there are 97212 reachable states in the model.
+
+Also we would like to find out if starvation is possible in our model. We therefore use the following PCTL formula to verify the properties in PRISM.
+\begin{center}
+$(task1 > 0) \Rightarrow \mathbb{P}_{\geq 1}(F(task1 = 0))$\\
+$(task2 > 0) \Rightarrow \mathbb{P}_{\geq 1}(F(task2 = 0))$\\
+$(task3 > 0) \Rightarrow \mathbb{P}_{\geq 1} (F(task3 = 0))$
+\end{center}
+These properties have been verified by PRISM meaning that a job will always complete.
 
 \subsection*{High priority tasks}
 We have extended the priority lottery scheduler so that one server is reserved for high priority tasks. This extension can be found in the file \emph{PLS-2servers-Priority.pm}. This extension also has two modules called server1 and server2, where server1 is reserved for high priority tasks. We use the notion that a task has high priority when it has 3 or more tickets. A task has at most 4 tickets. Server1 will only serve jobs with 3 or more tickets and server2 will just serve the tasks currently in the scheduler with the highest priority as before. This means that we no longer need a variable to keep track of what server to use next. It will just choose server1 if the task has 3 or more tickets. Nothing else has been changed from the previous extension with probabilistic choice. 
@@ -753,6 +761,13 @@ By using this PCTL property we have created a graph for $0 \leq t \leq 200$. 337
 	\end{center}
 	\caption{Graph for 2 servers with one server reserved for high priority tasks}
 \end{figure}
-We can see by the graph how the probability of finishing the first job from $client_1$ grows over time. At time step 200 it will have a probability of being finished. In a model with 134967 reachable states this is again quite high. It would be desirable to compare the two extensions to each other but this is difficult because of the big difference in reachable states. But the extensions however will never suffer from starvation and have a sensible probability of finishing jobs fast.
+We can see by the graph how the probability of finishing the first job from $client_1$ grows over time. At time step 200 it will have a probability of being finished. In a model with 155127 reachable states this is again quite high. It would be desirable to compare the two extensions to each other but this is difficult because of the big difference in reachable states. But the extensions however will never suffer from starvation and have a sensible probability of finishing jobs fast.
+\\Again we would like to find out if starvation is possible in our extended model. We therefore use PRISM to verify the following PCTL properties.
+\begin{center}
+$(task1 > 0) \Rightarrow \mathbb{P}_{\geq 1}(F(task1 = 0))$\\
+$(task2 > 0) \Rightarrow \mathbb{P}_{\geq 1}(F(task2 = 0))$\\
+$(task3 > 0) \Rightarrow \mathbb{P}_{\geq 1} (F(task3 = 0))$
+\end{center}
+These properties have been verified by PRISM meaning that a job will always complete.
 
 \end{document}

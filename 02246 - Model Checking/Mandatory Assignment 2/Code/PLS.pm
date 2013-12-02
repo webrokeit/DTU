@@ -72,24 +72,24 @@ module scheduler
   job6 : bool init false;
   job7 : bool init false;
   job8 : bool init false;
-  ticket1 : [0..5] init 5; // Number of tickets for job1
-  ticket2 : [0..5] init 5; // Number of tickets for job2
-  ticket3 : [0..5] init 5; // Number of tickets for job3
-  ticket4 : [0..5] init 5;
-  ticket5 : [0..5] init 5;
-  ticket6 : [0..5] init 5;
-  ticket7 : [0..5] init 5;
-  ticket8 : [0..5] init 5;
+  ticket1 : [0..5] init 0; // Number of tickets for job1
+  ticket2 : [0..5] init 0; // Number of tickets for job2
+  ticket3 : [0..5] init 0; // Number of tickets for job3
+  ticket4 : [0..5] init 0;
+  ticket5 : [0..5] init 0;
+  ticket6 : [0..5] init 0;
+  ticket7 : [0..5] init 0;
+  ticket8 : [0..5] init 0;
 
   // Record that there is a waiting job
-  [create1] job1=false & ticket1=5 -> (job1'=true) & (ticket1'=ticket1-task1);
-  [create2] job2=false & ticket2=5 -> (job2'=true) & (ticket2'=ticket2-task2);
-  [create3] job3=false & ticket3=5 -> (job3'=true) & (ticket3'=ticket3-task3);
-  [create4] job4=false & ticket4=5 -> (job4'=true) & (ticket4'=ticket4-task4);
-  [create5] job5=false & ticket5=5 -> (job5'=true) & (ticket5'=ticket5-task5);
-  [create6] job6=false & ticket6=5 -> (job6'=true) & (ticket6'=ticket6-task6);
-  [create7] job7=false & ticket7=5 -> (job7'=true) & (ticket7'=ticket7-task7);
-  [create8] job8=false & ticket8=5 -> (job8'=true) & (ticket8'=ticket8-task7);
+  [create1] job1=false -> (job1'=true) & (ticket1'=5-task1);
+  [create2] job2=false -> (job2'=true) & (ticket2'=5-task2);
+  [create3] job3=false -> (job3'=true) & (ticket3'=5-task3);
+  [create4] job4=false -> (job4'=true) & (ticket4'=5-task4);
+  [create5] job5=false -> (job5'=true) & (ticket5'=5-task5);
+  [create6] job6=false -> (job6'=true) & (ticket6'=5-task6);
+  [create7] job7=false -> (job7'=true) & (ticket7'=5-task7);
+  [create8] job8=false -> (job8'=true) & (ticket8'=5-task7);
 
 
 
@@ -105,14 +105,14 @@ module scheduler
 
 
   // Complete any job that has finished
-  [finish1] job1=true -> (job1'=false) & (ticket1'=5);
-  [finish2] job2=true -> (job2'=false) & (ticket2'=5);
-  [finish3] job3=true -> (job3'=false) & (ticket3'=5);
-  [finish4] job4=true -> (job4'=false) & (ticket4'=5);
-  [finish5] job5=true -> (job5'=false) & (ticket5'=5);
-  [finish6] job6=true -> (job6'=false) & (ticket6'=5);
-  [finish7] job7=true -> (job7'=false) & (ticket7'=5);
-  [finish8] job8=true -> (job8'=false) & (ticket8'=5);
+  [finish1] job1=true -> (job1'=false) & (ticket1'=0);
+  [finish2] job2=true -> (job2'=false) & (ticket2'=0);
+  [finish3] job3=true -> (job3'=false) & (ticket3'=0);
+  [finish4] job4=true -> (job4'=false) & (ticket4'=0);
+  [finish5] job5=true -> (job5'=false) & (ticket5'=0);
+  [finish6] job6=true -> (job6'=false) & (ticket6'=0);
+  [finish7] job7=true -> (job7'=false) & (ticket7'=0);
+  [finish8] job8=true -> (job8'=false) & (ticket8'=0);
 
 endmodule
 
