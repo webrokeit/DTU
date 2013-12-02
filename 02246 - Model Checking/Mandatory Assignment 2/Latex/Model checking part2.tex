@@ -113,10 +113,10 @@ This report has been written by the both of us. All parts have been worked on to
 \subsection*{A1.1}
 In this problem we will ad probabilities to the FCFS scheduler from the previous assignment, so that we construct a discrete time Markov chain.
 
-\subsubsection*{A1.1a)}
+\subsubsection*{A1.1a) Non-determinism}
 Currently in the FCFS scheduler there are sources of non-determinism. Some of the sources are the create commands in $client_1$ and $client_2$ because there are 5 different create commands with the same guard only the update distinguishes the commands. These sources are due to local non-determinism between the commands in the modules. The other source of non-determinism is due to concurrent execution of the modules in FCFS. The shifting command in the Scheduler module is a result of non-determinism because it can happen independently of what the other modules are doing.
 
-\subsubsection*{A1.1b)}
+\subsubsection*{A1.1b) Resolve local non-determinism}
 In order to resolve the local non-determinism we have to modify the modules to include probabilistic commands. Since the distribution of the probabilities should be uniform the new create command will look like the following:
 \begin{lstlisting}[style=prismmodel]
 [create1] state1=0 -> 0.2 :(state1'=1) & (task1'=1) +
@@ -126,31 +126,31 @@ In order to resolve the local non-determinism we have to modify the modules to i
                       0.2 :(state1'=1) & (task1'=5);
 \end{lstlisting}
 
-\subsubsection*{A1.1c)}
+\subsubsection*{A1.1c) From MDP to DTMC}
 The FCFS file has been changed to have the extension .pm and the first line of the model is 'dtmc' which tells PRISM that the file describes a Discrete Time Markov Chain. Building the model causes no errors and tells us that we now have 83 reachable states in the model. Which was the same as before because PRISM resolves the local non-determinism by using a uniform distribution. If there are 5 possibilities it will choose each with probability $\frac{1}{5}$.
 
-\subsubsection*{A1.1d)}
+\subsubsection*{A1.1d) From non-deterministic to probabilistic}
 As explained earlier the shifting command in the Scheduler module causes some non-determinism. This non-determinism we have due to the concurrent execution of the modules is still there. If there were commands in the other commands in the modules that could happen independently of what the Scheduler module was doing all of these commands would happen with equal probability. Since there are no other commands specified that way the command in the Scheduler module happens with probability 1 when possible. PRISM enforces this.
 
-\subsubsection*{A1.1e)}
+\subsubsection*{A1.1e) Verify some PCTL formula}
 In order to make sure that a job will almost certainly complete we specify the following PRISM properties - one for each client.
 \begin{center}
-$(task_1 > 0) \Rightarrow \mathbb{P}_{\geq 1}(F(task_1 = 0))$\\
-$(task_2 > 0) \Rightarrow \mathbb{P}_{\geq 1}(F(task_2 = 0))$
+$(task_1 > 0) \Rightarrow \mathbb{P}_{\geq 1}(\diamondsuit(task_1 = 0))$\\
+$(task_2 > 0) \Rightarrow \mathbb{P}_{\geq 1}(\diamondsuit(task_2 = 0))$
 \end{center}
 These properties have been verified by PRISM so we now know that a created job will almost certainly complete in this model.
 
 \subsection*{A1.2}
 This section is about using PRISM to compute numerical properties of the FCFS model.
 
-\subsubsection*{A1.2a)}
+\subsubsection*{A1.2a) Computing the steady state distribution}
 If we calculate the steady state distribution of the model we can find the probability of having no jobs in the scheduler. We use PRISM to calculate the steady state distribution and it gives us the probability of being in each of the reachable states. Only one state has no jobs in the scheduler which is the initial:
 \begin{lstlisting}[style=logoutput]
 0:(0,0,0,0,0,0)=0.016145825133811565
 \end{lstlisting}
 The probability of having no jobs in the scheduler is therefore 0.0161.
 
-\subsubsection*{A1.2b)}
+\subsubsection*{A1.2b) Calculating the expected length of a job for $client_1$}
 We want to calculate the expected length of a job for $client_1$ by looking at the steady state probabilities. In order to do this computation manually we first have to sum the probabilities of the states where $client_1$ has a job of length $i$, $0 \leq i \leq 5$. These states are states 12--82.
 \begin{center}
 Probability: 0.75
@@ -160,13 +160,13 @@ $$\frac{0 \cdot 0.0911 + 1 \cdot 0.1675 + 2 \cdot 0.1506 + 3 \cdot 0.1331 + 4 \c
 The expected length of a job for $client_1$ is 2.39.
 We want to calculate the expected length of a job for $client_1$ by looking at the steady state probabilities. In order to do this computation manually we first have to sum the probabilities of the states where $client_1$ has a job of length $i$, $0 \leq i \leq 5$. These states are states 12--82.
 
-\subsubsection*{A1.2c)}
+\subsubsection*{A1.2c) Calculating the transient distribution}
 We want to know what the probability of $client_1$ not having a job at time $t = 10$ so we calculate the transient distribution of the model at time $t = 10$. When we do this PRISM will output the probability for being in each state at this time and we sum the probabilities of being in states where $client_1$ does not have a job. States where $client_1$ does not have a job are states 0--11. We sum the probability of being in these states and get:
 \begin{center}
 Probability: 0.2574
 \end{center}
 
-\subsubsection*{A1.2d)}
+\subsubsection*{A1.2d) Showing probability as a graph}
 We have to plot a graph of the probability that $client_1$ does not have a job against time $t$, for $0 \leq t \leq 10$. We therefore calculate the transient distribution of the model for time $t$. We sum the probabilities of the states where $client_1$ does not have a job. We can then plot the graph of the probability.\\
 \begin{figure}[H]
 	\centering
@@ -179,24 +179,28 @@ The graph starts a probability 1 because in the initial state there is no jobs i
 This part is about PCTL model checking in PRISM. We will specify some PCTL formula about the FCFS. For each PCTL formula we will explain what the PCTL formula captures. We will use PRISM to determine whether the \emph{initial state} of the model satisfies it.
 
 \begin{description}
-\item[A1.3a)] $$\mathbb{P}_{> 0.2}(\bigcirc task1 > 2)$$
+\item[A1.3a) Active job of some length] {\huge\textbf{\textcolor{red}{Maybe we need to state that the job is active, state1=1.. or ?}}}
+$$\mathbb{P}_{> 0.2}(\bigcirc \; task1 > 2)$$
 This PCTL formula captures a query that asks if the probability is greater than 0.2 that $client_1$ will have an active job of length greater than 2 in the next time unit. This has been verified by PRISM for the model.
 
 
-\item[A1.3b)] $$\mathbb{P}_{< 0.5}(\diamondsuit^{\leq 10} task2=5)$$
+\item[A1.3b) Create job of a specific length]
+$$\mathbb{P}_{< 0.5}(\diamondsuit^{\leq 10} task2=5)$$
 This PCTL formula captures a query that asks if the probability is less than 0.5 that $client_2$ will create a job of length 5 within 10 time units. This has been verified by PRISM for the model.
 
 
-\item[A1.3c)] $$\mathbb{P}_{> 0}(\Box state1=1)$$
+\item[A1.3c) Always having an active job]
+$$\mathbb{P}_{> 0}(\Box state1=1)$$
 This PCTL formula captures a query that asks if the probabilty is greater than zero that $client_1$ will always have an active job. This has not been verified by PRISM as it is false.
 
 
-\item[A1.3d)] For all of the above properties we use the '$\mathbb{P}_{=?}$' notation in PRISM to calculate the actual probability.
+\item[A1.3d) Calculating the probability]
+For all of the above properties we use the '$\mathbb{P}_{=?}$' notation in PRISM to calculate the actual probability.
 \begin{center}
 \begin{tabular}{l r}
 PCTL formula & Probability\\
-$\mathbb{P}_{=?}(\bigcirc task1> 2)$ & 0.3\\
-$\mathbb{P}_{=?}(\Diamond^{\leq10} task2=5)$ & 0.26\\
+$\mathbb{P}_{=?}(\bigcirc \; task1> 2)$ & 0.3\\
+$\mathbb{P}_{=?}(\diamondsuit^{\leq10} task2=5)$ & 0.26\\
 $\mathbb{P}_{=?}(\Box state1=1)$ & 0.0\\
 \end{tabular}
 \end{center}
@@ -206,12 +210,12 @@ $\mathbb{P}_{=?}(\Box state1=1)$ & 0.0\\
 \subsection*{A1.4}
 In the first part of the course we used the syntax '$\mathbb{P}_{>=1}$' and '$!\mathbb{P}_{<=0}$' to encode the quantifiers $A$ and $E$ when we wrote CTL formulae in PRISM. If we want to model check CTL formulae on a DTMC, however, these do not encode the $A$ and $E$ quantifiers as we would expect.
 
-\subsubsection*{A1.4a)}
+\subsubsection*{A1.4a) Satisfying a CTL formula}
 A DTMC satisfies a CTL formula if the transition system obtained by throwing away the probabilities in the DTMC satisfies the formula. Formally this can be written as:
 $$Sat_{TS(M)}(\Psi),$$
 where TS(M) is the transition system obtained by throwing away the probabilities in Markov Chain $M$ and $\Psi$ is the CTL formula.
 
-\subsubsection*{A1.4b)}
+\subsubsection*{A1.4b) Only one holds}
 Considering the CTL formula $EG \Phi$ and the PCTL formula $\neg \mathbb{P}_{\leq 0}(G \Phi)$. In the figure below a DTMC is described where the CTL formula holds but the PCTL formula does not hold.
 \begin{figure}[H]
 	\begin{center}
@@ -221,11 +225,11 @@ Considering the CTL formula $EG \Phi$ and the PCTL formula $\neg \mathbb{P}_{\le
 	\label{fig:1a14b}
 \end{figure}
 
-\subsubsection*{A1.4c)}
+\subsubsection*{A1.4c) Explaining why}
 The CTL formula holds because there exists a path from $s_0$ where for the rest of time $s_0$ will be satisfied which is because it will loop forever. Where as the PCTL formula has probability and it is therefore unlikely that it will loop forever.
 
-\subsubsection*{A1.4d)}
-The quantifier $E$ is required in order for the semantics of these formulae to be the same. Because since there are probabilities involved there will aways be a chance that it will step out of the loop. Meanwhile in CTL there should just be a path that satisfies the specified property.
+\subsubsection*{A1.4d) Feature of CTL}
+The quantifier $E$ is required in order for the semantics of these formulae to be the same. Since there are probabilities involved there will aways be a chance that it will step out of the loop. Meanwhile in CTL there should just be a path that satisfies the specified property.
 
 \section*{A2) Theoretical Problems}
 \begin{figure}[H]
@@ -731,7 +735,7 @@ In this part we wish to extend our Priority Lottery Scheduler from part B1, wher
 
 \subsection*{Probabilistically choice}
 We have extended the priority lottery scheduler so that it chooses between the two servers with an equal probability. This extension can be found in the file \emph{PLS-2serversP.pm}. This extension has been done by making two modules called \emph{server1} and \emph{server2}. The scheduler is extended with new commands that will synchronise with either server1 or server2 which will be determined by the variable \emph{useserver}. Whenever useserver is 0 then it will be assigned to 1 with probability 0.5 and assigned to 2 with probability 0.5. The value 1 will cause the server1 to be used and likewise for server2. The scheduler is responsible for the priority of the tasks which will be used to determine which job will be served. The priority of the task are assigned to approximate a Shortest Remaining Time scheduler. The more ticket a job has the higher priority the job has. The scheduler module and the server modules synchronize over commands that specify that the task must have a high priority to be served and the specific server must be chosen by the useserver variable. The servers will use a variable changed by the synchronized commands with the scheduler to specify what job should be served and serve them by using the corresponding serve commands for the job. We now have to investigate how the probability of finishing the first task from $client_1$ evolve over time. We use PRISM to make an experiment with the following PCTL property:
-$$\mathbb{P}_{=?}( F^{\leq t} finished=true)$$
+$$\mathbb{P}_{=?}(\diamondsuit^{\leq t} finished=true)$$
 Recall from earlier in the report that finished is a variable that will be assigned to true when the finish1 command is triggered. By using this PCTL property we have created a graph for $0 \leq t \leq 200$.
 \begin{figure}[H]
 	\begin{center}
@@ -743,9 +747,9 @@ We can see by the graph how the probability of the first job from $client_1$ gro
 
 Also we would like to find out if starvation is possible in our model. We therefore use the following PCTL formula to verify the properties in PRISM.
 \begin{center}
-$(task1 > 0) \Rightarrow \mathbb{P}_{\geq 1}(F(task1 = 0))$\\
-$(task2 > 0) \Rightarrow \mathbb{P}_{\geq 1}(F(task2 = 0))$\\
-$(task3 > 0) \Rightarrow \mathbb{P}_{\geq 1} (F(task3 = 0))$
+$(task1 > 0) \Rightarrow \mathbb{P}_{\geq 1}(\diamondsuit(task1 = 0))$\\
+$(task2 > 0) \Rightarrow \mathbb{P}_{\geq 1}(\diamondsuit(task2 = 0))$\\
+$(task3 > 0) \Rightarrow \mathbb{P}_{\geq 1}(\diamondsuit(task3 = 0))$
 \end{center}
 These properties have been verified by PRISM meaning that a job will always complete.
 
@@ -753,7 +757,7 @@ These properties have been verified by PRISM meaning that a job will always comp
 We have extended the priority lottery scheduler so that one server is reserved for high priority tasks. This extension can be found in the file \emph{PLS-2servers-Priority.pm}. This extension also has two modules called server1 and server2, where server1 is reserved for high priority tasks. We use the notion that a task has high priority when it has 3 or more tickets. A task has at most 4 tickets. Server1 will only serve jobs with 3 or more tickets and server2 will just serve the tasks currently in the scheduler with the highest priority as before. This means that we no longer need a variable to keep track of what server to use next. It will just choose server1 if the task has 3 or more tickets. Nothing else has been changed from the previous extension with probabilistic choice. 
 \\
 We want to investigate how the probability of finishing the first task from $client_1$ evolve over time. We use PRISM to make an experiment with the same PCTL property as before.
-$$\mathbb{P}_{=?}( F^{\leq t} finished=true)$$
+$$\mathbb{P}_{=?}(\diamondsuit^{\leq t} finished=true)$$
 By using this PCTL property we have created a graph for $0 \leq t \leq 200$. 337
 \begin{figure}[H]
 	\begin{center}
@@ -764,9 +768,9 @@ By using this PCTL property we have created a graph for $0 \leq t \leq 200$. 337
 We can see by the graph how the probability of finishing the first job from $client_1$ grows over time. At time step 200 it will have a probability of being finished. In a model with 155127 reachable states this is again quite high. It would be desirable to compare the two extensions to each other but this is difficult because of the big difference in reachable states. But the extensions however will never suffer from starvation and have a sensible probability of finishing jobs fast.
 \\Again we would like to find out if starvation is possible in our extended model. We therefore use PRISM to verify the following PCTL properties.
 \begin{center}
-$(task1 > 0) \Rightarrow \mathbb{P}_{\geq 1}(F(task1 = 0))$\\
-$(task2 > 0) \Rightarrow \mathbb{P}_{\geq 1}(F(task2 = 0))$\\
-$(task3 > 0) \Rightarrow \mathbb{P}_{\geq 1} (F(task3 = 0))$
+$(task1 > 0) \Rightarrow \mathbb{P}_{\geq 1}(\diamondsuit(task1 = 0))$\\
+$(task2 > 0) \Rightarrow \mathbb{P}_{\geq 1}(\diamondsuit(task2 = 0))$\\
+$(task3 > 0) \Rightarrow \mathbb{P}_{\geq 1}(\diamondsuit(task3 = 0))$
 \end{center}
 These properties have been verified by PRISM meaning that a job will always complete.
 
