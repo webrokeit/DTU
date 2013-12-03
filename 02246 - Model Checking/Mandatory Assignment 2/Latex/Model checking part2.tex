@@ -739,7 +739,7 @@ Recall from earlier in the report that finished is a variable that will be assig
 	\end{center}
 	\caption{Graph for 2 servers with probabilistically choice}
 \end{figure}
-We can see by the graph how the probability of the first job from $client_1$ grows over time. At time step 200 it will have a probability of 0.8 of being finished which is quite high considering there are 97212 reachable states in the model.
+We can see by the graph how the probability of the first job from $client_1$ grows over time. At time step 200 it will have a probability of 0.8 of being finished which is quite high considering there are 84231 reachable states in the model.
 
 Also we would like to find out if starvation is possible in our model. We therefore use the following PCTL formula to verify the properties in PRISM.
 \begin{center}
@@ -761,7 +761,7 @@ By using this PCTL property we have created a graph for $0 \leq t \leq 200$. 337
 	\end{center}
 	\caption{Graph for 2 servers with one server reserved for high priority tasks}
 \end{figure}
-We can see by the graph how the probability of finishing the first job from $client_1$ grows over time. At time step 200 it will have a probability of being finished. In a model with 155127 reachable states this is again quite high. It would be desirable to compare the two extensions to each other but this is difficult because of the big difference in reachable states. But the extensions however will never suffer from starvation and have a sensible probability of finishing jobs fast.
+We can see by the graph how the probability of finishing the first job from $client_1$ grows over time. At time step 200 it will have a probability of being finished. In a model with 131114 reachable states this is again quite high. It would be desirable to compare the two extensions to each other but this is difficult because of the big difference in reachable states. But the extensions however will never suffer from starvation and have a sensible probability of finishing jobs fast.
 \\Again we would like to find out if starvation is possible in our extended model. We therefore use PRISM to verify the following PCTL properties.
 \begin{center}
 $(task1 > 0) \Rightarrow \mathbb{P}_{\geq 1}(F(task1 = 0))$\\
