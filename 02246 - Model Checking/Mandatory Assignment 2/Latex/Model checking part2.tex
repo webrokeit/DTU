@@ -461,7 +461,7 @@ We have to calculate the \emph{Markov chain sojourn time}. We look at the probab
 	$$\mathrm{E}[N_{s_0}] = \frac{1}{1 - P(s_0,s_0)}$$
 	We then replace $P(s_0,s_0)$:
 	$$\mathrm{E}[N_{s_0}] = \frac{1}{1 - p}$$
-\end{description}
+\end{description} 
 
 \subsubsection*{A2.3c) DTMC modification}
 We have to modify Figure \ref{fig:2a3}(b), without increasing the number of states, so that the following holds:
@@ -533,9 +533,9 @@ The PCTL formula: $\mathbb{P}_{=?}(\diamondsuit^{\leq t} finished=true)$
 \subsubsection*{Starvation}
 We are interested in finding out whether it is possible for our lottery scheduler to suffer from starvation. In order to determine this we specify some PCTL formula which we will use PRISM to verify. The PCTL formulae states that whenever task1, task2 or task3 is greater than zero there must be a probability of greater than or equal to 1 that task1, task2 or task3 will eventually be zero. This means that whenever a job is created it will be served until it is finished.
 \begin{center}
-$(task1 > 0) \Rightarrow \mathbb{P}_{\geq 1}(F(task1 = 0))$\\
-$(task2 > 0) \Rightarrow \mathbb{P}_{\geq 1}(F(task2 = 0))$\\
-$(task3 > 0) \Rightarrow \mathbb{P}_{\geq 1} (F(task3 = 0))$
+$(task1 > 0) \Rightarrow \mathbb{P}_{\geq 1}(\diamondsuit(task1 = 0))$\\
+$(task2 > 0) \Rightarrow \mathbb{P}_{\geq 1}(\diamondsuit(task2 = 0))$\\
+$(task3 > 0) \Rightarrow \mathbb{P}_{\geq 1} (\diamondsuit(task3 = 0))$
 \end{center}
 These properties have been verified by PRISM so it is not possible in our model that our lottery scheduler will suffer from starvation.
 
@@ -561,9 +561,9 @@ We wish to find out how this affects the time taken to complete a task from $cli
 As we can see by the graph adding priorities will affect the time taken to complete a task from $client_1$. It now has a higher probability of finishing a job within 20 time steps because all the small jobs will be served first by the scheduler.
 \\Also we would like to find out if starvation is possible in our model. We therefore use the following PCTL formula to verify the properties in PRISM.
 \begin{center}
-$(task1 > 0) \Rightarrow \mathbb{P}_{\geq 1}(F(task1 = 0))$\\
-$(task2 > 0) \Rightarrow \mathbb{P}_{\geq 1}(F(task2 = 0))$\\
-$(task3 > 0) \Rightarrow \mathbb{P}_{\geq 1} (F(task3 = 0))$
+$(task1 > 0) \Rightarrow \mathbb{P}_{\geq 1}(\diamondsuit(task1 = 0))$\\
+$(task2 > 0) \Rightarrow \mathbb{P}_{\geq 1}(\diamondsuit(task2 = 0))$\\
+$(task3 > 0) \Rightarrow \mathbb{P}_{\geq 1}(\diamondsuit(task3 = 0))$
 \end{center}
 These properties have been verified by PRISM meaning that a job will always complete but it is worth noting that it can take a job of length 5 a long time to complete if the other clients keep creating shorter jobs.
 
