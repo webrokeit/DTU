@@ -32,9 +32,9 @@ module scheduler
   job1 : bool init false; // Is there a job from client1?
   job2 : bool init false; // Is there a job from client2?
   job3 : bool init false; // Is there a job from client3?
-  ticket1 : [0..5] init 5; // Number of tickets for job1
-  ticket2 : [0..5] init 5; // Number of tickets for job2
-  ticket3 : [0..5] init 5; // Number of tickets for job3
+  ticket1 : [0..5] init 0; // Number of tickets for job1
+  ticket2 : [0..5] init 0; // Number of tickets for job2
+  ticket3 : [0..5] init 0; // Number of tickets for job3
   useserver : [0..2] init 0;
 
   // Record that there is a waiting job
