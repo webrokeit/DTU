@@ -61,7 +61,7 @@ We're considering the Hill cipher. We have plaintext $\mathcal{P}$, {\tt\bfserie
 \\
 We wish to find the $2 \times 2$ key matrix $K$ used in the encryption. To do this we first split the plaintext and ciphertext into pairs of two, this gives that {\tt\bfseries cr} is encrypted to {\tt\bfseries LS}, {\tt\bfseries yp} to {\tt\bfseries DK} and {\tt\bfseries to} to {\tt\bfseries DH}. Now we must find two pairs we can use to figure out the key. We start off with {\tt\bfseries cr} and {\tt\bfseries yp}.\\
 \\
-First we wish to find the multiplicative inverse for the plaintext message $m$.
+First we wish to check if the plaintext message $m$ is invertible.
 $$m = \begin{bmatrix}
        c & r\\
        y & p
@@ -71,7 +71,7 @@ $$m = \begin{bmatrix}
 	\end{bmatrix} (\mathtt{mod}\;26)$$
 $$m^{-1} =\;?$$
 
-There is no multiplicative inverse for the plaintext message $m$. We skip the plaintext {\tt\bfseries cr} and use the next pair from the plaintext. Now we have {\tt\bfseries yp} and {\tt\bfseries to}.
+The plaintext message $m$ is not invertible. We skip the plaintext {\tt\bfseries cr} and use the next pair from the plaintext. Now we have {\tt\bfseries yp} and {\tt\bfseries to}.
 
 $$m = \begin{bmatrix}
        	y & p\\
@@ -85,7 +85,7 @@ $$m^{-1} = \begin{bmatrix}
 		19 & 2
 	\end{bmatrix} (\mathtt{mod}\;26)$$
 
-There is a multiplicative inverse for the plaintext message $m$. Now onto finding the key. First we define $c$, the ciphertext that $m$ encrypts to.
+The message $m$ is invertible. Now onto finding the key. First we define $c$, the ciphertext that $m$ encrypts to.
 $$c = \begin{bmatrix}
 		3 & 10\\
 		3 & 7
@@ -128,6 +128,29 @@ The values {\tt\bfseries [11,0,17,10]} maps to the text \uuline{{\tt\bfseries la
 
 \section*{Exercise 1.2}
 \subsection*{1.2.1}
+We are to consider $m \times m$ matrices with entries from $\mathbb{Z}_{26}$. We know that the following holds:
+$$\det(AB)=\det(A) \cdot \det(B)$$
+
+
+We have an invertible $m \times m$ matrix $A$ over $\mathbb{Z}_{26}$, where $A = A^{-1}$. We wish to prove:
+$$\det(A) = \pm 1\;(\mathtt{mod}\;26)$$
+
+We know that $A$ is invertible, hence we can claim that $A$ is orthogonal.
+$$A^{-1}=A^T$$
+
+We know the definition of for an inverse matrix, using identity matrix $I$.
+$$A \cdot A^{-1}\;(\mathtt{mod}\;26) = I$$
+
+We can now substitute $A^{-1}$ with $A^T$ and reduce.
+$$A \cdot A^T\;(\mathtt{mod}\;26)= I$$
+$$\det(A \cdot A^T\;(\mathtt{mod}\;26)) = \det(I) = 1$$
+$$\det(A) \cdot \det(A^T)\;(\mathtt{mod}\;26) = 1$$
+
+We know that the determinant of a square matrix and it's transpose are equal.
+$$\det(A) \cdot \det(A)\;(\mathtt{mod}\;26) = (\det(A))^2\;(\mathtt{mod}\;26) = 1$$
+
+We can now conclude our proof:
+$$\det(A) = \pm 1\;(\mathtt{mod}\;26)$$
 
 \subsection*{1.2.2}
 
