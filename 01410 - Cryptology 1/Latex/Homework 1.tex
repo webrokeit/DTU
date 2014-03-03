@@ -1,11 +1,10 @@
-
-\documentclass[12pt]{report}
+\documentclass[11pt]{report}
+\usepackage{geometry}
 \usepackage{graphicx}
 \usepackage{titling}
 \usepackage{fancyhdr}
-\usepackage[latin1]{inputenc}
 \usepackage{enumerate}
-\usepackage{float}
+\usepackage{ulem}
 \usepackage{latexsym}
 \usepackage{amssymb}
 \usepackage{amsthm}
@@ -14,29 +13,15 @@
 \usepackage[labelfont=bf]{caption}
 \usepackage[usenames,dvipsnames,svgnames,table]{xcolor}
 \usepackage{listings}
+\usepackage{lmodern}
 \parindent=0pt
-\frenchspacing
+%\frenchspacing
 
 \pagestyle{fancy}
-
-\newcommand{\pctlrepeat}[1]{{\buildrel{#1}\over\curvearrowleft}}
 
 \fancyhead[L]{\slshape\footnotesize March 3, 2014\\\textsc{01410 Cryptology 1}}
 \fancyhead[R]{\slshape\footnotesize \textsc{Andreas Kjeldsen (s092638)}\\\textsc{Morten Eskesen (s133304)}}
 \fancyfoot[C]{\thepage}
-
-\lstdefinestyle{logoutput}{
-	backgroundcolor=\color[RGB]{248,248,248},
-	tabsize=1,
-	captionpos=b
-  	belowcaptionskip=1\baselineskip,
-  	breaklines=true,
-  	frame=single,
-	language={},
-  	basicstyle=\footnotesize\ttfamily\color{Black}
-}
-
-\newcommand{\tab}{\hspace*{2em}}
 \newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
 
 \begin{document}
@@ -45,11 +30,8 @@
 \begin{center}
 
 \includegraphics[scale=2.0]{../GFX/dtu_logo.pdf}\\[1cm]
-
 \textsc{\LARGE Technical University of Denmark}\\[1.5cm]
-
 \textsc{\Large 01410 Cryptology 1}\\[0.5cm]
-
 
 % Title
 \HRule \\[0.4cm]
@@ -57,15 +39,13 @@
 \HRule \\[1.5cm]
 
 % Author and supervisor
-\large
-\emph{Authors:}
-\\[10pt]
+{\large
+\emph{Authors:} \\[10pt]
 Andreas Hallberg \textsc{Kjeldsen}\\
-\emph{s092638@student.dtu.dk}
-\\[10pt]
+\emph{s092638@student.dtu.dk} \\[10pt]
 Morten Chabert \textsc{Eskesen}\\
 \emph{s133304@student.dtu.dk}
-
+}
 \vfill
 
 % Bottom of the page
@@ -76,8 +56,75 @@ Morten Chabert \textsc{Eskesen}\\
 
 \section*{Exercise 1.1}
 \subsection*{1.1.1}
+We're considering the Hill cipher. We have plaintext $\mathcal{P}$, {\tt\bfseries crypto}, which map to values {\tt\bfseries [2,17,24,15,19,14]}. We also have ciphertext $\mathcal{C}$, {\tt\bfseries LSDKDH}, which map to values {\tt\bfseries [11,18,3,10,3,7]}. We have that $\mathcal{P} = \mathcal{C} = \mathbb{Z}_{26}$.
+\\
+\\
+We wish to find the $2 \times 2$ key matrix $K$ used in the encryption. To do this we first split the plaintext and ciphertext into pairs of two, this gives that {\tt\bfseries cr} is encrypted to {\tt\bfseries LS}, {\tt\bfseries yp} to {\tt\bfseries DK} and {\tt\bfseries to} to {\tt\bfseries DH}. Now we must find two pairs we can use to figure out the key. We start off with {\tt\bfseries cr} and {\tt\bfseries yp}.\\
+\\
+First we wish to find the multiplicative inverse for the plaintext message $m$.
+$$m = \begin{bmatrix}
+       c & r\\
+       y & p
+	\end{bmatrix} (\mathtt{mod}\;26) = \begin{bmatrix}
+       2 & 17\\
+       24 & 15
+	\end{bmatrix} (\mathtt{mod}\;26)$$
+$$m^{-1} =\;?$$
+
+There is no multiplicative inverse for the plaintext message $m$. We skip the plaintext {\tt\bfseries cr} and use the next pair from the plaintext. Now we have {\tt\bfseries yp} and {\tt\bfseries to}.
+
+$$m = \begin{bmatrix}
+       	y & p\\
+     	t & o
+	\end{bmatrix} (\mathtt{mod}\;26) = \begin{bmatrix}
+		24 & 15\\
+		19 & 14
+	\end{bmatrix} (\mathtt{mod}\;26)$$
+$$m^{-1} = \begin{bmatrix}
+		12 & 15\\
+		19 & 2
+	\end{bmatrix} (\mathtt{mod}\;26)$$
+
+There is a multiplicative inverse for the plaintext message $m$. Now onto finding the key. First we define $c$, the ciphertext that $m$ encrypts to.
+$$c = \begin{bmatrix}
+		3 & 10\\
+		3 & 7
+	\end{bmatrix} (\mathtt{mod}\;26)$$
+	
+Now we can derive the key.
+$$c = mK (\mathtt{mod}\;26)$$
+$$K = m^{-1}c (\mathtt{mod}\;26) = \begin{bmatrix}
+		12 & 15\\
+		19 & 2
+	\end{bmatrix} \begin{bmatrix}
+		3 & 10\\
+		3 & 7
+	\end{bmatrix} (\mathtt{mod}\;26) = \uuline{\begin{bmatrix}
+		3 & 17\\
+		11 & 22
+	\end{bmatrix}}$$
+
 
 \subsection*{1.1.2}
+With the key $K$ obtained, we now wish to decrypt the text {\tt\bfseries HFFP} mapping to values {\tt\bfseries [7,5,5,15]}.
+$$m = cK^{-1} = \begin{bmatrix}
+		7 & 5\\
+		5 & 15
+	\end{bmatrix} \begin{bmatrix}
+		3 & 17\\
+		11 & 22
+	\end{bmatrix}^{-1} (\mathtt{mod}\;26) = \begin{bmatrix}
+		7 & 5\\
+		5 & 15
+	\end{bmatrix} \begin{bmatrix}
+		14 & 1\\
+		19 & 9
+	\end{bmatrix} (\mathtt{mod}\;26) = \begin{bmatrix}
+		11 & 0\\
+		17 & 10
+	\end{bmatrix}$$
+
+The values {\tt\bfseries [11,0,17,10]} maps to the text \uuline{{\tt\bfseries lark}}.
 
 \section*{Exercise 1.2}
 \subsection*{1.2.1}
