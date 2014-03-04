@@ -1,6 +1,12 @@
 <html>
 	<head>
+		<style type="text/css">
+			body {
+				word-break: break-all;
+			}
+		</style>
 		<script type="text/javascript">
+		window.onload = function(){
 			var asciiDiff = 65;
 			var jout = function(o){
 				console.log(JSON.stringify(o, null, '  '));
@@ -9,6 +15,15 @@
 			var char2string = function(c){
 				return [c].join('');
 			};
+
+			var appendBody = function(s){
+				document.body.innerHTML += s;
+			};
+
+			var mround = function(num, d){
+				var dp = Math.pow(10, d);
+				return Math.round(num * dp) / dp;
+			}
 
 			var coincidence = {
 				"A": 0.082,
@@ -41,7 +56,7 @@
 
 			var i,j,k;
 			var textRows = [
-				'PKCONIBEPYYPOPNWKZCCKABDPZWAPBYEADKOHYZWJWAYPSPKH',
+				'PKCONIBEPYYPOPNWKZCCKABDPZWAPBYEADKOHYZXJWAYPSPKH',
 				'AGTIBHKGLRBPTTBMPKMAGPKXXHGWHHNEMBIMRBPXZGXHATHJR',
 				'TSSGCKPVTWSPUZCIWXWADPPKSCSIRGQWJRIXPEDCTIZJTHTJ',
 				'GPSSUSBFQSSGSSHZWJFCBMBWZNOVOHIWFVWQBOICFKGFKBBW',
@@ -64,7 +79,8 @@
 					}
 				}
 				for(k in occurences[j]){
-					occurences[j][k]['ratio'] = Math.round(occurences[j][k].count / textRows[j].length * 1000)/1000;
+					occurences[j][k]['ratio'] = mround(occurences[j][k].count / textRows[j].length, 5);
+					//appendBody('(' + j + ',' + k + ') = ' + occurences[j][k]['ratio']);
 				}	
 			}
 			//jout(occurences);
@@ -101,26 +117,33 @@
 						//scalc[pIndex] = ('(' + pIndex + ' - ' + qIndex + ')&sup2;');
 
 					}
+					appendBody('(' + k + ',' + j + ') = ' + d + '<br />');
+					
+					d = mround(d, 5);
+					//appendBody(scalc.join(' + ') + ' = ' + d + '<br /><br />');
 					//document.write(scalc.join(' + '));
 					//document.write(' = ' + d);
 					//document.write('<br/><br />');
-					//document.write('[' +  k + '][' + j + '] : ' + d + '<br />');
 					rowDecrypt[k][j] = d;
 				}
 			}
 			//jout(rowDecrypt);
+
+			appendBody('<br />');
 
 			var key = 'WTPOOH';
 
 			var result = '';
 			for(i = 0; i < textRows[0].length; i++){
 				for(j = 0; j < key.length; j++){
-						if(i >= textRows[j].length) continue;
-						result += char2string(String.fromCharCode(textRows[j].charCodeAt(i) - key.charCodeAt(j) + asciiDiff));
+					if(i >= textRows[j].length) continue;
+					var charCode = ((26 + textRows[j].charCodeAt(i) - key.charCodeAt(j)) % 26) + asciiDiff;
+					result += String.fromCharCode(charCode);
 					
 				}
 			}
-			document.write('DECRYPTED:<br/>' + result);
+			appendBody('<br/>Decrypted:<br/>' + result);
+		}
 		</script>
 	</head>
 	<body>
