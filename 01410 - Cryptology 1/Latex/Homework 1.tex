@@ -19,7 +19,7 @@
 
 \pagestyle{fancy}
 
-\fancyhead[L]{\slshape\footnotesize March 3, 2014\\\textsc{01410 Cryptology 1}}
+\fancyhead[L]{\slshape\footnotesize March 10, 2014\\\textsc{01410 Cryptology 1}}
 \fancyhead[R]{\slshape\footnotesize \textsc{Andreas Kjeldsen (s092638)}\\\textsc{Morten Eskesen (s133304)}}
 \fancyfoot[C]{\thepage}
 \newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
@@ -49,14 +49,14 @@ Morten Chabert \textsc{Eskesen}\\
 \vfill
 
 % Bottom of the page
-{\large March 3, 2014}
+{\large March 10, 2014}
 
 \end{center}
 \end{titlepage}
 
 \section*{Exercise 1.1}
 \subsection*{1.1.1}
-We're considering the Hill cipher. We have plaintext $\mathcal{P}$, {\tt\bfseries crypto}, which map to values {\tt\bfseries [2,17,24,15,19,14]}. We also have ciphertext $\mathcal{C}$, {\tt\bfseries LSDKDH}, which map to values {\tt\bfseries [11,18,3,10,3,7]}. We have that $\mathcal{P} = \mathcal{C} = \mathbb{Z}_{26}$.
+We are considering the Hill cipher. We have plaintext $\mathcal{P}$, {\tt\bfseries crypto}, which map to values {\tt\bfseries [2,17,24,15,19,14]}. We also have ciphertext $\mathcal{C}$, {\tt\bfseries LSDKDH}, which map to values {\tt\bfseries [11,18,3,10,3,7]}. We have that $\mathcal{P} = \mathcal{C} = \mathbb{Z}_{26}$.
 \\
 \\
 We wish to find the $2 \times 2$ key matrix $K$ used in the encryption. To do this we first split the plaintext and ciphertext into pairs of two, this gives that {\tt\bfseries cr} is encrypted to {\tt\bfseries LS}, {\tt\bfseries yp} to {\tt\bfseries DK} and {\tt\bfseries to} to {\tt\bfseries DH}. Now we must find two pairs we can use to figure out the key. We start off with {\tt\bfseries cr} and {\tt\bfseries yp}.\\
@@ -153,10 +153,381 @@ We can now conclude our proof:
 $$\det(A) = \pm 1\;(\mathtt{mod}\;26)$$
 
 \subsection*{1.2.2}
+We wish to show that there are 736 $2 \times 2$ matrices $A$ over $\mathbb{Z}_{26}$ for which it holds that $A= A^{-1}$. We split the problem into two cases. We first consider the problem modulo 2 and then modulo 13.
+
+\subsubsection*{$\mathbb{Z}_{2}$}
+A matrix modulo 2 that is the inverse of itself only has 4 types where $b = 0$:
+$$\begin{pmatrix}
+\pm 1 & 0\\
+0 & \pm 1
+\end{pmatrix}$$
+In total we have 4 self-inverse matrices over $\mathbb{Z}_{2}$.
+
+\subsubsection*{$\mathbb{Z}_{13}$}
+A matrix modulo 13 that is the inverse of itself has likewise modulo 2 those 4 types as wel where $b = 0$:\\
+$$\begin{pmatrix}
+\pm 1 & 0\\
+0 & \pm 1
+\end{pmatrix}$$
+
+If $a = 0$ and $b \neq 0$ then $\frac{1}{ad - bc} = -1$ has a solution where $c=\frac{1}{b}$. Since there are 12 possible values for $b$ where $b \neq 0$ there are 12 more types of this kind:\\
+$$\begin{pmatrix}
+0 & b\\
+\frac{1}{b} & 0
+\end{pmatrix}$$
+
+If $bc \neq 0$ then we have $a^2 + bc = 1$. Therefore $1 - bc$ has to be square modulo 13. Hence we have:\\
+$$1 - bc \in \{0,1,3,4,9,10,12\}$$
+Since $bc \neq 0$ then:
+$$bc \in \{1,3,4,9,10,12\}$$
+There are 12 invertible elements in $\mathbb{Z}_{13}$. For any choice of invertible $b$, there are 6 options for $bc$, each gives one option for $c$, each, in turn gives 2 options for $a$.\\
+$$6 * 12 * 1 * 2 = 144$$
+We isolate $c$ in $a^2 + bc = 1$ and get that $c = \frac{1-a^2}{b}$. Therefore we have 144 types of this kind of matrix:\\
+$$\begin{pmatrix}
+a & b\\
+\frac{1-a^2}{b} & -a
+\end{pmatrix}$$
+Lastly we have 12 each of these types:
+$$
+\begin{pmatrix}
+1 & 0\\
+c & -1
+\end{pmatrix}
+,
+\begin{pmatrix}
+-1 & 0\\
+c & 1
+\end{pmatrix}
+,
+\begin{pmatrix}
+1 & b\\
+0 & -1
+\end{pmatrix}
+,
+\begin{pmatrix}
+-1 & b\\
+0 & 1
+\end{pmatrix}
+$$
+But however only the two first types have to be counted, because the last two types have already been counted among the type of size 144. Which means that we have:
+$$4 + 12 + 144 + 24 = 184$$
+
+In total we have 184 self-inverse matrices over $\mathbb{Z}_{13}$.
+
+\subsubsection*{$\mathbb{Z}_{26}$}
+Since $\mathbb{Z}_{26}$ is the direct product of $\mathbb{Z}_{13}$ and $\mathbb{Z}_{2}$ we can muiltiply the number of self-inverse matrices over these two and get the number of self-inverse matrices over $\mathbb{Z}_{26}$.
+$$184 * 4 = 736$$
+We have therefore shown that there are 736 $2 \times 2$ matrices $A$ over $\mathbb{Z}_{26}$ for which it holds that $A= A^{-1}$.
 
 \section*{Exercise 1.3}
 \subsection*{1.3.1}
+We consider the Vig\'{e}nere cryptosystem. We know the following ciphertext encrypted using the Vig\'{e}nere crpytosystem.\\
+\begin{tabular}{| l |}
+\hline
+PATGSJKGSPFPCTSSKHOIGSDHNBCUHVIHKSHVBKPBQLEGVFSHPLTQFLYRWS\\
+RLYBSSRPPPPGIUOTUSHVPTZSVLNBCHCIWMIZSZKPWWZLZKXJWUCMWFCBCA\\
+ACBKKGDBHOAPPMHVBKPBQLDXKWGPPXSZCUZHCNCVWGSOGRAWIVSTPHROFL\\
+BHGHVLYNQIBAEEWWGYAMJFBDDBRVVLKIIWAPOMXQOSHRPBHPYBEOHLZPDI\\
+ZKXXCCZVJZTFHOWGIKCDAXZGCMYHJFGLPATKOYSTHBCAPHTBRZKJJWQRHR\\
+\hline
+\end{tabular}
+${}$\\
+We wish to compute the most likely period of the key by using the index of coincidence. We do this by arranging the ciphertext in ($j \times c$) matrices. Instead of showing all our created matrices when computing index of coincidence. We skip right ahead to the (6 x c) matrix, we found to be the likely period of key. We arrange the ciphertext in this matrix.\\
+\begin{tabular}{| l |}
+\hline
+PKCONIBEPYYPOPNWKZCCKABDPZWAPBYEADKOHYZXJWAYPSPKH\\
+AGTIBHKGLRBPTTBMPKMAGPKXXHGWHHNEMBIMRBPXZGXHATHJR\\
+TSSGCKPVTWSPUZCIWXWADPPKSCSIRGQWJRIXPEDCTIZJTHTJ\\
+GPSSUSBFQSSGSSHZWJFCBMBWZNOVOHIWFVWQBOICFKGFKBBW\\
+SFKDHHQSFRRIHVCSZWCBHHQGCCGSFVBGBVAOHHZZHCCGOCRQ\\
+JPHHVVLHLLPUVLIZLUBKOVLPUVRTLLAYDLPSPLKVODMLYAZR\\
+\hline
+\end{tabular}
+${}$\\${}$\\
+We compute the index of coincidence for each row vector and we get the following six numbers:\\
+\begin{center}
+0.065,0.059,0.051,0.061,0.071,0.082.
+\end{center}
+We have computed the index of coincidence of each row in ($j \times c$) matrix for all (likely) values of $j$, where $j = 1, \dots 7$. This gives us the following:
+\begin{center}
+\begin{tabular}{| c l |}
+\hline
+Period & Index of coincidence\\ \hline
+1 & 0.0433\\
+2 & 0.047 0.044\\
+3 & 0.049 0.054 0.049\\
+4 & 0.052 0.036 0.044 0.043\\
+5 & 0.039 0.038 0.039 0.046 0.042\\
+6 & \textbf{0.065 0.059 0.051 0.061 0.071 0.082}\\
+7 & 0.033 0.038 0.035 0.041 0.043 0.04 0.041\\
+\hline
+\end{tabular}
+\end{center}
+
+We are therefore able to conclude that the period is most likely six.
 
 \subsection*{1.3.2}
+We wish to find the plaintext message of the ciphertext. We arrange the ciphertext in a $6 \times c$ matrix. First we have to find the key therefore for each row we do the following:\\
+For i:=0 to 25 do
+\begin{enumerate}
+\item shift all letters $i$ positions backwards in the alphabet
+\item compute the distribution of the resulting characters
+\item compute the distance of this distribution from the distribution in a typical English text
+\end{enumerate}
+We define the distance between two distributions as the "sum of squared differences". We therefore use this formula for calculating the distance.\\
+$$d(i) = \sum_{\ell=1}^{25} (p_{\ell} - q_{\ell}(i))^2,$$
+for i = $0,\dots,25$, $p_{\ell}$ for $\ell = 0,\dots,25$ is the probability distribution of letters in English text and $q_{\ell}(i)$ for $\ell = 0,\dots,25$ is the probability distribution of letters in this row when each letter is shifted $i$ positions back in the alphabet.\\
+We do this for each row.
+
+\subsubsection{First row}
+\begin{tabular}{| c | c c c c c c c c c c c c c |}
+\hline
+$i$ & 0 & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 & 11 & 12\\
+$d(i)$ & 0.07 & 0.08 & 0.07 & 0.08 & 0.08 & 0.08 & 0.06 & 0.05 & 0.07 & 0.07 & 0.05 & 0.04 & 0.08\\
+\hline
+\end{tabular}
+\begin{tabular}{| c | c c c c c c c c c c c c c |}
+\hline
+$i$ & 13 & 14 & 15 & 16 & 17 & 18 & 19 & 20 & 21 & 22 & 23 & 24 & 25\\
+$d(i)$ & 0.09 & 0.07 & 0.07 & 0.09 & 0.08 & 0.08 & 0.08 & 0.07 & 0.06 & \textbf{0.02} & 0.06 & 0.07 & 0.08\\
+\hline
+\end{tabular}
+${}$\\
+It follows that the computed distances are lowest for $i$ = 22, which corresponds to the key
+character "W".
+
+\subsubsection{Second row}
+\begin{tabular}{| c | c c c c c c c c c c c c c |}
+\hline
+$i$ & 0 & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 & 11 & 12\\
+$d(i)$ & 0.06 & 0.07 & 0.07 & 0.06 & 0.06 & 0.07 & 0.06 & 0.07 & 0.05 & 0.07 & 0.08 & 0.08 & 0.07\\
+\hline
+\end{tabular}
+\begin{tabular}{| c | c c c c c c c c c c c c c |}
+\hline
+$i$ & 13 & 14 & 15 & 16 & 17 & 18 & 19 & 20 & 21 & 22 & 23 & 24 & 25\\
+$d(i)$ 
+& 0.06
+& 0.07
+& 0.04
+& 0.08
+& 0.09
+& 0.08
+& \textbf{0.02}
+& 0.07
+& 0.08
+& 0.07
+& 0.06
+& 0.07
+& 0.07\\
+\hline
+\end{tabular}
+${}$\\
+It follows that the computed distances are lowest for $i$ = 19, which corresponds to the key
+character "T".
+
+\subsubsection{Third row}
+\begin{tabular}{| c | c c c c c c c c c c c c c |}
+\hline
+$i$ & 0 & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 & 11 & 12\\
+$d(i)$ & 0.06
+& 0.05
+& 0.05
+& 0.07
+& 0.04
+& 0.05
+& 0.06
+& 0.07
+& 0.06
+& 0.07
+& 0.07
+& 0.04
+& 0.07\\
+\hline
+\end{tabular}
+
+\begin{tabular}{| c | c c c c c c c c c c c c c |}
+\hline
+$i$ & 13 & 14 & 15 & 16 & 17 & 18 & 19 & 20 & 21 & 22 & 23 & 24 & 25\\
+$d(i)$ & 0.08
+& 0.05
+& \textbf{0.01}
+& 0.06
+& 0.06
+& 0.05
+& 0.07
+& 0.08
+& 0.06
+& 0.05
+& 0.07
+& 0.06
+& 0.06\\
+\hline
+\end{tabular}
+${}$\\
+It follows that the computed distances are lowest for $i$ = 15, which corresponds to the key
+character "P".
+
+\subsubsection{Fourth row}
+\begin{tabular}{| c | c c c c c c c c c c c c c |}
+\hline
+$i$ & 0 & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 & 11 & 12\\
+$d(i)$ & 0.08
+& 0.04
+& 0.07
+& 0.07
+& 0.07
+& 0.06
+& 0.08
+& 0.08
+& 0.06
+& 0.08
+& 0.06
+& 0.08
+& 0.08 \\
+\hline
+\end{tabular}
+
+\begin{tabular}{| c | c c c c c c c c c c c c c |}
+\hline
+$i$ & 13 & 14 & 15 & 16 & 17 & 18 & 19 & 20 & 21 & 22 & 23 & 24 & 25\\
+$d(i)$ & 0.07
+& \textbf{0.02}
+& 0.08
+& 0.08
+& 0.08
+& 0.05
+& 0.08
+& 0.07
+& 0.08
+& 0.08
+& 0.06
+& 0.07
+& 0.06\\
+\hline
+\end{tabular}
+${}$\\
+It follows that the computed distances are lowest for $i$ = 14, which corresponds to the key
+character "O".
+
+\subsubsection{Fifth row}
+\begin{tabular}{| c | c c c c c c c c c c c c c |}
+\hline
+$i$ & 0 & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 & 11 & 12\\
+$d(i)$ & 0.08
+& 0.09
+& 0.07
+& 0.05
+& 0.08
+& 0.1
+& 0.09
+& 0.08
+& 0.09
+& 0.08
+& 0.08
+& 0.09
+& 0.09\\
+\hline
+\end{tabular}
+\begin{tabular}{| c | c c c c c c c c c c c c c |}
+\hline
+$i$ & 13 & 14 & 15 & 16 & 17 & 18 & 19 & 20 & 21 & 22 & 23 & 24 & 25\\
+$d(i)$ & 0.07
+& \textbf{0.02}
+& 0.07
+& 0.09
+& 0.08
+& 0.08
+& 0.09
+& 0.08
+& 0.07
+& 0.1
+& 0.09
+& 0.06
+& 0.05\\
+\hline
+\end{tabular}
+${}$\\
+It follows that the computed distances are lowest for $i$ = 14, which corresponds to the key
+character "O".
+
+\subsubsection{Sixth row}
+\begin{tabular}{| c | c c c c c c c c c c c c c |}
+\hline
+$i$ & 0 & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 & 11 & 12\\
+$d(i)$ & 0.10
+& 0.10
+& 0.10
+& 0.06
+& 0.08
+& 0.12
+& 0.10
+& \textbf{0.02}
+& 0.08
+& 0.10
+& 0.10
+& 0.07
+& 0.11\\
+\hline
+\end{tabular}
+
+\begin{tabular}{| c | c c c c c c c c c c c c c |}
+\hline
+$i$ & 13 & 14 & 15 & 16 & 17 & 18 & 19 & 20 & 21 & 22 & 23 & 24 & 25\\
+$d(i)$ & 0.09
+& 0.10
+& 0.10
+& 0.10
+& 0.08
+& 0.08
+& 0.09
+& 0.09
+& 0.09
+& 0.09
+& 0.08
+& 0.09
+& 0.10\\
+\hline
+\end{tabular}
+${}$\\
+It follows that the computed distances are lowest for $i$ = 7, which corresponds to the key
+character "H".
+
+\subsubsection*{Finding the plaintext message}
+We have found the key which is "WTPOOH". We follow the decryption for the Vig\'{e}nere crpytosystem which is:
+$$d_k(y_1,\dots,y_n) = (y_1 - k_1,\dots,y_n - k_n)$$
+
+\begin{figure}
+\centering
+\begin{tabular}{| l |}
+\hline
+thesecondbrigadewaspreparingtomovetofrance\\
+ingreatsecrecyhedecideditwasunsafetotakeher\\
+intobattlesowhiledrivingthroughlondonontheway\\
+tofrancehevisitedlondonzooandaskedthemtocare\\
+forthecubuntilhisreturnwhichheoptimistically\\
+anticipatedwouldbenolongerthantwoweeksof\\
+coursethewarwasnottoendsoquickly\\
+\hline
+\end{tabular}
+\caption{The plaintext message}
+\end{figure}
+
+\begin{figure}
+\centering
+\begin{tabular}{| l |}
+\hline
+the second brigade was preparing to move to france\\
+in great secrecy he decided it was unsafe to take her\\
+into battle so while driving through london on the way\\
+to france he visited london zoo and asked them to care\\
+for the cub until his return which he optimistically\\
+anticipated would be no longer than two weeks of\\
+course the war was not to end so quickly\\
+\hline
+\end{tabular}
+\caption{The plaintext message with space added for readability}
+\end{figure}
+The figures above describe the plaintext message.
 
 \end{document}
