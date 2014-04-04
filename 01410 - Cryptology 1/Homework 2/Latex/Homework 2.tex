@@ -26,6 +26,26 @@
 \fancyfoot[C]{\thepage}
 \newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
 
+\definecolor{lightgrey}{rgb}{0.975,0.975,0.975}
+\lstdefinestyle{maple}{
+	morekeywords={and,assuming,break,by,catch,description,do,done,
+	elif,else,end,error,export,fi,finally,for,from,global,if,
+	implies,in,intersect,local,minus,mod,module,next,not,od,
+	option,options,or,proc,quit,read,return,save,stop,subset,then,
+	to,try,union,use,uses,while,xor},
+	sensitive=true,
+	morecomment=[l]\#,
+	morestring=[b]",
+	morestring=[d]",
+	frame=single,
+ 	basicstyle=\tt\small,
+	keywordstyle=\bf,
+	xleftmargin=.25in,
+	xrightmargin=.25in,
+	mathescape=true,
+	backgroundcolor=\color{lightgrey},
+}[keywords,comments,strings]
+
 \begin{document}
 
 \begin{titlepage}
@@ -60,40 +80,49 @@ Morten Chabert \textsc{Eskesen}\\
 \subsection*{2.1.1}
 We have to show that $m^{e\tilde{d}} \equiv m$ mod $n$ for all $m \in \mathbb{Z}_{n}$.\\
 The keys $e$ and $\tilde{d}$ are chosen such that.
-\begin{center}
-$e\tilde{d} \equiv 1$ mod $\frac{(p-1)(q-1)}{gcd(p-1,q-1)}$
-\end{center}
+$$e\tilde{d} \equiv 1 \text{ mod } \frac{(p-1)(q-1)}{gcd(p-1,q-1)}$$
+
 This means that for some positive integer $k$
 $$e\tilde{d} = 1 + k\frac{(p-1)(q-1)}{gcd(p-1,q-1)}$$
+
 We can rewrite this expression and get
-\begin{center}
-$m^{e\tilde{d}}$ mod $n$ = $m^{1+k\frac{(p-1)(q-1)}{gcd(p-1,q-1)}}$ mod $n$
-\end{center}
+$$m^{e\tilde{d}} \text{ mod } n = m^{1+k\frac{(p-1)(q-1)}{gcd(p-1,q-1)}}  \text{ mod } n$$
 for some integer $k$.\\
+\\
 If two integers $x$ and $y$ are congruent modulo $n$ then they are also congruent modulo $p$ and modulo $q$ because both $p$ and $q$ divide $n$. The Chinese Remainder Theorem tells us that the reverse implication is also true. This means that if $x$ and $y$ are congruent modulo $p$ and congruent modulo $q$, then they are also congruent modulo $n$.\\
-We want to show that $m^{e\tilde{d}} \equiv m$ mod $n$ so if it will be sufficient to show that:
-\begin{center}
-$m^{e\tilde{d}} \equiv m$ mod $p$ and  $m^{e\tilde{d}} \equiv m$ mod $q$
-\end{center}
-First we will show that $m^{e\tilde{d}} \equiv m$ mod $p$. We have therefore have two cases to consider:
+\\
+We want to show that $m^{e\tilde{d}} \equiv m$ mod $n$ so it will be sufficient to show that:
+
+$$m^{e\tilde{d}} \equiv m \text{ mod } p \text{ and } m^{e\tilde{d}} \equiv m \text{ mod } q$$
+
+First we will show that $m^{e\tilde{d}} \equiv m$ mod $p$. We therefore have two cases to consider:
 \begin{enumerate}
-\item $p$ divides m
-\item $p$ does not divide m.
+	\item $p$ divides m
+	\item $p$ does not divide m.
 \end{enumerate}
-Case 1: If $p$ divides $m$, then $m \equiv 0$ mod $p$, but also $m^{e\tilde{d}} \equiv 0$ mod $p$, therefore $m^{e\tilde{d}} \equiv m$ mod $p$.\\
-Case 2: If $p$ does not divide m then $m \in \mathbb{Z}^*_p$. By Fermat's Little Theorem we have $m^{p-1} \equiv 1$ mod $p$. Since $e\tilde{d} \equiv 1$ mod $\psi(n)$, we have that $psi(n)$ divides $e\tilde{d} - 1$. This equivalent with some integer $k$: $k \psi(n) = e\tilde{d} - 1$, so $e\tilde{d} = k \psi(n) + 1$ for some integer $k$. We therefore have:
-\begin{center}
-$m^{e\tilde{d}} = m^{k\psi(n)+1} = m * m^{k\frac{(p-1)(q-1)}{gcd(p-1,q-1)}}$ \\
-$m^{e\tilde{d}} = m * (m^{p-1})^{k\frac{(q-1)}{gcd(p-1,q-1)}}$ \\
-$m^{e\tilde{d}} \equiv m * 1^{k\frac{(q-1)}{gcd(p-1,q-1)}}$ mod $p$ \\
-$m^{e\tilde{d}} \equiv m$ mod $p$.
-\end{center}
+
+\begin{description}
+	\item[Case 1:] If $p$ divides $m$, then $m \equiv 0$ mod $p$, but also $m^{e\tilde{d}} \equiv 0$ mod $p$, therefore $m^{e\tilde{d}} \equiv m$ mod $p$.
+	
+	\item[Case 2:] If $p$ does not divide m then $m \in \mathbb{Z}^*_p$. By Fermat's Little Theorem we have $m^{p-1} \equiv 1$ mod $p$. Since $e\tilde{d} \equiv 1$ mod $\psi(n)$, we have that $\psi(n)$ divides $e\tilde{d} - 1$.\\
+	This gives:
+	\begin{center}
+		$k \psi(n) = e\tilde{d} - 1$, so $e\tilde{d} = k \psi(n) + 1$ for some integer $k$.
+	\end{center}
+	We therefore have:
+	$$m^{e\tilde{d}} = m^{k\psi(n)+1} = m * m^{k\frac{(p-1)(q-1)}{gcd(p-1,q-1)}}$$
+	$$m^{e\tilde{d}} = m * (m^{p-1})^{k\frac{(q-1)}{gcd(p-1,q-1)}}$$
+	$$m^{e\tilde{d}} \equiv m * 1^{k\frac{(q-1)}{gcd(p-1,q-1)}} \text{ mod } p$$
+	$$m^{e\tilde{d}} \equiv m \text{ mod } p$$
+\end{description}
+
 We can do similar calculations to show that $m^{e\tilde{d}} \equiv m$ mod $q$ by replacing $p$ by $q$.\\
 Therefore we have now shown for all $m \in \mathbb{Z}_n$ that
-\begin{center}
-$m^{e\tilde{d}} \equiv m$ mod $p$ and  $m^{e\tilde{d}} \equiv m$ mod $q$
-\end{center}
+$$m^{e\tilde{d}} \equiv m \text{ and } p \text{ and } m^{e\tilde{d}} \equiv m \text{ mod } q$$
+
 Hence we can concluce that $m^{e\tilde{d}} \equiv m$ mod $n$ for all $m \in \mathbb{Z}_{n}$.
+
+
 \subsection*{2.1.2}
 Let $p = 881$, $q = 461$, and let $n = pq = 405141$. We have to show that $e = 3$ is an allowed encryption exponent for an RSA encryption system with modulus $n$. By the definition of RSA $e$ must be chosen such that $e$ and $\phi(n)$ are co-prime. Formally this means that $e \in \mathbb{Z}^*_{\phi(n)}$, where $\phi(n) = (p-1)(q-1)$.
 $$gcd(3, (881-1)(461-1) = 1$$
@@ -105,13 +134,26 @@ We have to find $d_1$ such that $ed_1 \equiv 1$ mod $\phi(n)$.
 p := 881; q := 461; e := 3; \\
 d1 := mod($e^{-1}$, (p-1)*(q-1))
 \end{mapleinput}
+
+\begin{lstlisting}[style=Maple]
+> p := 881; q := 461; e := 3;
+d1 := mod($e^{-1}$, (p-1)*(q-1))
+\end{lstlisting}
+
 Using the maple code above we find that $d_1 = 269867$
 \subsection*{2.1.4}
 We have to find $d_2$ such that $ed_2 \equiv 1$ mod $\psi(n)$
+
 \begin{mapleinput}
 p := 881; q := 461; e := 3; \\
 d2 := mod($e^{-1}$, (p-1)*(q-1)/gcd(p-1, q-1))
 \end{mapleinput}
+
+\begin{lstlisting}[style=Maple]
+> p := 881; q := 461; e := 3;
+d2 := mod($e^{-1}$, (p-1)*(q-1)/gcd(p-1, q-1))
+\end{lstlisting}
+
 Using the maple code above we find that $d_2 = 6747$.
 \subsection*{2.1.5}
 Choosing $\psi(n)$ instead of $\phi(n)$ in the congruence for d means that the decryption becomes faster since
@@ -121,6 +163,7 @@ Because $p$ and $q$ are odd primes $gcd(p-1,q-1) \geq 2$.
 \section*{Exercise 2.2}
 \subsection*{2.2.a}
 We have implemented trial division in maple with the following code:
+
 \begin{mapleinput}
 TrialDivision := proc (n::integer) \\
 local i; \\
@@ -134,6 +177,19 @@ true end if \\
 end proc:
 \end{mapleinput}
 
+\begin{lstlisting}[style=Maple]
+> TrialDivision := proc (n::integer)
+local i;
+if n $\leq$ 1 then false
+elif n = 2 then true
+elif type(n, 'even') then false
+else for i from 3 by 2 while i*i $\leq$ n do
+if irem(n, i) = 0 then return false end if
+end do;
+true end if
+end proc:
+\end{lstlisting}
+
 \begin{mapleinput}
 result := 0; \\
 for n from 25 to 25000 do \\
@@ -141,6 +197,15 @@ if TrialDivision(n) then result := result+1 end if \\
 end do; \\
 result;
 \end{mapleinput}
+
+\begin{lstlisting}[style=Maple]
+> result := 0;
+for n from 25 to 25000 do
+if TrialDivision(n) then result := result+1 end if
+end do;
+result;
+\end{lstlisting}
+
 Using this code we find that the number of primes $s$ between 25 and 25000 is 2753.
 $$s = 2753$$
 
@@ -166,6 +231,28 @@ end do; \\
 return true \\
 end proc:
 \end{mapleinput}
+
+\begin{lstlisting}[style=Maple]
+> MillerRabin := proc (n::integer, k::integer)
+local x, r, roll, s, d, i, a;
+s := n-1; d := 0;
+while mod(s, 2) = 0 do
+s := (1/2)*s; d := d+1
+end do;
+for i to k do
+roll := rand(2 .. n-1);
+a := roll(); x := mod($a^s$, n);
+if x = 1 or x = n-1 then next end if;
+for r to d-1 do x := mod($x^2$, n);
+if x = 1 then return false end if;
+if x = n-1 then break end if
+end do;
+if x $\ne$ n-1 then return false end if
+end do;
+return true
+end proc:
+\end{lstlisting}
+
 \subsection*{2.2.c}
 We use this maple code below and define $k = 1,2,3,\dots$ to find the smallest number of iterations needed such that we gets the correct answer $s$.
 \begin{mapleinput}
@@ -175,6 +262,15 @@ if MillerRabin2(n, k) then result := result+1 end if \\
 end do; \\
 result;
 \end{mapleinput}
+
+\begin{lstlisting}[style=Maple]
+> result := 0;
+for n from 25 to 25000 do
+if MillerRabin2(n, k) then result := result+1 end if
+end do;
+result;
+\end{lstlisting}
+
 This gives us the following table:
 \begin{center}
 \begin{tabular}{| c | c | c | c | c |}
