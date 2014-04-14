@@ -62,6 +62,7 @@
     <Compile Include="Heaps\Heap.cs" />
     <Compile Include="Heaps\KeyValueHeap.cs" />
     <Compile Include="Heuristics\IHeuristic.cs" />
+    <Compile Include="Heuristics\StraightLineHeuristic.cs" />
     <Compile Include="PathFinding\AStarPathFinder.cs" />
     <Compile Include="PathFinding\IPathFinder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

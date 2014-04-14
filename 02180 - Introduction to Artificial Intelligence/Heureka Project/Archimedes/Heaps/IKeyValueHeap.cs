@@ -13,7 +13,9 @@ namespace Archimedes.Heaps {
 		void SetValue(TKey key, TValue value);
 		TValue Remove(TKey key);
 		TValue RemoveRoot();
+		TKey RemoveRootKey();
 		TValue Peek();
+		TKey PeekKey();
 
 		bool ContainsKey(TKey key);
 	}

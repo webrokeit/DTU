@@ -38,7 +38,7 @@ namespace Heureka.Factories {
 				var nodeFromY = parts[1].ToInt(-1);
 				var nodeToX = parts[3].ToInt(-1);
 				var nodeToY = parts[4].ToInt(-1);
-				var edgeName = parts[3];
+				var edgeName = parts[2];
 
 				var nodeFrom = new CoordinateNode(new Point(nodeFromX, nodeFromY));
 				var nodeTo = new CoordinateNode(new Point(nodeToX, nodeToY));

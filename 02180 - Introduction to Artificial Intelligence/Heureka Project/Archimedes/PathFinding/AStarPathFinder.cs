@@ -18,32 +18,53 @@ namespace Archimedes.PathFinding {
 
 		public IList<TNode> ShortestPath(IDirectedGraph<TNode, TEdge> graph, TNode from, TNode to) {
 			var visited = new HashSet<string>();
-			var queue = new Heap<KeyValuePair<TNode, int>>(Comparer<KeyValuePair<TNode, int>>.Create((node1, node2) => node1.Value.CompareTo(node2.Value)));
+			var queue = new KeyValueHeap<string, int>(Comparer<int>.Create((val1, val2) => val1.CompareTo(val2)));
 			var cameFrom = new Dictionary<string, string>();
 
 			var gScore = new Dictionary<string, int>();
 			var fScore = new Dictionary<string, int>();
 
-			queue.Insert(new KeyValuePair<TNode, int>(from, 0));
+			queue.Insert(from.Id, 0);
 			gScore[from.Id] = 0;
 			fScore[from.Id] = gScore[from.Id] + Heuristic.Evaluate(from, to);
 
 			while (!queue.Empty) {
-				var current = queue.RemoveRoot().Key;
+				var current = graph[queue.RemoveRootKey()];
 				if (current.Id == to.Id) {
-					// Return path;
+					return ReconstructPath(graph, cameFrom, current.Id);
 				}
 
 				visited.Add(current.Id);
 				foreach (var neighbor in graph.Outgoing(current).Where(neighbor => !visited.Contains(neighbor.Id))) {
 					var score = gScore[current.Id] + graph[current, neighbor].Weight;
 
+					if (!queue.ContainsKey(neighbor.Id) || score < gScore[neighbor.Id]) {
+						cameFrom[neighbor.Id] = current.Id;
+						gScore[neighbor.Id] = score;
+						fScore[neighbor.Id] = score + Heuristic.Evaluate(neighbor, to);
+						if (queue.ContainsKey(neighbor.Id)) {
+							queue.SetValue(neighbor.Id, fScore[neighbor.Id]);
+						} else {
+							queue.Insert(neighbor.Id, fScore[neighbor.Id]);
+						}
+					}
 				}
 			}
 
 			return null;
 		}
 
+		private static IList<TNode> ReconstructPath(IDirectedGraph<TNode, TEdge> graph, IReadOnlyDictionary<string, string> cameFrom, string currentNodeId) {
+			var path = new List<TNode>();
+			ReconstructPath(graph, cameFrom, currentNodeId, path);
+			return path;
+		}
 
+		private static void ReconstructPath(IDirectedGraph<TNode, TEdge> graph, IReadOnlyDictionary<string, string> cameFrom, string currentNodeId, ICollection<TNode> thelist) {
+			if (cameFrom.ContainsKey(currentNodeId)) {
+				ReconstructPath(graph, cameFrom, cameFrom[currentNodeId], thelist);
+			}
+			thelist.Add(graph[currentNodeId]);
+		}
 	}
 }

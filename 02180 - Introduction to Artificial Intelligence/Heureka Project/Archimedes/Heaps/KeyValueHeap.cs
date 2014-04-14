@@ -58,7 +58,7 @@ namespace Archimedes.Heaps {
 			var tmpKey = _items[index];
 			var tmp = _dictionary[tmpKey];
 
-			var i = 0;
+			var i = index;
 			while (i < Count / 2) {
 				var j = (2 * i) + 1;
 				if (j < Count - 1 && Comparer.Compare(_dictionary[_items[j]], _dictionary[_items[j + 1]]) > 0) {
@@ -74,12 +74,17 @@ namespace Archimedes.Heaps {
 		public TValue Remove(TKey key) {
 			var value = _dictionary[key];
 			_dictionary.Remove(key);
-			for (var i = Count - 1; i >= 0; i--) {
+			for (var i = 0; i < Count; i++) {
 				if (!_items[i].Equals(key)) continue;
-				_items.RemoveAt(i);
+				_items[i] = _items[Count - 1];
+				_items.RemoveAt(Count - 1);
+				if (i < Count) {
+					Console.WriteLine("Percolating!");
+					PercolateDown(i);
+				}
+				Console.WriteLine("Deleted it!");
 				break;
 			}
-			Rebuild();
 			return value;
 		}
 
@@ -88,17 +93,32 @@ namespace Archimedes.Heaps {
 			return _dictionary[_items[0]];
 		}
 
+		public TKey PeekKey() {
+			if (Count < 1) throw new InvalidOperationException("The heap is empty.");
+			return _items[0];
+		}
+
 		public TValue RemoveRoot() {
 			if (Count < 1) throw new InvalidOperationException("The heap is empty.");
 
 			var root = _dictionary[_items[0]];
+			RemoveRootKey();
+			return root;
+		}
+
+		public TKey RemoveRootKey() {
+			if (Count < 1) throw new InvalidOperationException("The heap is empty.");
+
+			var rootKey = _items[0];
+			_dictionary.Remove(rootKey);
 			_items[0] = _items[Count - 1];
 			_items.RemoveAt(Count - 1);
-			if (Count < 1) return root;
 
-			PercolateDown(0);
+			if (Count > 0) {
+				PercolateDown(0);
+			}
 
-			return root;
+			return rootKey;
 		}
 
 		public bool ContainsKey(TKey key) {
@@ -120,17 +140,22 @@ namespace Archimedes.Heaps {
 
 		public override string ToString() {
 			var cnt = 0;
+			var i = 0;
 			var breakLineAt = 1;
 			var sb = new StringBuilder();
-			while (cnt < Count) {
-				sb.Append("{" + _items[cnt] + ": " + _dictionary[_items[cnt]] + "}");
+			while (i < Count) {
+				sb.Append("{" + _items[i] + ": " + _dictionary[_items[i]] + "}");
 
+				i++;
 				cnt++;
-				if (cnt == breakLineAt) {
-					sb.AppendLine();
-					breakLineAt *= 2;
-				} else {
-					sb.Append(", ");
+				if (i < Count) {
+					if (cnt == breakLineAt) {
+						sb.AppendLine();
+						breakLineAt *= 2;
+						cnt = 0;
+					} else {
+						sb.Append(", ");
+					}
 				}
 			}
 			return sb.ToString();

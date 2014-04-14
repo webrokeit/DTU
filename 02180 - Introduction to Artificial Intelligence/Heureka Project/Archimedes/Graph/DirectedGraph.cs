@@ -44,9 +44,11 @@ namespace Archimedes.Graph {
         }
 
 		public IDirectedGraph<TNode, TEdge> AddNode(TNode node) {
-            _nodes.Add(node.Id, node);
-			_outgoing.Add(node.Id, new HashSet<string>());
-			_incoming.Add(node.Id, new HashSet<string>());
+			if (!_nodes.ContainsKey(node.Id)) {
+				_nodes.Add(node.Id, node);
+				_outgoing.Add(node.Id, new HashSet<string>());
+				_incoming.Add(node.Id, new HashSet<string>());
+			}
 			return this;
 		}
 

@@ -7,6 +7,6 @@ using Archimedes.Graph;
 
 namespace Archimedes.Heuristics {
 	public interface IHeuristic {
-		int Evaluate(INode from, INode to);
+		int Evaluate(INode @from, INode to);
 	}
 }

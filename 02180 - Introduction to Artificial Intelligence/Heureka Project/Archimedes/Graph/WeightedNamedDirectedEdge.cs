@@ -35,7 +35,7 @@ namespace Archimedes.Graph {
         }
 
         public override sealed string ToString() {
-            return "{" + From + " -> " + To + "} : " + Name;
+            return "{" + From.Id + " -> " + To.Id + "} : " + Name;
         }
     }
 }
