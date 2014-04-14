@@ -9,8 +9,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Archimedes</RootNamespace>
     <AssemblyName>Archimedes</AssemblyName>
-    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -40,9 +41,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Extensions\DictionaryExtensions.cs" />
+    <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Graph\CoordinateNode.cs" />
-    <Compile Include="Graph\DirectedGraph.cs" />
     <Compile Include="Graph\Graph.cs" />
+    <Compile Include="Graph\DirectedGraph.cs" />
     <Compile Include="Graph\ICoordinateNode.cs" />
     <Compile Include="Graph\IDirectedEdge.cs" />
     <Compile Include="Graph\IDirectedGraph.cs" />
@@ -52,8 +54,16 @@
     <Compile Include="Graph\INode.cs" />
     <Compile Include="Graph\IPoint.cs" />
     <Compile Include="Graph\IWeighted.cs" />
+    <Compile Include="Graph\IWeightedNamedDirectedEdge.cs" />
     <Compile Include="Graph\Point.cs" />
     <Compile Include="Graph\WeightedNamedDirectedEdge.cs" />
+    <Compile Include="Heaps\IKeyValueHeap.cs" />
+    <Compile Include="Heaps\IHeap.cs" />
+    <Compile Include="Heaps\Heap.cs" />
+    <Compile Include="Heaps\KeyValueHeap.cs" />
+    <Compile Include="Heuristics\IHeuristic.cs" />
+    <Compile Include="PathFinding\AStarPathFinder.cs" />
+    <Compile Include="PathFinding\IPathFinder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />

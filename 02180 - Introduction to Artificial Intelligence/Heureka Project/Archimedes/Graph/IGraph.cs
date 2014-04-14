@@ -16,11 +16,11 @@ namespace Archimedes.Graph {
         TNode this[string nodeId] { get; }
         TEdge this[TNode node1, TNode node2] { get; }
 
-        void AddNode(TNode node);
-        void AddEdge(TEdge edge);
+		IGraph<TNode, TEdge> AddNode(TNode node);
+		IGraph<TNode, TEdge> AddEdge(TEdge edge);
 
-        void RemoveNode(TNode node);
-        void RemoveEdge(TEdge edge);
+		IGraph<TNode, TEdge> RemoveNode(TNode node);
+		IGraph<TNode, TEdge> RemoveEdge(TEdge edge);
 
         IEnumerable<TNode> Adjacent(INode node);
     }

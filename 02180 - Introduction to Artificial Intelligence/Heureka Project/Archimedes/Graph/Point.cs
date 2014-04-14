@@ -19,5 +19,14 @@ namespace Archimedes.Graph {
         public override string ToString() {
             return "Point{" + X + ", " + Y + "}";
         }
+
+	    public static int DistanceBetween(IPoint pointA, IPoint pointB) {
+		    if (pointA == null || pointB == null) return 0;
+
+		    var horizontalDistance = Math.Abs(pointA.X - pointB.X);
+		    var verticalDistance = Math.Abs(pointA.Y - pointB.Y);
+
+		    return (int) Math.Sqrt(horizontalDistance*horizontalDistance + verticalDistance*verticalDistance);
+	    }
     }
 }

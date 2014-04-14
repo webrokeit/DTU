@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Archimedes.Graph {
-    public class WeightedNamedDirectedEdge<TNode> : IWeighted, INamed, IDirectedEdge<TNode> where TNode : class, INode {
+	public class WeightedNamedDirectedEdge<TNode> : IWeightedNamedDirectedEdge<TNode> where TNode : class, INode {
         public TNode From { get; private set; }
         public TNode To { get; private set; }
         public int Weight { get; private set; }

@@ -15,12 +15,13 @@ namespace Archimedes.Graph {
         TNode this[string nodeId] { get; }
         TEdge this[TNode to, TNode from] { get; }
 
-        void AddNode(TNode node);
-        void AddEdge(TEdge edge);
+		IDirectedGraph<TNode, TEdge> AddNode(TNode node);
+		IDirectedGraph<TNode, TEdge> AddEdge(TEdge edge);
 
-        void RemoveNode(TNode node);
-        void RemoveEdge(TEdge edge);
+		IDirectedGraph<TNode, TEdge> RemoveNode(TNode node);
+		IDirectedGraph<TNode, TEdge> RemoveEdge(TEdge edge);
 
-        IEnumerable<TNode> Adjacent(INode fromNode);
+        IEnumerable<TNode> Outgoing(INode fromNode);
+		IEnumerable<TNode> Incoming(INode toNode);
     }
 }

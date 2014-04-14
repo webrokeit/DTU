@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Archimedes.Graph {
-    public interface IEdge<out TNode> where TNode : INode {
+	public interface IEdge<out TNode> where TNode : INode {
         TNode Node1 { get; }
         TNode Node2 { get; }
     }
