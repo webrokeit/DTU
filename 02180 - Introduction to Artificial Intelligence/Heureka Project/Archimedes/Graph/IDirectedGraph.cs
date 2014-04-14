@@ -12,6 +12,9 @@ namespace Archimedes.Graph {
         ICollection<TEdge> Edges { get; }
         int EdgeCount { get; }
 
+        TNode this[string nodeId] { get; }
+        TEdge this[TNode to, TNode from] { get; }
+
         void AddNode(TNode node);
         void AddEdge(TEdge edge);
 
