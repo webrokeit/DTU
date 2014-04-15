@@ -10,19 +10,20 @@ using Archimedes.Graph;
 
 namespace Heureka.Factories {
     public static class GraphFactory {
-		public static IDirectedGraph<ICoordinateNode, IWeightedNamedDirectedEdge<ICoordinateNode>> FromInput(){
+		#region "Named Directed Graph"
+		public static INamedDirectedGraph<ICoordinateNode, IWeightedNamedDirectedEdge<ICoordinateNode>> NamedDirectedFromInput() {
 			var oldIn = Console.In;
-			var graph = FromInput(Console.OpenStandardInput());
+			var graph = NamedDirectedFromInput(Console.OpenStandardInput());
 			Console.SetIn(oldIn);
 			return graph;
 		}
 
-		public static IDirectedGraph<ICoordinateNode, IWeightedNamedDirectedEdge<ICoordinateNode>> FromInput(Stream input) {
-			return FromInput(new StreamReader(input));
+		public static INamedDirectedGraph<ICoordinateNode, IWeightedNamedDirectedEdge<ICoordinateNode>> NamedDirectedFromInput(Stream input) {
+			return NamedDirectedFromInput(new StreamReader(input));
 		}
 
-		public static IDirectedGraph<ICoordinateNode, IWeightedNamedDirectedEdge<ICoordinateNode>> FromInput(StreamReader input)  {
-			var graph = new DirectedGraph<ICoordinateNode, IWeightedNamedDirectedEdge<ICoordinateNode>>();
+		public static INamedDirectedGraph<ICoordinateNode, IWeightedNamedDirectedEdge<ICoordinateNode>> NamedDirectedFromInput(StreamReader input) {
+			var graph = new NamedDirectedGraph<ICoordinateNode, IWeightedNamedDirectedEdge<ICoordinateNode>>();
 
 			while (!input.EndOfStream) {
 				var line = input.ReadLine();
@@ -53,13 +54,14 @@ namespace Heureka.Factories {
 			return graph;
 		}
 
-		public static IDirectedGraph<ICoordinateNode, IWeightedNamedDirectedEdge<ICoordinateNode>> FromInput(string inputContent) {
+		public static INamedDirectedGraph<ICoordinateNode, IWeightedNamedDirectedEdge<ICoordinateNode>> NamedDirectedFromInput(string inputContent) {
 			using (var ms = new MemoryStream()) {
 				var buffer = Encoding.Default.GetBytes(inputContent);
 				ms.Write(buffer, 0, buffer.Length);
 				ms.Position = 0;
-				return FromInput(new StreamReader(ms));
+				return NamedDirectedFromInput(new StreamReader(ms));
 			}
 		}
+		#endregion
 	}
 }

@@ -100,7 +100,7 @@ namespace Archimedes.Graph {
 		}
 
         private static string EdgeKey(TEdge edge) {
-            return EdgeKey(edge.To, edge.From);
+            return EdgeKey(edge.From, edge.To);
         }
 
         private static string EdgeKey(TNode from, TNode to) {

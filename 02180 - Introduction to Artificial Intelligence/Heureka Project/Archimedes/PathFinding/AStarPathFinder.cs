@@ -9,28 +9,32 @@ using Archimedes.Heaps;
 using Archimedes.Heuristics;
 
 namespace Archimedes.PathFinding {
-	public class AStarPathFinder<TNode, TEdge> : IPathFinder<TNode, TEdge> where TNode : INode where TEdge : IDirectedEdge<TNode>, IWeighted {
+	public class AStarPathFinder<TNode, TEdge> : IPathFinder<TNode, TEdge> where TNode : class,INode where TEdge : class,IDirectedEdge<TNode>, IWeighted {
 		public IHeuristic Heuristic { get; private set; }
+		private readonly IComparer<int> _comparer;
 
 		public AStarPathFinder(IHeuristic heuristic) {
 			Heuristic = heuristic;
+			_comparer = Comparer<int>.Create((val1, val2) => val1.CompareTo(val2));
 		}
 
-		public IList<TNode> ShortestPath(IDirectedGraph<TNode, TEdge> graph, TNode from, TNode to) {
+		public IList<TNode> ShortestPath(IDirectedGraph<TNode, TEdge> graph, TNode source, TNode goal) {
+			if (source == null || goal == null) return null;
+
 			var visited = new HashSet<string>();
-			var queue = new KeyValueHeap<string, int>(Comparer<int>.Create((val1, val2) => val1.CompareTo(val2)));
+			var queue = new KeyValueHeap<string, int>(_comparer);
 			var cameFrom = new Dictionary<string, string>();
 
 			var gScore = new Dictionary<string, int>();
 			var fScore = new Dictionary<string, int>();
 
-			queue.Insert(from.Id, 0);
-			gScore[from.Id] = 0;
-			fScore[from.Id] = gScore[from.Id] + Heuristic.Evaluate(from, to);
+			queue.Insert(source.Id, 0);
+			gScore[source.Id] = 0;
+			fScore[source.Id] = gScore[source.Id] + Heuristic.Evaluate(source, goal);
 
 			while (!queue.Empty) {
 				var current = graph[queue.RemoveRootKey()];
-				if (current.Id == to.Id) {
+				if (current.Id == goal.Id) {
 					return ReconstructPath(graph, cameFrom, current.Id);
 				}
 
@@ -41,7 +45,7 @@ namespace Archimedes.PathFinding {
 					if (!queue.ContainsKey(neighbor.Id) || score < gScore[neighbor.Id]) {
 						cameFrom[neighbor.Id] = current.Id;
 						gScore[neighbor.Id] = score;
-						fScore[neighbor.Id] = score + Heuristic.Evaluate(neighbor, to);
+						fScore[neighbor.Id] = score + Heuristic.Evaluate(neighbor, goal);
 						if (queue.ContainsKey(neighbor.Id)) {
 							queue.SetValue(neighbor.Id, fScore[neighbor.Id]);
 						} else {
@@ -53,6 +57,18 @@ namespace Archimedes.PathFinding {
 
 			return null;
 		}
+
+		//public IList<TNode> ShortestPath(IDirectedGraph<TNode, TEdge> graph, TNode source, ICollection<TNode> goals) {
+		//	return ShortestPath(graph, new[] { source }, goals);
+		//}
+
+		//public IList<TNode> ShortestPath(IDirectedGraph<TNode, TEdge> graph, ICollection<TNode> sources, TNode goal) {
+		//	return ShortestPath(graph, sources, new[] { goal });
+		//}
+
+		//public IList<TNode> ShortestPath(IDirectedGraph<TNode, TEdge> graph, ICollection<TNode> sources, ICollection<TNode> goals) {
+			
+		//}
 
 		private static IList<TNode> ReconstructPath(IDirectedGraph<TNode, TEdge> graph, IReadOnlyDictionary<string, string> cameFrom, string currentNodeId) {
 			var path = new List<TNode>();

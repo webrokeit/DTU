@@ -51,10 +51,13 @@
     <Compile Include="Graph\IEdge.cs" />
     <Compile Include="Graph\IGraph.cs" />
     <Compile Include="Graph\INamed.cs" />
+    <Compile Include="Graph\INamedDirectedGraph.cs" />
+    <Compile Include="Graph\INamedGraph.cs" />
     <Compile Include="Graph\INode.cs" />
     <Compile Include="Graph\IPoint.cs" />
     <Compile Include="Graph\IWeighted.cs" />
     <Compile Include="Graph\IWeightedNamedDirectedEdge.cs" />
+    <Compile Include="Graph\NamedDirectedGraph.cs" />
     <Compile Include="Graph\Point.cs" />
     <Compile Include="Graph\WeightedNamedDirectedEdge.cs" />
     <Compile Include="Heaps\IKeyValueHeap.cs" />

@@ -13,5 +13,19 @@ namespace Archimedes.Graph {
             Point = point;
             Id = "Node{" + Point.X + ", " + Point.Y + "}";
         }
+
+		public override bool Equals(object obj) {
+			if (obj == this) return true;
+			var cObj = obj as CoordinateNode;
+			return cObj != null && Id.Equals(cObj.Id);
+		}
+
+		public override int GetHashCode() {
+			return Id.GetHashCode();
+		}
+
+		public override sealed string ToString() {
+			return Id;
+		}
     }
 }

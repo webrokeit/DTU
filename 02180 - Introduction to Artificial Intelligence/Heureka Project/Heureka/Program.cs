@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -26,9 +27,9 @@ namespace Heureka {
 			//	if(heap.Count > 0) Console.WriteLine();
 			//}
 
-	        IDirectedGraph<ICoordinateNode, IWeightedNamedDirectedEdge<ICoordinateNode>> graph;
+	        INamedDirectedGraph<ICoordinateNode, IWeightedNamedDirectedEdge<ICoordinateNode>> graph;
 	        using (var fs = new FileStream("TestInputs/pathtestinput01.txt", FileMode.Open, FileAccess.Read, FileShare.Read)) {
-		        graph = GraphFactory.FromInput(fs);
+		        graph = GraphFactory.NamedDirectedFromInput(fs);
 	        }
 
 	        Console.WriteLine("Graph has " + graph.NodeCount + " nodes and " + graph.EdgeCount + " edges");
@@ -36,8 +37,15 @@ namespace Heureka {
 	        var heuristic = new StraightLineHeuristic();
 	        var pathFinder = new AStarPathFinder<ICoordinateNode, IWeightedNamedDirectedEdge<ICoordinateNode>>(heuristic);
 
-			var start = graph[""]
-			var path = pathFinder.ShortestPath(graph, )
+			var starts = graph.GetNodesByEdgeNames("SktPedersStraede", "Larsbjoernsstraede").ToList();
+			var ends = graph.GetNodesByEdgeNames("Studiestraede", "Larsbjoernsstraede").ToList();
+
+	        var sw = new Stopwatch();
+			sw.Start();
+	        var path = pathFinder.ShortestPath(graph, starts[0], ends[0]);
+			sw.Stop();
+			Console.WriteLine("Time taken to find path was " + sw.ElapsedMilliseconds + " ms, path is:");
+	        Console.WriteLine(string.Join(" -> ", path));
 
 	        Console.ReadKey(true);
         }

@@ -51,6 +51,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="TestInputs\manhattan.txt" />
     <Content Include="TestInputs\pathtestinput01.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
