@@ -20,8 +20,15 @@ namespace Archimedes.Graph {
 
 		IDirectedGraph<TNode, TEdge> RemoveNode(TNode node);
 		IDirectedGraph<TNode, TEdge> RemoveEdge(TEdge edge);
+        IDirectedGraph<TNode, TEdge> RemoveAllEdgesForNode(TNode node);
+
+        bool HasNode(string nodeId);
+        bool HasEdge(TNode to, TNode from);
+        TNode GetNode(string nodeId);
+        TEdge GetEdge(TNode to, TNode from);
 
         IEnumerable<TNode> Outgoing(INode fromNode);
 		IEnumerable<TNode> Incoming(INode toNode);
+        IEnumerable<TNode> NodesOfDegree(int degree);
     }
 }

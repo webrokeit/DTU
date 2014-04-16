@@ -27,7 +27,7 @@ namespace Archimedes.Graph {
         public override bool Equals(object obj) {
             if (obj == this) return true;
             var weObj = obj as WeightedNamedDirectedEdge<TNode>;
-            return weObj != null && Weight == weObj.Weight && From.Equals(weObj.From) && To.Equals(weObj.To);
+            return weObj != null && Weight == weObj.Weight && Name == weObj.Name && From.Equals(weObj.From) && To.Equals(weObj.To);
         }
 
         public override int GetHashCode() {

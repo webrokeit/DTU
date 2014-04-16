@@ -11,7 +11,7 @@ namespace Archimedes.Graph {
         
         public CoordinateNode(IPoint point) {
             Point = point;
-            Id = "Node{" + Point.X + ", " + Point.Y + "}";
+            Id = "Node(" + Point.X + ", " + Point.Y + ")";
         }
 
 		public override bool Equals(object obj) {

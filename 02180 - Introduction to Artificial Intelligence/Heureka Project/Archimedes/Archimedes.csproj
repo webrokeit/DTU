@@ -41,8 +41,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Extensions\DictionaryExtensions.cs" />
+    <Compile Include="Extensions\ListExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Graph\CoordinateNode.cs" />
+    <Compile Include="Graph\DirectedEdge.cs" />
     <Compile Include="Graph\Graph.cs" />
     <Compile Include="Graph\DirectedGraph.cs" />
     <Compile Include="Graph\ICoordinateNode.cs" />
@@ -58,6 +60,7 @@
     <Compile Include="Graph\IWeighted.cs" />
     <Compile Include="Graph\IWeightedNamedDirectedEdge.cs" />
     <Compile Include="Graph\NamedDirectedGraph.cs" />
+    <Compile Include="Graph\Node.cs" />
     <Compile Include="Graph\Point.cs" />
     <Compile Include="Graph\WeightedNamedDirectedEdge.cs" />
     <Compile Include="Heaps\IKeyValueHeap.cs" />
@@ -66,6 +69,18 @@
     <Compile Include="Heaps\KeyValueHeap.cs" />
     <Compile Include="Heuristics\IHeuristic.cs" />
     <Compile Include="Heuristics\StraightLineHeuristic.cs" />
+    <Compile Include="Logic\Clause.cs" />
+    <Compile Include="Logic\ClauseNode.cs" />
+    <Compile Include="Logic\IClause.cs" />
+    <Compile Include="Logic\IClauseNode.cs" />
+    <Compile Include="Logic\IExpression.cs" />
+    <Compile Include="Logic\IKnowledgeBase.cs" />
+    <Compile Include="Logic\ILiteral.cs" />
+    <Compile Include="Logic\ILiteralNode.cs" />
+    <Compile Include="Logic\ILogicNode.cs" />
+    <Compile Include="Logic\KnowledgeBase.cs" />
+    <Compile Include="Logic\Literal.cs" />
+    <Compile Include="Logic\LiteralNode.cs" />
     <Compile Include="PathFinding\AStarPathFinder.cs" />
     <Compile Include="PathFinding\IPathFinder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

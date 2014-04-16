@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Archimedes.Graph;
 using Archimedes.Heaps;
 using Archimedes.Heuristics;
+using Archimedes.Logic;
 using Archimedes.PathFinding;
 using Heureka.Factories;
 
@@ -46,6 +47,13 @@ namespace Heureka {
 			sw.Stop();
 			Console.WriteLine("Time taken to find path was " + sw.ElapsedMilliseconds + " ms, path is:");
 	        Console.WriteLine(string.Join(" -> ", path));
+            Console.WriteLine();
+
+            IKnowledgeBase kb;
+            using (var fs = new FileStream("TestInputs/logic01simple.txt", FileMode.Open, FileAccess.Read, FileShare.Read)) {
+                kb = KnowledgeBaseFactory.FromInput(fs);
+            }
+            Console.WriteLine(kb);
 
 	        Console.ReadKey(true);
         }

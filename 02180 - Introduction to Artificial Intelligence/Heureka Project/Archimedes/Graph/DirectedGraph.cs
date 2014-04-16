@@ -44,19 +44,23 @@ namespace Archimedes.Graph {
         }
 
 		public IDirectedGraph<TNode, TEdge> AddNode(TNode node) {
-			if (!_nodes.ContainsKey(node.Id)) {
-				_nodes.Add(node.Id, node);
-				_outgoing.Add(node.Id, new HashSet<string>());
-				_incoming.Add(node.Id, new HashSet<string>());
-			}
+		    if (!_nodes.ContainsKey(node.Id)) {
+		        _nodes.Add(node.Id, node);
+		        _outgoing.Add(node.Id, new HashSet<string>());
+		        _incoming.Add(node.Id, new HashSet<string>());
+		    } else {
+		        _nodes[node.Id] = node;
+		    }
 			return this;
 		}
 
 		public IDirectedGraph<TNode, TEdge> AddEdge(TEdge edge) {
-			_edges.Add(EdgeKey(edge), edge);
-			_outgoing[edge.From.Id].Add(edge.To.Id);
-			_incoming[edge.To.Id].Add(edge.From.Id);
-			return this;
+		    if (edge.From.Id != edge.To.Id) {
+		        _edges.Add(EdgeKey(edge), edge);
+		        _outgoing[edge.From.Id].Add(edge.To.Id);
+		        _incoming[edge.To.Id].Add(edge.From.Id);
+		    }
+		    return this;
         }
 
 		public IDirectedGraph<TNode, TEdge> RemoveNode(TNode node) {
@@ -82,6 +86,31 @@ namespace Archimedes.Graph {
 			return this;
         }
 
+        public IDirectedGraph<TNode, TEdge> RemoveAllEdgesForNode(TNode node) {
+            foreach (var toEdge in _outgoing[node.Id]) {
+                _incoming[toEdge].Remove(node.Id);
+                _edges.Remove(EdgeKey(node, this[toEdge]));
+            }
+            _outgoing[node.Id].Clear();
+            return this;
+        }
+
+        public bool HasNode(string nodeId) {
+            return _nodes.ContainsKey(nodeId);
+        }
+
+        public bool HasEdge(TNode from, TNode to) {
+            return _edges.ContainsKey(EdgeKey(from, to));
+        }
+
+        public TNode GetNode(string nodeId) {
+            return _nodes.GetOrDefault(nodeId, default(TNode));
+        }
+
+        public TEdge GetEdge(TNode from, TNode to) {
+            return _edges.GetOrDefault(EdgeKey(from, to), default(TEdge));
+        }
+
         public IEnumerable<TNode> Outgoing(INode fromNode) {
             if(fromNode == null) yield break;
             var outgoingNodes = _outgoing.GetOrDefault(fromNode.ToString(), null);
@@ -98,6 +127,10 @@ namespace Archimedes.Graph {
 				yield return _nodes[node];
 			}
 		}
+
+        public IEnumerable<TNode> NodesOfDegree(int degree) {
+            return _outgoing.Where(outgoing => outgoing.Value.Count == degree).Select(outgoing => _nodes[outgoing.Key]);
+        }
 
         private static string EdgeKey(TEdge edge) {
             return EdgeKey(edge.From, edge.To);
