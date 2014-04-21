@@ -130,10 +130,6 @@ This means that $e$ and $\phi(n)$ are co-prime and therefore $e=3$ is an allowed
 
 \subsection*{2.1.3}
 We have to find $d_1$ such that $ed_1 \equiv 1$ mod $\phi(n)$.
-\begin{mapleinput}
-p := 881; q := 461; e := 3; \\
-d1 := mod($e^{-1}$, (p-1)*(q-1))
-\end{mapleinput}
 
 \begin{lstlisting}[style=Maple]
 > p := 881; q := 461; e := 3;
@@ -143,11 +139,6 @@ d1 := mod($e^{-1}$, (p-1)*(q-1))
 Using the maple code above we find that $d_1 = 269867$
 \subsection*{2.1.4}
 We have to find $d_2$ such that $ed_2 \equiv 1$ mod $\psi(n)$
-
-\begin{mapleinput}
-p := 881; q := 461; e := 3; \\
-d2 := mod($e^{-1}$, (p-1)*(q-1)/gcd(p-1, q-1))
-\end{mapleinput}
 
 \begin{lstlisting}[style=Maple]
 > p := 881; q := 461; e := 3;
@@ -164,19 +155,6 @@ Because $p$ and $q$ are odd primes $gcd(p-1,q-1) \geq 2$.
 \subsection*{2.2.a}
 We have implemented trial division in maple with the following code:
 
-\begin{mapleinput}
-TrialDivision := proc (n::integer) \\
-local i; \\
-if n $\leq$ 1 then false \\
-elif n = 2 then true \\
-elif type(n, 'even') then false \\
-else for i from 3 by 2 while i*i $\leq$ n do \\
-if irem(n, i) = 0 then return false end if \\
-end do; \\
-true end if \\
-end proc:
-\end{mapleinput}
-
 \begin{lstlisting}[style=Maple]
 > TrialDivision := proc (n::integer)
 local i;
@@ -189,14 +167,6 @@ end do;
 true end if
 end proc:
 \end{lstlisting}
-
-\begin{mapleinput}
-result := 0; \\
-for n from 25 to 25000 do \\
-if TrialDivision(n) then result := result+1 end if \\
-end do; \\
-result;
-\end{mapleinput}
 
 \begin{lstlisting}[style=Maple]
 > result := 0;
@@ -211,26 +181,6 @@ $$s = 2753$$
 
 \subsection*{2.2.b}
 We have implemented the Miller-Rabin algorithm with $k$ iterations in maple with the following code:
-\begin{mapleinput}
-MillerRabin := proc (n::integer, k::integer) \\
-local x, r, roll, s, d, i, a; \\
-s := n-1; d := 0; \\
-while mod(s, 2) = 0 do \\
-s := (1/2)*s; d := d+1 \\
-end do; \\
-for i to k do \\
-roll := rand(2 .. n-1); \\
-a := roll(); x := mod($a^s$, n); \\
-if x = 1 or x = n-1 then next end if; \\
-for r to d-1 do x := mod($x^2$, n); \\
-if x = 1 then return false end if; \\
-if x = n-1 then break end if \\
-end do; \\
-if x $\ne$ n-1 then return false end if \\
-end do; \\
-return true \\
-end proc:
-\end{mapleinput}
 
 \begin{lstlisting}[style=Maple]
 > MillerRabin := proc (n::integer, k::integer)
@@ -255,18 +205,11 @@ end proc:
 
 \subsection*{2.2.c}
 We use this maple code below and define $k = 1,2,3,\dots$ to find the smallest number of iterations needed such that we gets the correct answer $s$.
-\begin{mapleinput}
-result := 0; \\
-for n from 25 to 25000 do \\
-if MillerRabin2(n, k) then result := result+1 end if \\
-end do; \\
-result;
-\end{mapleinput}
 
 \begin{lstlisting}[style=Maple]
 > result := 0;
 for n from 25 to 25000 do
-if MillerRabin2(n, k) then result := result+1 end if
+if MillerRabin(n, k) then result := result+1 end if
 end do;
 result;
 \end{lstlisting}
