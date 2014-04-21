@@ -1,0 +1,97 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{B890CADD-FEB8-4DE6-B57F-8111C8299A04}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Archimedes</RootNamespace>
+    <AssemblyName>Archimedes</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Extensions\DictionaryExtensions.cs" />
+    <Compile Include="Extensions\ListExtensions.cs" />
+    <Compile Include="Extensions\StringExtensions.cs" />
+    <Compile Include="Graph\CoordinateNode.cs" />
+    <Compile Include="Graph\DirectedEdge.cs" />
+    <Compile Include="Graph\Graph.cs" />
+    <Compile Include="Graph\DirectedGraph.cs" />
+    <Compile Include="Graph\ICoordinateNode.cs" />
+    <Compile Include="Graph\IDirectedEdge.cs" />
+    <Compile Include="Graph\IDirectedGraph.cs" />
+    <Compile Include="Graph\IEdge.cs" />
+    <Compile Include="Graph\IGraph.cs" />
+    <Compile Include="Graph\INamed.cs" />
+    <Compile Include="Graph\INamedDirectedGraph.cs" />
+    <Compile Include="Graph\INamedGraph.cs" />
+    <Compile Include="Graph\INode.cs" />
+    <Compile Include="Graph\IPoint.cs" />
+    <Compile Include="Graph\IWeighted.cs" />
+    <Compile Include="Graph\IWeightedNamedDirectedEdge.cs" />
+    <Compile Include="Graph\NamedDirectedGraph.cs" />
+    <Compile Include="Graph\Node.cs" />
+    <Compile Include="Graph\Point.cs" />
+    <Compile Include="Graph\WeightedNamedDirectedEdge.cs" />
+    <Compile Include="Heaps\IKeyValueHeap.cs" />
+    <Compile Include="Heaps\IHeap.cs" />
+    <Compile Include="Heaps\Heap.cs" />
+    <Compile Include="Heaps\KeyValueHeap.cs" />
+    <Compile Include="Heuristics\IHeuristic.cs" />
+    <Compile Include="Heuristics\StraightLineHeuristic.cs" />
+    <Compile Include="Logic\Clause.cs" />
+    <Compile Include="Logic\ClauseNode.cs" />
+    <Compile Include="Logic\IClause.cs" />
+    <Compile Include="Logic\IClauseNode.cs" />
+    <Compile Include="Logic\IExpression.cs" />
+    <Compile Include="Logic\IKnowledgeBase.cs" />
+    <Compile Include="Logic\ILiteral.cs" />
+    <Compile Include="Logic\ILiteralNode.cs" />
+    <Compile Include="Logic\ILogicNode.cs" />
+    <Compile Include="Logic\KnowledgeBase.cs" />
+    <Compile Include="Logic\Literal.cs" />
+    <Compile Include="Logic\LiteralNode.cs" />
+    <Compile Include="PathFinding\AStarPathFinder.cs" />
+    <Compile Include="PathFinding\IPathFinder.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
