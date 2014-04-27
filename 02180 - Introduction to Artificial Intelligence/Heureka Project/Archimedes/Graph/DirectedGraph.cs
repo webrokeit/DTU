@@ -113,7 +113,7 @@ namespace Archimedes.Graph {
 
         public IEnumerable<TNode> Outgoing(INode fromNode) {
             if(fromNode == null) yield break;
-            var outgoingNodes = _outgoing.GetOrDefault(fromNode.ToString(), null);
+			var outgoingNodes = _outgoing.GetOrDefault(fromNode.Id, null);
             if(outgoingNodes == null) yield break;
             foreach (var node in outgoingNodes) {
                 yield return _nodes[node];
@@ -121,7 +121,7 @@ namespace Archimedes.Graph {
         }
 		public IEnumerable<TNode> Incoming(INode toNode) {
 			if (toNode == null) yield break;
-			var incomingNodes = _incoming.GetOrDefault(toNode.ToString(), null);
+			var incomingNodes = _incoming.GetOrDefault(toNode.Id, null);
 			if (incomingNodes == null) yield break;
 			foreach (var node in incomingNodes) {
 				yield return _nodes[node];

@@ -7,5 +7,7 @@ using System.Threading.Tasks;
 namespace Archimedes.Logic {
     public interface IKnowledgeBase {
         void AddClause(IClause clause);
+		bool DirectQuery(IQuery query);
+		bool RefutationQuery(IQuery query);
     }
 }

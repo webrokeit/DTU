@@ -7,23 +7,20 @@ using System.Threading.Tasks;
 namespace Archimedes.Logic {
     public class Literal : ILiteral {
         public string Value { get; private set; }
-        public string Negated { get; private set; }
-        public bool Valid { get { return Validator(); } }
-        public Func<bool> Validator { get; set; } 
+		public bool Negated { get; private set; }
 
-        public Literal(string value, Func<bool> validator) {
+        public Literal(string value) {
             Value = value;
-            Negated = value[0] == '!' ? value.Substring(1) : "!" + Value;
-            Validator = validator;
-        }
-
-        public bool Evaluate() {
-            return Valid;
+			Negated = value [0] == '!';// ? value.Substring(1) : "!" + Value;
         }
 
         public IExpression Reduce() {
             return this;
         }
+
+		public string NegatedValue(){
+			return Negated ? Value.Substring (1) : "!" + Value;
+		}
 
         public string ToProperString() {
             return Value;
@@ -40,7 +37,8 @@ namespace Archimedes.Logic {
         }
 
         public override string ToString() {
-            return "[" + Value + ":" + (Valid ? "true" : "false") + "]";
+			return Value;
+			//return "[" + Value + ":" + (Valid ? "true" : "false") + "]";
         }
     }
 }

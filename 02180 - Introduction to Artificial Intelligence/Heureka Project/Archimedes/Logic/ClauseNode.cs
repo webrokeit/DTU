@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace Archimedes.Logic {
     internal class ClauseNode : IClauseNode {
         public string Id { get; private set; }
-        public bool Fact { get { return false; } }
+		public bool Fact { get { return false; } set { throw new NotSupportedException (); } }
 
         public ClauseNode(string id) {
             Id = id;

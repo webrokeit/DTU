@@ -6,9 +6,6 @@ using System.Threading.Tasks;
 
 namespace Archimedes.Logic {
     public interface IExpression {
-        bool Evaluate();
-
-        IExpression Reduce();
         string ToProperString();
     }
 }

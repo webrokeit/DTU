@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 namespace Archimedes.Logic {
     public interface ILiteral : IExpression {
         string Value { get; }
-        string Negated { get; }
-        bool Valid { get; }
-        Func<bool> Validator { get; set; }
+		bool Negated { get; }
+
+		string NegatedValue();
     }
 }
