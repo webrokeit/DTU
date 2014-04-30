@@ -37,16 +37,18 @@ namespace Heureka.Factories {
 			var clause = new Clause(head);
 
 			if (parts.Length > 1) {
+				var i = 1;
 				if (parts [1] == "if") {
-					if (parts.Length < 2)
-						return clause;
-					for (var i = 2; i < parts.Length; i++) {
-						var literal = new Literal (parts [i]);
-						clause.Body.Add (literal);
-					}
+					if (parts.Length < 2) return clause;
+					i = 2;
 				} else {
-					// We do not handle this yet!
-					return clause;
+					clause = new Clause ();
+					clause.Body.Add (head);
+				}
+
+				while (i < parts.Length) {
+					var literal = new Literal (parts [i++]);
+					clause.Body.Add (literal);
 				}
 			}
 

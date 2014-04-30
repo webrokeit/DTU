@@ -1,8 +1,12 @@
 ﻿h if f g e
 l if d e n
 a if b
+a if !b
 b if c d
+!b if c d
 m if a n
+p if q
+q if p
 c
 d
 f

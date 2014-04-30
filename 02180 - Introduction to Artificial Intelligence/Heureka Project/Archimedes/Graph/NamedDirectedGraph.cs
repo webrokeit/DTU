@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Archimedes.Extensions;
 
 namespace Archimedes.Graph {
 	public class NamedDirectedGraph<TNode, TEdge> : DirectedGraph<TNode, TEdge>, INamedDirectedGraph<TNode, TEdge> where TNode : INode where TEdge : IDirectedEdge<TNode>, INamed {
@@ -71,7 +72,7 @@ namespace Archimedes.Graph {
 		}
 
 		public ICollection<TEdge> GetEdgesByName(string edgeName) {
-			return _edgeNames[edgeName];
+			return _edgeNames.GetOrDefault(edgeName, new TEdge[]{});
 		}
 	}
 }
