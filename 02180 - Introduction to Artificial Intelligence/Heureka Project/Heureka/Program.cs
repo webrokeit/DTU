@@ -20,8 +20,12 @@ namespace Heureka {
 		public static void Main(string[] args) {
 			_arguments = ArgumentsFactory.ArgumentsAsDictionary (args);
 
-			var function = _arguments.GetOrDefault ("func", "path");
-			var input = _arguments.GetOrDefault ("file", "input.txt");
+		    const string defaultFunction = "logic";
+			var function = _arguments.GetOrDefault ("func", defaultFunction);
+
+		    var defaultInput = function + "-input.txt";
+			var input = _arguments.GetOrDefault ("file", defaultInput);
+            input = "TestInputs/logic02simple.txt";
 
 			if (input == null) {
 				ExitWithMsg ("No input file specified");
@@ -32,54 +36,10 @@ namespace Heureka {
 			if (function == "path") {
 				PathPlanning (input);
 			} else if (function == "logic") {
-
+			    Inference(input);
 			} else {
 				ExitWithMsg ("Invalid function specified, valid values are: 'path' and 'logic'");
 			}
-
-
-//	        INamedDirectedGraph<ICoordinateNode, IWeightedNamedDirectedEdge<ICoordinateNode>> graph;
-//	        using (var fs = new FileStream("TestInputs/pathtestinput01.txt", FileMode.Open, FileAccess.Read, FileShare.Read)) {
-//		        graph = GraphFactory.NamedDirectedFromInput(fs);
-//	        }
-//
-//	        Console.WriteLine("Graph has " + graph.NodeCount + " nodes and " + graph.EdgeCount + " edges");
-//
-//	        var heuristic = new StraightLineHeuristic();
-//	        var pathFinder = new AStarPathFinder<ICoordinateNode, IWeightedNamedDirectedEdge<ICoordinateNode>>(heuristic);
-//
-//			var starts = graph.GetNodesByEdgeNames("SktPedersStraede", "Larsbjoernsstraede").ToList();
-//			var ends = graph.GetNodesByEdgeNames("Studiestraede", "Larsbjoernsstraede").ToList();
-//
-//	        var sw = new Stopwatch();
-//			sw.Start();
-//	        var path = pathFinder.ShortestPath(graph, starts[0], ends[0]);
-//			sw.Stop();
-//			Console.WriteLine("Time taken to find path was " + sw.ElapsedMilliseconds + " ms, path is:");
-//	        Console.WriteLine(string.Join(" -> ", path));
-//            Console.WriteLine();
-
-            IKnowledgeBase kb;
-			using (var fs = new FileStream("TestInputs/logic02simple.txt", FileMode.Open, FileAccess.Read, FileShare.Read)) {
-                kb = KnowledgeBaseFactory.FromInput(fs);
-            }
-
-			var query = KnowledgeBaseFactory.QueryFromLine("a");
-			var qStr = string.Join (" & ", query.Literals);
-
-			for (var i = 0; i < 2; i++) {
-				Console.WriteLine ("Round #" + (i + 1));
-				Console.WriteLine ("Is " + qStr + " satisfiable? [Direct]");
-				var satisfied = kb.DirectQuery (query);
-				Console.WriteLine ((satisfied ? "Yes " + qStr + " is" : "No " + qStr + " is not") + " satisfiable [Direct]");
-				Console.WriteLine ();
-				Console.WriteLine ("Is " + qStr + " satisfiable? [Refutation]");
-				var refuSatisfied = kb.RefutationQuery (query);
-				Console.WriteLine ((refuSatisfied ? "Yes " + qStr + " is" : "No " + qStr + " is not") + " satisfiable [Refuation]");
-				Console.WriteLine ();
-			}
-
-	        Console.ReadKey(true);
         }
 
 		private static void PathPlanning(string fileName){
@@ -94,16 +54,15 @@ namespace Heureka {
 			Console.WriteLine ("Type exit to quit the program.");
 			Console.WriteLine ();
 
-			var read = string.Empty;
-			while (read != "exit") {
+		    while (true) {
 				ICollection<ICoordinateNode> startNodes = null;
 
-				while (startNodes == null || startNodes.Count < 1) {
+			    string read;
+			    while (startNodes == null || startNodes.Count < 1) {
 					Console.Write ("Enter street names for starting point: ");
 					read = Console.ReadLine ();
-					if (read == "quit") {
-						ExitWithMsg (null);
-					}
+                    if (string.IsNullOrEmpty(read)) continue;
+                    if (read == "quit") ExitWithMsg(null);
 
 					// SktPedersStraede Larsbjoernsstraede
 					var parts = read.Split (new char[]{' '}, 2);
@@ -119,9 +78,8 @@ namespace Heureka {
 				while (endNodes == null || endNodes.Count < 1) {
 					Console.Write ("Enter street names for ending point: ");
 					read = Console.ReadLine ();
-					if (read == "quit") {
-						ExitWithMsg (null);
-					}
+				    if (string.IsNullOrEmpty(read)) continue;
+                    if (read == "quit") ExitWithMsg(null);
 
 					// Studiestraede Larsbjoernsstraede
 					var parts = read.Split (new char[]{' '}, 2);
@@ -153,6 +111,50 @@ namespace Heureka {
 				Console.WriteLine ();
 			}
 		}
+
+	    private static void Inference(string fileName) {
+	        try {
+                IKnowledgeBase kb;
+                using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.Read)) {
+                    kb = KnowledgeBaseFactory.FromInput(fs);
+                }
+
+                OutputKnowledgeBaseGraph(kb, "graphviz.txt");
+
+                Console.WriteLine("Type exit to quit the program.");
+                Console.WriteLine();
+
+	            while (true) {
+	                Console.Write("Enter query: ");
+	                var read = Console.ReadLine() ?? "";
+	                if (read == "quit") ExitWithMsg(null);
+
+	                var query = KnowledgeBaseFactory.QueryFromLine(read);
+	                var qStr = string.Join(" & ", query.Literals);
+	                var negQStr = string.Join(" | ", query.Literals.Select(literal => literal.NegatedValue()));
+
+	                Console.WriteLine("[Direct] Is " + qStr + " satisfiable?");
+	                var satisfied = kb.DirectQuery(query);
+	                Console.WriteLine("[Direct] " + (satisfied ? "Yes " + qStr + " is" : "No " + qStr + " is not") +
+	                                  " satisfiable");
+                    Console.WriteLine();
+
+	                Console.WriteLine("[Refutation] Is " + qStr + " satisfiable?");
+	                var refuSatisfied = kb.RefutationQuery(query);
+                    Console.WriteLine("[Refutation] " + (refuSatisfied ? "Yes " + qStr + " is" : "No " + qStr + " is not") +
+	                                  " satisfiable");
+                    Console.WriteLine();
+	            }
+	        } catch (Exception ex) {
+	            ExitWithMsg("Error: " + ex.Message);
+	        }
+	    }
+
+	    private static void OutputKnowledgeBaseGraph(IKnowledgeBase kb, string outputFileName) {
+            using (var fs = new StreamWriter(new FileStream(outputFileName, FileMode.OpenOrCreate, FileAccess.Write, FileShare.Write))) {
+                fs.Write(kb.ToString());
+            }
+	    }
 
 		private static void ExitWithMsg(string msg){
 			if (!string.IsNullOrEmpty (msg)) {

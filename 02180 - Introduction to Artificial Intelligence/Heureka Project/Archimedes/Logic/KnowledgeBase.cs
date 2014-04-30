@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
 using Archimedes.Graph;
@@ -27,10 +28,10 @@ namespace Archimedes.Logic {
             }
 
 			if (clause.Body.Count < 1) {
-				if (clause.Head == null) throw new ArgumentNullException ("Clause Head is null");
+                if (headNode == null) throw new NullReferenceException("Clause Head is null");
 				headNode.Fact = true;
 			} else if (clause.Body.Count == 1) {
-				if (clause.Head == null) throw new ArgumentNullException ("Clause Head is null");
+                if (clause.Head == null) throw new NullReferenceException("Clause Head is null");
                 var literal = clause.Body.First();
 
 				if (clause.Head.Value != literal.Value) {
@@ -103,6 +104,19 @@ namespace Archimedes.Logic {
 				negated.Body.Add (new Literal (dependency.NegatedValue()));
 			}
 			AddNegatedClause (negated);
+
+            if (headNode != null && negated.Head != null) {
+                var negatedHeadNode = _graph.GetNode(negated.Head.Value);
+                if (negatedHeadNode != null) {
+                    if (headNode.Fact && negatedHeadNode.Fact) {
+                        throw new Exception("KB is inconsistent, " + headNode.Id + " and " + negatedHeadNode.Id + " are both facts!");
+                    }
+
+                    if (NodesConnected(headNode, negatedHeadNode)) { 
+                        //throw new Exception("KB is inconsistent, " + headNode.Id + " and " + negatedHeadNode.Id + " can become true at the same time!");
+                    }
+                }
+            }
         }
 
 		private void AddNegatedClause(IClause clause){
@@ -152,6 +166,29 @@ namespace Archimedes.Logic {
 			}
 		}
 
+        private bool NodesConnected(ILogicNode startNode, ILogicNode endNode) {
+            var visited = new HashSet<string>();
+            var queue = new Queue<ILogicNode>();
+            queue.Enqueue(startNode);
+
+            while (queue.Count > 0) {
+                var node = queue.Dequeue();
+                if (node.Id == endNode.Id) return true;
+
+                foreach (var dependency in _graph.Outgoing(node).Where(dependency => !visited.Contains(dependency.Id))) {
+                    visited.Add(dependency.Id);
+                    queue.Enqueue(dependency);
+                }
+
+                foreach (var dependency in _graph.Incoming(node).Where(dependency => !visited.Contains(dependency.Id))) {
+                    visited.Add(dependency.Id);
+                    queue.Enqueue(dependency);
+                }
+            }
+
+            return false;
+        }
+
 		public bool DirectQuery(IQuery query){
 			if(query == null || query.Literals.Count < 1) {
 				// Empty clause is true
@@ -195,6 +232,7 @@ namespace Archimedes.Logic {
 				}
 
 				if (Satisfied (sourceNode, checkedLiterals)) {
+				    Console.WriteLine("Learned that " + sourceNode.Id + " is satisfied");
 					_satisfiedLiterals.Add (sourceNode.Id);
 				}
 			}
@@ -206,6 +244,7 @@ namespace Archimedes.Logic {
 			var newlySatisfiedLiterals = new HashSet<string> ();
 			if (Satisfied (source, newlySatisfiedLiterals, checkedLiterals)) {
 				foreach (var satLit in newlySatisfiedLiterals) {
+                    Console.WriteLine("Learned that " + satLit + " is satisfied");
 					_satisfiedLiterals.Add (satLit);
 				}
 				return true;
@@ -232,7 +271,7 @@ namespace Archimedes.Logic {
 						if (Satisfied (dependency, newSat, checkedLiterals)) {
 							newSat.Add (dependency.Id);
 							satisfied = true;
-							//break;
+							break;
 						}
 					}
 				}
@@ -274,6 +313,45 @@ namespace Archimedes.Logic {
 
 			return satisfied;
 		}
+
+        // Output in Graphviz format (mainly for debugging)
+        public override string ToString() {
+            var seen = new Dictionary<string, int>();
+            var labeled = new HashSet<string>();
+            var cnt = 0;
+            const string indent = "  ";
+            var sb = new StringBuilder();
+
+            sb.AppendLine("digraph g{");
+            foreach (var from in _graph.Nodes) {
+                if (!seen.ContainsKey(from.Id)) seen[from.Id] = ++cnt;
+
+                foreach (var to in _graph.Outgoing(from)) {
+                    if (!seen.ContainsKey(to.Id)) seen[to.Id] = ++cnt;
+
+                    sb.AppendLine(indent + seen[from.Id] + " -> " + seen[to.Id]);
+
+                    if (labeled.Contains(to.Id)) continue;
+                    labeled.Add(to.Id);
+                    if (to is IClauseNode) {
+                        sb.AppendLine(indent + seen[to.Id] + " [label=\"" + to.Id + "\",shape=box,fillcolor=\"#EEF2D3\",style=\"filled\"];");
+                    } else {
+                        sb.AppendLine(indent + seen[to.Id] + " [label=\"" + to.Id + "\",shape=ellipse,fillcolor=\"#EEEEEE\",style=\"filled\"];");
+                    }
+                }
+
+                if (labeled.Contains(from.Id)) continue;
+                labeled.Add(from.Id);
+                if (from is IClauseNode) {
+                    sb.AppendLine(indent + seen[from.Id] + " [label=\"" + from.Id + "\",shape=box,fillcolor=\"#EEF2D3\",style=\"filled\"];");
+                } else {
+                    sb.AppendLine(indent + seen[from.Id] + " [label=\"" + from.Id + "\",shape=ellipse,fillcolor=\"#EEEEEE\",style=\"filled\"];");
+                }
+            }
+            sb.Append("}");
+
+            return sb.ToString();
+        }
 
         private static string ClauseKey(IEnumerable<ILiteral> literals) {
             var sorted = new SortedDictionary<string, ILiteral>();
