@@ -113,7 +113,7 @@ namespace Archimedes.Logic {
                     }
 
                     if (NodesConnected(headNode, negatedHeadNode)) { 
-                        //throw new Exception("KB is inconsistent, " + headNode.Id + " and " + negatedHeadNode.Id + " can become true at the same time!");
+                        throw new Exception("KB is inconsistent, one or more literal can be both satisfied and unsatisfied at the same time!");
                     }
                 }
             }
@@ -180,7 +180,8 @@ namespace Archimedes.Logic {
                     queue.Enqueue(dependency);
                 }
 
-                foreach (var dependency in _graph.Incoming(node).Where(dependency => !visited.Contains(dependency.Id))) {
+                if (!(node is ILiteralNode)) continue;
+                foreach (var dependency in _graph.Incoming(node).Where(dependency => dependency is IClauseNode && !visited.Contains(dependency.Id))) {
                     visited.Add(dependency.Id);
                     queue.Enqueue(dependency);
                 }
@@ -336,7 +337,7 @@ namespace Archimedes.Logic {
                     if (to is IClauseNode) {
                         sb.AppendLine(indent + seen[to.Id] + " [label=\"" + to.Id + "\",shape=box,fillcolor=\"#EEF2D3\",style=\"filled\"];");
                     } else {
-                        sb.AppendLine(indent + seen[to.Id] + " [label=\"" + to.Id + "\",shape=ellipse,fillcolor=\"#EEEEEE\",style=\"filled\"];");
+                        sb.AppendLine(indent + seen[to.Id] + " [label=\"" + to.Id + "\",shape=ellipse,fillcolor=\"#" + (to.Fact ? "D6EBFF" : "EEEEEE") + "\",style=\"filled\"];");
                     }
                 }
 
@@ -345,7 +346,7 @@ namespace Archimedes.Logic {
                 if (from is IClauseNode) {
                     sb.AppendLine(indent + seen[from.Id] + " [label=\"" + from.Id + "\",shape=box,fillcolor=\"#EEF2D3\",style=\"filled\"];");
                 } else {
-                    sb.AppendLine(indent + seen[from.Id] + " [label=\"" + from.Id + "\",shape=ellipse,fillcolor=\"#EEEEEE\",style=\"filled\"];");
+                    sb.AppendLine(indent + seen[from.Id] + " [label=\"" + from.Id + "\",shape=ellipse,fillcolor=\"#" + (from.Fact ? "D6EBFF" : "EEEEEE") + "\",style=\"filled\"];");
                 }
             }
             sb.Append("}");
