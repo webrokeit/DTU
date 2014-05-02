@@ -115,20 +115,20 @@ namespace Archimedes.Logic {
 
             if (headNode != null) {
 			    var disjointLiteralKey = DisjointLiteralKey(clause.Body);
-			    var disjointLiteral = _graph.GetNode(disjointLiteralKey) ?? _graph.AddNode(new LiteralNode(disjointLiteralKey)).GetNode(disjointLiteralKey);
+                var disjointLiteral = _graph.GetNode(disjointLiteralKey) ?? _graph.AddNode(clause.Body.Count > 1 ? (ILogicNode) new LiteralNode(disjointLiteralKey) : new ClauseNode(disjointLiteralKey)).GetNode(disjointLiteralKey);
 
                 if (_graph.GetEdge(headNode, disjointLiteral) == null) {
                     _graph.AddEdge(new WeightedDirectedEdge<ILogicNode>(headNode, disjointLiteral, clause.Body.Count));
                 }
 
-				foreach (var literalNode in clause.Body.Select(literal => _graph.GetNode(literal.Value) ?? _graph.AddNode(new LiteralNode(literal.Value)).GetNode(literal.Value)).Where(literalNode => _graph.GetEdge(disjointLiteral, literalNode) == null)) {
+				foreach (var literalNode in clause.Body.Select(literal => _graph.GetNode(literal.Value) ?? _graph.AddNode(new ClauseNode(literal.Value)).GetNode(literal.Value)).Where(literalNode => _graph.GetEdge(disjointLiteral, literalNode) == null)) {
                     _graph.AddEdge(new WeightedDirectedEdge<ILogicNode>(disjointLiteral, literalNode, 1));
 				}
             } else {
                 var jointLiteralKey = ClauseKey(clause.Body);
                 var jointLiteral = _graph.GetNode(jointLiteralKey) ?? _graph.AddNode(new ClauseNode(jointLiteralKey)).GetNode(jointLiteralKey);
 
-				foreach (var literalNode in clause.Body.Select(literal => _graph.GetNode(literal.Value) ?? _graph.AddNode(new LiteralNode(literal.Value)).GetNode(literal.Value)).Where(literalNode => _graph.GetEdge(jointLiteral, literalNode) == null)) {
+				foreach (var literalNode in clause.Body.Select(literal => _graph.GetNode(literal.Value) ?? _graph.AddNode(new ClauseNode(literal.Value)).GetNode(literal.Value)).Where(literalNode => _graph.GetEdge(jointLiteral, literalNode) == null)) {
 				    _graph.AddEdge(new WeightedDirectedEdge<ILogicNode>(jointLiteral, literalNode, 1));
 				}
 			}
@@ -184,18 +184,26 @@ namespace Archimedes.Logic {
                         node.Fact = true;
                         FactFlow(node);
                     }
-                } else if(node is ILiteralNode && _graph.OutDegree(node) == 1) {
+                } else if(node is ILiteralNode && (_graph.OutDegree(node) == 1 || node.Id.Contains("|"))) {
                     var negNode = _graph.GetNode(Negate(node.Id));
                     if (negNode.Fact) {
                         throw new Exception("KB is inconsistent, " + node.Id + " and " + negNode.Id + " are both facts!");
                     }
-                    FactFlow(node);
                     node.Fact = true;
+                    FactFlow(node);
                 }
             }
         }
 
         private static string Negate(string id) {
+            if (id.Contains('|', '&')) {
+                var parts = id.Split('|');
+                if (parts.Length > 1) {
+                    return string.Join(" & ", parts.Select(lit => Negate(lit.Trim()))); 
+                }
+                parts = id.Split('&');
+                return string.Join(" | ", parts.Select(lit => Negate(lit.Trim())));
+            }
             return id[0] == '!' ? id.Substring(1) : "!" + id;
         }
 

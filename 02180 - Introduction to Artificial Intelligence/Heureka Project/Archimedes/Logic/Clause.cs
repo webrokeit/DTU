@@ -1,11 +1,7 @@
-﻿using System;
-using System.CodeDom;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using Archimedes.Extensions;
 
 namespace Archimedes.Logic {
     public class Clause : IClause {

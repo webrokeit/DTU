@@ -14,5 +14,13 @@ namespace Archimedes.Extensions {
 			int res;
 			return int.TryParse(self, out res) ? res : defaultValue;
 		}
+
+	    public static bool Contains(this string self, char c1) {
+	        return self.Any(t => t == c1);
+	    }
+
+        public static bool Contains(this string self, char c1, char c2) {
+            return self.Any(t => t == c1 || t == c2);
+        }
 	}
 }

@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using Archimedes;
 
-namespace Archimedes.Logic
-{
+namespace Archimedes.Logic {
 	public class Query : IQuery {
 		public ISet<ILiteral> Literals { get; private set; }
 
