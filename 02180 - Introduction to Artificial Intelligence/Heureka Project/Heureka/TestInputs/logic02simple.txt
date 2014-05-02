@@ -3,5 +3,6 @@ p if l m
 m if b l
 l if a p
 l if a b
+q if !b
 a
 b

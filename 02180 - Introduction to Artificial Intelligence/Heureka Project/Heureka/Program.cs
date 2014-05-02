@@ -122,6 +122,7 @@ namespace Heureka {
                 OutputKnowledgeBaseGraph(kb, "graphviz.txt");
 
                 Console.WriteLine("Type exit to quit the program.");
+                Console.WriteLine("A query is a space separated list of literals to test for satisfiability.");
                 Console.WriteLine();
 
 	            while (true) {
@@ -130,8 +131,7 @@ namespace Heureka {
 	                if (read == "quit") ExitWithMsg(null);
 
 	                var query = KnowledgeBaseFactory.QueryFromLine(read);
-	                var qStr = string.Join(" & ", query.Literals);
-	                var negQStr = string.Join(" | ", query.Literals.Select(literal => literal.NegatedValue()));
+	                var qStr = query.ToString();
 
 	                Console.WriteLine("[Direct] Is " + qStr + " satisfiable?");
 	                var satisfied = kb.DirectQuery(query);
@@ -151,7 +151,7 @@ namespace Heureka {
 	    }
 
 	    private static void OutputKnowledgeBaseGraph(IKnowledgeBase kb, string outputFileName) {
-            using (var fs = new StreamWriter(new FileStream(outputFileName, FileMode.OpenOrCreate, FileAccess.Write, FileShare.Write))) {
+            using (var fs = new StreamWriter(new FileStream(outputFileName, FileMode.Create, FileAccess.Write, FileShare.Write))) {
                 fs.Write(kb.ToString());
             }
 	    }

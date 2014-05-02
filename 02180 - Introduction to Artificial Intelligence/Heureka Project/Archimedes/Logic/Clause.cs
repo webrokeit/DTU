@@ -32,20 +32,15 @@ namespace Archimedes.Logic {
                     var cnt = 0;
 					foreach (var literal in Body) {
                         cnt++;
-						var clause = (IClause) literal;
-                        if (clause != null) {
-                            sb.Append(clause.ToProperString());
-							if (cnt < Body.Count) {
-                                sb.Append(") & (");
-                            }
-                        } else {
-							sb.Append(literal.ToProperString());
-							if (cnt < Body.Count) {
-                                sb.Append(" & ");
-                            }
+						sb.Append(literal.ToProperString());
+						if (cnt < Body.Count) {
+                            sb.Append(" & ");
                         }
                     }
                     sb.Append(")");
+                }
+                if (Head != null) {
+                    sb.Insert(0, Head.Value + " <- ");
                 }
                 _properString = sb.ToString();
             }

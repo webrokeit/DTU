@@ -29,6 +29,8 @@ namespace Archimedes.Graph {
 
         IEnumerable<TNode> Outgoing(INode fromNode);
 		IEnumerable<TNode> Incoming(INode toNode);
+        int OutDegree(INode node);
+        int InDegree(INode node);
         IEnumerable<TNode> NodesOfDegree(int degree);
     }
 }

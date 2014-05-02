@@ -56,15 +56,17 @@ namespace Heureka.Factories {
 		}
 
 		public static IQuery QueryFromLine(string line){
-			var parts = line.ToLower().Split(' ');
 			var query = new Query();
 
-			if (parts.Length > 0) {
-				for (var i = 0; i < parts.Length; i++) {
-					var literal = new Literal (parts [i]);
-					query.Literals.Add (literal);
-				}
-			}
+		    if (!string.IsNullOrEmpty(line)) {
+                var parts = line.ToLower().Split(' '); 
+                for (var i = 0; i < parts.Length; i++) {
+                    parts[i] = parts[i].Trim();
+                    if (string.IsNullOrEmpty(parts[i])) continue;
+                    var literal = new Literal(parts[i]);
+                    query.Literals.Add(literal);
+                }
+		    }
 
 			return query;
 		}

@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 using Archimedes.Graph;
 
 namespace Archimedes.Logic {
-    internal interface ILogicNode : INode {
+    internal interface ILogicNode : ICoordinateNode {
 		bool Fact { get; set; }
-        bool Evaluate();
+        new IPoint Point { get; set; }
     }
 }

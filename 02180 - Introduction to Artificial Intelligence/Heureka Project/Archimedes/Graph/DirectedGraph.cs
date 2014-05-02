@@ -128,6 +128,14 @@ namespace Archimedes.Graph {
 			}
 		}
 
+        public int OutDegree(INode node) {
+            return _outgoing[node.Id].Count;
+        }
+
+        public int InDegree(INode node) {
+            return _incoming[node.Id].Count;
+        }
+
         public IEnumerable<TNode> NodesOfDegree(int degree) {
             return _outgoing.Where(outgoing => outgoing.Value.Count == degree).Select(outgoing => _nodes[outgoing.Key]);
         }

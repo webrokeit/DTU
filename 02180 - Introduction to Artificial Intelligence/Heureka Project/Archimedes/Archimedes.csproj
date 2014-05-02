@@ -61,10 +61,12 @@
     <Compile Include="Graph\INode.cs" />
     <Compile Include="Graph\IPoint.cs" />
     <Compile Include="Graph\IWeighted.cs" />
+    <Compile Include="Graph\IWeightedDirectedEdge.cs" />
     <Compile Include="Graph\IWeightedNamedDirectedEdge.cs" />
     <Compile Include="Graph\NamedDirectedGraph.cs" />
     <Compile Include="Graph\Node.cs" />
     <Compile Include="Graph\Point.cs" />
+    <Compile Include="Graph\WeightedDirectedEdge.cs" />
     <Compile Include="Graph\WeightedNamedDirectedEdge.cs" />
     <Compile Include="Heaps\IKeyValueHeap.cs" />
     <Compile Include="Heaps\IHeap.cs" />
