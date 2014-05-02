@@ -6,5 +6,5 @@ using System.Threading.Tasks;
 using Archimedes.Graph;
 
 namespace Archimedes.Logic {
-    internal interface IClauseNode : ILogicNode {}
+    internal interface IClauseNode : ILogicNode { }
 }

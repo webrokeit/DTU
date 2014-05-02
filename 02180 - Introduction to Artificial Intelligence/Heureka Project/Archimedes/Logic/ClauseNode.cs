@@ -8,7 +8,7 @@ using Archimedes.Graph;
 namespace Archimedes.Logic {
     internal class ClauseNode : IClauseNode {
         public string Id { get; private set; }
-		public bool Fact { get { return false; } set { throw new NotSupportedException (); } }
+		public bool Fact { get; set; }
         public IPoint Point { get; set; }
 
         public ClauseNode(string id) {

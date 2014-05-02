@@ -50,6 +50,10 @@ namespace Heureka.Factories {
 					var literal = new Literal (parts [i++]);
 					clause.Body.Add (literal);
 				}
+
+			    if (clause.Head == null && clause.Body.Count == 1) {
+			        clause = new Clause(clause.Body.First());
+			    }
 			}
 
 			return clause;

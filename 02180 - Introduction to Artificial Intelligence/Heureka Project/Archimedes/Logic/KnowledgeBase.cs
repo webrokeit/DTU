@@ -23,13 +23,22 @@ namespace Archimedes.Logic {
             if (clause == null) return;
 			_satisfiedLiterals.Clear ();
 
+            if (clause.Head != null && clause.Head.Negated && clause.Body.Count > 0) {
+                var newClause = new Clause(new Literal(clause.Head.NegatedValue()));
+                foreach (var literal in clause.Body) {
+                    newClause.Body.Add(new Literal(literal.NegatedValue()));
+                }
+                AddClause(newClause);
+                return;
+            }
+
             var headNode = clause.Head != null ? (_graph.GetNode(clause.Head.Value) ?? _graph.AddNode(new LiteralNode(clause.Head.Value)).GetNode(clause.Head.Value)) : null;
 			
             if (clause.Body.Count < 1) {
                 if (headNode == null) throw new NullReferenceException("Clause Head is null");
 				headNode.Fact = true;
 			} else if (clause.Body.Count == 1) {
-                if (clause.Head == null) throw new NullReferenceException("Clause Head is null");
+			    if (clause.Head == null) throw new NullReferenceException("Clause Head is null");
                 var literal = clause.Body.First();
 
 				if (clause.Head.Value != literal.Value) {
@@ -75,53 +84,48 @@ namespace Archimedes.Logic {
                     }
 
                     if (clause.Body.Count > 0) {
-                        //if (NodesConnected(headNode, negatedHeadNode)) {
-                        //    Console.WriteLine("Adding " + clause.ToProperString() + " will make KB inconsistent, skipping clause...");
-                        //    RemoveClause(clause);
-                        //}
-
-                        //var startNodes = clause.Body.Select(literal => _graph.GetNode(literal.Value));
-
-
-                        //var endNodes = new HashSet<string> {
-                        //    headNode.Id, negatedHeadNode.Id
-                        //};
-                        //if (NodeConflict(startNodes, endNodes)) {
-                        //    Console.WriteLine("Adding " + clause.ToProperString() + " will cause conflict, skipping clause...");
-                        //    RemoveClause(clause);
-                        //}
-
                         var nodesA = clause.Body.Select(literal => _graph.GetNode(literal.Value));
                         var nodesB = clause.Body.Select(literal => _graph.GetNode(literal.NegatedValue()));
                         if (SharedAncestor(nodesA, nodesB)) {
-                            Console.WriteLine("Adding " + clause.ToProperString() + " will cause ancestor sharing, skipping clause...");
-                            //RemoveClause(clause);
+                            Console.WriteLine("Adding " + clause.ToProperString() + " will cause conflict skipping clause...");
+                            RemoveClause(clause);
                         }
-
-                        //foreach (var literal in clause.Body) {
-                        //    var nodeA = _graph.GetNode(literal.Value);
-                        //    var nodeB = _graph.GetNode(literal.NegatedValue());
-                        //    if (SharedAncestor(nodeA, nodeB)) {
-                        //        Console.WriteLine("Adding " + clause.ToProperString() + " will cause ancestor sharing, skipping clause...");
-                        //        //RemoveClause(clause);
-                        //        break;
-                        //    }
-                        //}
                     }
+                }
+            }
+
+            if (headNode != null && headNode.Fact) {
+                FactFlow(headNode);
+            }
+            if (clause.Body.Count > 0) {
+                foreach (var node in clause.Body.Select(literal => _graph.GetNode(literal.Value)).Where(node => node.Fact)) {
+                    FactFlow(node);
+                }
+
+                foreach (var node in clause.Body.Select(literal => _graph.GetNode(literal.NegatedValue())).Where(node => node.Fact)) {
+                    FactFlow(node);
                 }
             }
         }
 
 		private void AddNegatedClause(IClause clause){
-			var headNode = clause.Head != null ? (_graph.GetNode(clause.Head.Value) ?? _graph.AddNode(new LiteralNode(clause.Head.Value)).GetNode(clause.Head.Value)): null;
+			var headNode = clause.Head != null ? (_graph.GetNode(clause.Head.Value) ?? _graph.AddNode(new ClauseNode(clause.Head.Value)).GetNode(clause.Head.Value)): null;
 
 			if (clause.Body.Count < 1) return;
-			if (clause.Head != null) {
-				foreach (var literalNode in clause.Body.Select(literal => _graph.GetNode(literal.Value) ?? _graph.AddNode(new LiteralNode(literal.Value)).GetNode(literal.Value)).Where(literalNode => _graph.GetEdge(headNode, literalNode) == null)) {
-				    _graph.AddEdge(new WeightedDirectedEdge<ILogicNode>(headNode, literalNode, 1));
+
+            if (headNode != null) {
+			    var disjointLiteralKey = DisjointLiteralKey(clause.Body);
+			    var disjointLiteral = _graph.GetNode(disjointLiteralKey) ?? _graph.AddNode(new LiteralNode(disjointLiteralKey)).GetNode(disjointLiteralKey);
+
+                if (_graph.GetEdge(headNode, disjointLiteral) == null) {
+                    _graph.AddEdge(new WeightedDirectedEdge<ILogicNode>(headNode, disjointLiteral, clause.Body.Count));
+                }
+
+				foreach (var literalNode in clause.Body.Select(literal => _graph.GetNode(literal.Value) ?? _graph.AddNode(new LiteralNode(literal.Value)).GetNode(literal.Value)).Where(literalNode => _graph.GetEdge(disjointLiteral, literalNode) == null)) {
+                    _graph.AddEdge(new WeightedDirectedEdge<ILogicNode>(disjointLiteral, literalNode, 1));
 				}
-			} else {
-				var jointLiteralKey = ClauseKey (clause.Body);
+            } else {
+                var jointLiteralKey = ClauseKey(clause.Body);
                 var jointLiteral = _graph.GetNode(jointLiteralKey) ?? _graph.AddNode(new ClauseNode(jointLiteralKey)).GetNode(jointLiteralKey);
 
 				foreach (var literalNode in clause.Body.Select(literal => _graph.GetNode(literal.Value) ?? _graph.AddNode(new LiteralNode(literal.Value)).GetNode(literal.Value)).Where(literalNode => _graph.GetEdge(jointLiteral, literalNode) == null)) {
@@ -147,6 +151,10 @@ namespace Archimedes.Logic {
                     var edge = _graph.GetEdge(headNode, clauseNode);
                     _graph.RemoveEdge(edge);
 
+                    if (_graph.InDegree(clauseNode) < 1) {
+                        _graph.RemoveNode(clauseNode);
+                    }
+
                     headNode = _graph.GetNode(clause.Head.NegatedValue());
                     foreach (var literalNode in clause.Body.Select(dependency => _graph.GetNode(dependency.NegatedValue()))) {
                         edge = _graph.GetEdge(headNode, literalNode);
@@ -156,38 +164,39 @@ namespace Archimedes.Logic {
             }
         }
 
-        private bool NodesConnected(ILogicNode startNode, ILogicNode endNode) {
-            return NodesConnectedInner(startNode, endNode) || NodesConnectedInner(endNode, startNode);
-        }
-
-        private bool NodesConnectedInner(ILogicNode startNode, ILogicNode endNode) {
-            var visited = new HashSet<string>();
-            var queue = new Queue<ILogicNode>();
-            queue.Enqueue(startNode);
-
-            while (queue.Count > 0) {
-                var node = queue.Dequeue();
-                if (node.Id == endNode.Id) return true;
-
-                foreach (var dependency in _graph.Outgoing(node).Where(dependency => !visited.Contains(dependency.Id))) {
-                    visited.Add(dependency.Id);
-                    queue.Enqueue(dependency);
-                }
-
-                if (node is ILiteralNode) {
-                    foreach (var dependency in _graph.Incoming(node).Where(dependency => dependency is IClauseNode && !visited.Contains(dependency.Id))) {
-                        visited.Add(dependency.Id);
-                        queue.Enqueue(dependency);
+        private void FactFlow(ILogicNode startNode) {
+            if (startNode is ILiteralNode && _graph.OutDegree(startNode) == 1) {
+                foreach (var node in _graph.Outgoing(startNode).Where(node => !node.Fact)) {
+                    if (node is ILiteralNode) {
+                        var negNode = _graph.GetNode(Negate(node.Id));
+                        if (negNode.Fact) {
+                            throw new Exception("KB is inconsistent, " + node.Id + " and " + negNode.Id + " are both facts!");
+                        }
                     }
-                } else if (node is IClauseNode) {
-                    foreach (var dependency in _graph.Incoming(node).Where(dependency => !visited.Contains(dependency.Id))) {
-                        visited.Add(dependency.Id);
-                        queue.Enqueue(dependency);
-                    }
+                    node.Fact = true;
+                    FactFlow(node);
                 }
             }
 
-            return false;
+            foreach (var node in _graph.Incoming(startNode).Where(node => !node.Fact)) {
+                if (node is IClauseNode) {
+                    if (_graph.Outgoing(node).All(dependency => dependency.Fact)) {
+                        node.Fact = true;
+                        FactFlow(node);
+                    }
+                } else if(node is ILiteralNode && _graph.OutDegree(node) == 1) {
+                    var negNode = _graph.GetNode(Negate(node.Id));
+                    if (negNode.Fact) {
+                        throw new Exception("KB is inconsistent, " + node.Id + " and " + negNode.Id + " are both facts!");
+                    }
+                    FactFlow(node);
+                    node.Fact = true;
+                }
+            }
+        }
+
+        private static string Negate(string id) {
+            return id[0] == '!' ? id.Substring(1) : "!" + id;
         }
 
         private bool SharedAncestor(IEnumerable<ILogicNode> nodeA, IEnumerable<ILogicNode> nodeB) {
@@ -227,29 +236,6 @@ namespace Archimedes.Logic {
             return false;
         }
 
-        private bool NodeConflict(IEnumerable<ILogicNode> startNodes, ISet<string> endLiterals) {
-            var visited = new HashSet<string>(); 
-            var queue = new Queue<ILogicNode>();
-            foreach (var startNode in startNodes) {
-                queue.Enqueue(startNode);
-            }
-
-            while (queue.Count > 0 && endLiterals.Count > 0) {
-                var node = queue.Dequeue();
-                if (endLiterals.Contains(node.Id)) {
-                    endLiterals.Remove(node.Id);
-                    if (endLiterals.Count < 1) break;
-                }
-
-                foreach (var dependency in _graph.Incoming(node).Where(dependency => !visited.Contains(dependency.Id))) {
-                    visited.Add(dependency.Id);
-                    queue.Enqueue(dependency);
-                }
-            }
-
-            return endLiterals.Count == 0;
-        }
-
 		public bool DirectQuery(IQuery query){
 			if(query == null || query.Literals.Count < 1) {
 				// Empty clause is true
@@ -257,6 +243,9 @@ namespace Archimedes.Logic {
 			}
 
 			if (query.Invalid) return false;
+		    if (query.Literals.Select(literal => _graph.GetNode(literal.NegatedValue())).Any(node => node != null && node.Fact)) {
+		        return false;
+		    }
 
 			var satisfied = Satisfied (query.Literals);
 			return satisfied.All (q => q.Value);
@@ -269,6 +258,9 @@ namespace Archimedes.Logic {
 			}
 
 			if (query.Invalid) return false;
+            if (query.Literals.Select(literal => _graph.GetNode(literal.NegatedValue())).Any(node => node != null && node.Fact)) {
+                return false;
+            }
 
 			var satisfied = Satisfied (query.Literals.Select(literal => new Literal(literal.NegatedValue())).Cast<ILiteral>().ToList());
 			return !satisfied.Any (q => q.Value);
@@ -313,7 +305,7 @@ namespace Archimedes.Logic {
 			        }
 
 			        Console.WriteLine(source.Id + " is satisfied");
-			        LearnSatisfied(source.Id);
+                    _satisfiedLiterals.Add(source.Id);
 			    }
 			} else {
 				Console.WriteLine (source.Id + " is not satisfied");
@@ -322,10 +314,6 @@ namespace Archimedes.Logic {
 			return satisfied;
 		}
 
-        private void LearnSatisfied(string literalValue) {
-            Console.WriteLine("Learned that " + literalValue + " is satisfied");
-            _satisfiedLiterals.Add(literalValue);
-        }
 
         // Output in Graphviz format (mainly for debugging)
         public override string ToString() {
@@ -348,7 +336,7 @@ namespace Archimedes.Logic {
                     if (labeled.Contains(to.Id)) continue;
                     labeled.Add(to.Id);
                     if (to is IClauseNode) {
-                        sb.AppendLine(indent + seen[to.Id] + " [label=\"" + to.Id + "\",shape=box,fillcolor=\"#EEF2D3\",style=\"filled\"];");
+                        sb.AppendLine(indent + seen[to.Id] + " [label=\"" + to.Id + "\",shape=box,fillcolor=\"#" + (to.Fact ? "B2D78D" : "EEF2D3") + "\",style=\"filled\"];");
                     } else {
                         sb.AppendLine(indent + seen[to.Id] + " [label=\"" + to.Id + "\",shape=ellipse,fillcolor=\"#" + (to.Fact ? "D6EBFF" : "EEEEEE") + "\",style=\"filled\"];");
                     }
@@ -357,7 +345,7 @@ namespace Archimedes.Logic {
                 if (labeled.Contains(from.Id)) continue;
                 labeled.Add(from.Id);
                 if (from is IClauseNode) {
-                    sb.AppendLine(indent + seen[from.Id] + " [label=\"" + from.Id + "\",shape=box,fillcolor=\"#EEF2D3\",style=\"filled\"];");
+                    sb.AppendLine(indent + seen[from.Id] + " [label=\"" + from.Id + "\",shape=box,fillcolor=\"#" + (from.Fact ? "B2D78D" : "EEF2D3") + "\",style=\"filled\"];");
                 } else {
                     sb.AppendLine(indent + seen[from.Id] + " [label=\"" + from.Id + "\",shape=ellipse,fillcolor=\"#" + (from.Fact ? "D6EBFF" : "EEEEEE") + "\",style=\"filled\"];");
                 }

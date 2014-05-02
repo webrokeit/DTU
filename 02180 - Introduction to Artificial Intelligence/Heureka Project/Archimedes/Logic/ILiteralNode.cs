@@ -1,3 +1,3 @@
 ﻿namespace Archimedes.Logic {
-    internal interface ILiteralNode : ILogicNode {}
+    internal interface ILiteralNode : ILogicNode { }
 }
