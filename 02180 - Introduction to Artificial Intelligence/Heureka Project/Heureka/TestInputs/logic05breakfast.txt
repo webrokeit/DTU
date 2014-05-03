@@ -1,11 +1,17 @@
 ﻿breakfast if hotdrink juice food
+breakfast if colddrink food
 breakfast if hotdrink food
 
 hotdrink if coffee cream
 hotdrink if tea
 
+colddrink if milk
+colddrink if juice
+
 food if toast butter
-food if egg
+food if scrambledeggs
+
+scrambledeggs if eggs milk
 
 coffee
 tea

@@ -9,6 +9,7 @@ using Archimedes.Extensions;
 using Archimedes.Graph;
 using Archimedes.Logic;
 using Archimedes;
+using System.Text.RegularExpressions;
 
 namespace Heureka.Factories {
     public static class KnowledgeBaseFactory {
@@ -32,6 +33,7 @@ namespace Heureka.Factories {
         }
 
 		public static IClause ClauseFromLine(string line){
+			line = CleanLine (line);
 			var parts = line.ToLower().Split(' ');
 			var head = new Literal(parts[0]);
 			var clause = new Clause(head);
@@ -61,6 +63,7 @@ namespace Heureka.Factories {
 
 		public static IQuery QueryFromLine(string line){
 			var query = new Query();
+			line = CleanLine (line);
 
 		    if (!string.IsNullOrEmpty(line)) {
                 var parts = line.ToLower().Split(' '); 
@@ -73,6 +76,11 @@ namespace Heureka.Factories {
 		    }
 
 			return query;
+		}
+
+		private static readonly Regex cleanLineRegex = new Regex (@"[^a-zA-Z_0-9 !-]+", RegexOptions.Compiled);
+		private static string CleanLine(string line){
+			return cleanLineRegex.Replace (line, string.Empty).Trim();
 		}
     }
 }

@@ -26,7 +26,7 @@ namespace Heureka {
 
 		    var defaultInput = function + "-input.txt";
 			var input = _arguments.GetOrDefault ("file", defaultInput);
-            input = "TestInputs/logic05breakfast.txt";
+			input = "TestInputs/logic05breakfast.txt";
 
 			if (input == null) {
 				ExitWithMsg ("No input file specified");

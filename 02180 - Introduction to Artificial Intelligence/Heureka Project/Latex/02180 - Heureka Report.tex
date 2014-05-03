@@ -1,4 +1,4 @@
-\documentclass[11pt]{report}
+\documentclass[11pt]{article}
 \usepackage{graphicx}
 \usepackage{titling}
 \usepackage{fancyhdr}
@@ -14,6 +14,9 @@
 \usepackage[usenames,dvipsnames,svgnames,table]{xcolor}
 \usepackage{listings}
 \usepackage{geometry}
+\usepackage{fancyref}
+\usepackage{hyperref}
+\usepackage[hypcap]{caption}
 \parindent=0pt
 \frenchspacing
 
@@ -77,10 +80,56 @@ Abstract goes here..
 
 \end{titlepage}
 
-\section*{Introduction}
-Intro intro intro
+\section{Introduction}
+\label{sec:intro}
+This report will focus on our work on the \emph{Heureka Project}, given as an assignment in the DTU course \emph{02180 Introduction to Artificial Intelligence}. The Heureka Project focuses on graph searching, logical deduction and the heuristics.
 
-\section*{Conclusion}
+\subsection{Objectives}
+The two objectives for the project are:
+\begin{enumerate}
+	\item[] \textbf{Route Planning}\\
+	Be able to find a route within a map.
+	
+	\item[] \textbf{Logic Deduction}\\
+	Be able to deduce whether a query is satisfied using a knowledge base, either as a direct proof or as a refutation proof. 
+\end{enumerate}
+
+\section{Data Representation}
+To solve both objectives, we decided to represent our data as graphs. The reasoning behinds this decision, is that a graph can both represent a map and a knowledge base.
+
+\subsection{Map}
+For the route planning problem, we are expecting a source file containing the map data. The source file is read and interpreted, generating a graph representing the map. Each node represents a coordinate pair {\tt (X, Y)} indicating either a crossing of two streets or an end of a street. Each edge has a name, a weight and represents a partial street. Edge names are not unique, as a street can consist of multiple edges.
+
+\subsubsection{Source File}
+The source file should be in plaintext, have one entry per line and use the following syntax:
+\begin{lstlisting}[style=logoutput]
+X1 Y1 StreetName X2 Y2
+\end{lstlisting}
+
+Where {\tt (X1, Y1)} and {\tt (X2, Y2)} are node coordinates and {\tt StreetName} is the edge name. The weight of the edge is then calculated as the straight line distance from {\tt (X1, Y1)} to {\tt (X2, Y2)}.
+
+\subsection{Knowledge Base}
+For the logical deduction problem, we are expecting a source file containing the knowledge base. The source file is read and interpreted, generating a graph representing the knowledge base.
+
+\subsubsection{Nodes}
+In the knowledge base, nodes represent multiple objects:
+\begin{description}
+	\item[Literal] Literals are what the knowledge base works with. Literals can be {\tt Positive} and {\tt Negative}, they have a unique ID. A negative literal has a {\tt !} prepended to it's ID, which means literal {\tt lit} is a positive literal and literal {\tt !lit} is a negative literal. Literals can be stated as facts, if the positive literal is a fact, the negative literal cannot be, as this would make the knowledge base inconsistent.
+	
+	\item[Conjunctive Literal] Literals can depend on more than one other literal to be satisfied. In this case we make a node representing the conjunction of the depending literals. The ID of the conjunction will be the IDs of the depending literals in sorted order separated by {\tt \&}. An edge is then made between the literal and the conjunction, and between the conjunction and the literals it represents. If all the literals of a conjunction are facts, then so will the conjunction be.
+	
+	\item[Disjunctive Literal] In cases where a literal has more than one way to be satisfied, a disjunctive literal can be used. The ID of the disjunction will be the IDs of the literals in sorted order separated by {\tt |}. An edge is made between the literal and the disjunction, and between the disjunction and the literals it represents. If any of the literals in the disjunction are facts, then so will the disjunction be.
+\end{description}
+
+The nodes are stored in the graph as either {\tt AND} nodes or {\tt OR} nodes. The scheme for determining the node type is:
+$$
+\text{Node type} = \begin{cases}
+  {\text{\tt AND}} & \text{if {\tt Negative} or {\tt Conjunctive}} \\
+  {\text {\tt OR}} & \text{if {\tt Positive} or {\tt Disjunctive}}
+\end{cases}
+$$
+
+\section{Conclusion}
 We've done smart stuff
 
 \end{document}

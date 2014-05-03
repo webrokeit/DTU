@@ -32,7 +32,7 @@ namespace Archimedes.Logic {
                 return;
             }
 
-            var headNode = clause.Head != null ? (_graph.GetNode(clause.Head.Value) ?? _graph.AddNode(new LiteralNode(clause.Head.Value)).GetNode(clause.Head.Value)) : null;
+			var headNode = clause.Head != null ? (_graph.GetNode(clause.Head.Value) ?? _graph.AddNode(clause.Head.Negated ? (ILogicNode)new ClauseNode(clause.Head.Value) : new LiteralNode(clause.Head.Value)).GetNode(clause.Head.Value)) : null;
 			
             if (clause.Body.Count < 1) {
                 if (headNode == null) throw new NullReferenceException("Clause Head is null");
@@ -42,7 +42,7 @@ namespace Archimedes.Logic {
                 var literal = clause.Body.First();
 
 				if (clause.Head.Value != literal.Value) {
-                    var node = _graph.GetNode(literal.Value) ?? _graph.AddNode(new LiteralNode(literal.Value)).GetNode(literal.Value);
+					var node = _graph.GetNode(literal.Value) ?? _graph.AddNode(literal.Negated ? (ILogicNode)new ClauseNode(literal.Value) : new LiteralNode(literal.Value)).GetNode(literal.Value);
 
                     if (_graph.GetEdge(headNode, node) == null) {
 						_graph.AddEdge (new WeightedDirectedEdge<ILogicNode> (headNode, node, 1));
@@ -50,21 +50,24 @@ namespace Archimedes.Logic {
 				}
             } else if (clause.Body.Count > 1) {
 				if (clause.Head != null) {
-					var clauseKey = ClauseKey (clause.Body);
-                    var clauseNode = _graph.GetNode(clauseKey) ?? _graph.AddNode(new ClauseNode(clauseKey)).GetNode(clauseKey);
+					var literals = clause.Body.Where (literal => clause.Head.Value != literal.Value).ToList ();
+					if(literals.Count > 0) {
+						var clauseKey = ClauseKey(literals);
+	                    var clauseNode = _graph.GetNode(clauseKey) ?? _graph.AddNode(new ClauseNode(clauseKey)).GetNode(clauseKey);
 
-                    if (_graph.GetEdge(headNode, clauseNode) == null) {
-						_graph.AddEdge (new WeightedDirectedEdge<ILogicNode> (headNode, clauseNode, clause.Body.Count));
-					}
+	                    if (_graph.GetEdge(headNode, clauseNode) == null) {
+							_graph.AddEdge (new WeightedDirectedEdge<ILogicNode> (headNode, clauseNode, clause.Body.Count));
+						}
 
-					foreach (var literalNode in clause.Body.Where(literal => clause.Head.Value != literal.Value).Select(literal => _graph.GetNode(literal.Value) ?? _graph.AddNode(new LiteralNode(literal.Value)).GetNode(literal.Value)).Where(literalNode => _graph.GetEdge(clauseNode, literalNode) == null)) {
-					    _graph.AddEdge (new WeightedDirectedEdge<ILogicNode> (clauseNode, literalNode, 1));
+						foreach (var literalNode in literals.Select(literal => _graph.GetNode(literal.Value) ?? _graph.AddNode(literal.Negated ? (ILogicNode)new ClauseNode(literal.Value) : new LiteralNode(literal.Value)).GetNode(literal.Value)).Where(literalNode => _graph.GetEdge(clauseNode, literalNode) == null)) {
+						    _graph.AddEdge (new WeightedDirectedEdge<ILogicNode> (clauseNode, literalNode, 1));
+						}
 					}
 				} else {
 					var disjointLiteralKey = DisjointLiteralKey (clause.Body);
                     var disjointLiteral = _graph.GetNode(disjointLiteralKey) ?? _graph.AddNode(new LiteralNode(disjointLiteralKey)).GetNode(disjointLiteralKey);
 
-					foreach (var literalNode in clause.Body.Select(literal => _graph.GetNode (literal.Value) ?? _graph.AddNode(new LiteralNode(literal.Value)).GetNode(literal.Value)).Where(literalNode => _graph.GetEdge(disjointLiteral, literalNode) == null)) {
+					foreach (var literalNode in clause.Body.Select(literal => _graph.GetNode (literal.Value) ?? _graph.AddNode(literal.Negated ? (ILogicNode)new ClauseNode(literal.Value) : new LiteralNode(literal.Value)).GetNode(literal.Value)).Where(literalNode => _graph.GetEdge(disjointLiteral, literalNode) == null)) {
 					    _graph.AddEdge(new WeightedDirectedEdge<ILogicNode>(disjointLiteral, literalNode, 1));
 					}
 				}
@@ -88,7 +91,7 @@ namespace Archimedes.Logic {
                         var nodesB = clause.Body.Select(literal => _graph.GetNode(literal.NegatedValue()));
                         if (SharedAncestor(nodesA, nodesB)) {
                             Console.WriteLine("Adding " + clause.ToProperString() + " will cause conflict skipping clause...");
-                            RemoveClause(clause);
+							//RemoveClause(clause);
                         }
                     }
                 }
@@ -109,20 +112,34 @@ namespace Archimedes.Logic {
         }
 
 		private void AddNegatedClause(IClause clause){
-			var headNode = clause.Head != null ? (_graph.GetNode(clause.Head.Value) ?? _graph.AddNode(new ClauseNode(clause.Head.Value)).GetNode(clause.Head.Value)): null;
+			var headNode = clause.Head != null ? (_graph.GetNode(clause.Head.Value) ?? _graph.AddNode(clause.Head.Negated ? (ILogicNode)new ClauseNode(clause.Head.Value) : new LiteralNode(clause.Head.Value)).GetNode(clause.Head.Value)): null;
 
 			if (clause.Body.Count < 1) return;
 
             if (headNode != null) {
-			    var disjointLiteralKey = DisjointLiteralKey(clause.Body);
-                var disjointLiteral = _graph.GetNode(disjointLiteralKey) ?? _graph.AddNode(clause.Body.Count > 1 ? (ILogicNode) new LiteralNode(disjointLiteralKey) : new ClauseNode(disjointLiteralKey)).GetNode(disjointLiteralKey);
+				if (clause.Body.Count == 1) {
+					var literal = clause.Body.First ();
+					if(headNode.Id != literal.Value){
+						var negatedLiteral = _graph.GetNode(literal.Value) ?? _graph.AddNode (literal.Negated ? (ILogicNode)new ClauseNode(literal.Value) : new LiteralNode(literal.Value)).GetNode (literal.Value);
 
-                if (_graph.GetEdge(headNode, disjointLiteral) == null) {
-                    _graph.AddEdge(new WeightedDirectedEdge<ILogicNode>(headNode, disjointLiteral, clause.Body.Count));
-                }
+						if (_graph.GetEdge (headNode, negatedLiteral) == null) {
+							_graph.AddEdge (new WeightedDirectedEdge<ILogicNode> (headNode, negatedLiteral, clause.Body.Count));
+						}
+					}
+				} else {
+					var literals = clause.Body.Where(literal => headNode.Id != literal.Value).ToList();
+					if (literals.Count > 0) {
+						var disjointLiteralKey = DisjointLiteralKey (literals);
+						var disjointLiteral = _graph.GetNode (disjointLiteralKey) ?? _graph.AddNode (new LiteralNode (disjointLiteralKey)).GetNode (disjointLiteralKey);
 
-				foreach (var literalNode in clause.Body.Select(literal => _graph.GetNode(literal.Value) ?? _graph.AddNode(new ClauseNode(literal.Value)).GetNode(literal.Value)).Where(literalNode => _graph.GetEdge(disjointLiteral, literalNode) == null)) {
-                    _graph.AddEdge(new WeightedDirectedEdge<ILogicNode>(disjointLiteral, literalNode, 1));
+						if (_graph.GetEdge (headNode, disjointLiteral) == null) {
+							_graph.AddEdge (new WeightedDirectedEdge<ILogicNode> (headNode, disjointLiteral, clause.Body.Count));
+						}
+
+						foreach (var literalNode in literals.Select(literal => _graph.GetNode(literal.Value) ?? _graph.AddNode(literal.Negated ? (ILogicNode)new ClauseNode(literal.Value) : new LiteralNode(literal.Value)).GetNode(literal.Value)).Where(literalNode => _graph.GetEdge(disjointLiteral, literalNode) == null)) {
+							_graph.AddEdge (new WeightedDirectedEdge<ILogicNode> (disjointLiteral, literalNode, 1));
+						}
+					}
 				}
             } else {
                 var jointLiteralKey = ClauseKey(clause.Body);
