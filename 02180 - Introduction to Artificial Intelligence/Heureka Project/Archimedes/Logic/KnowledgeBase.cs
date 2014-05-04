@@ -11,11 +11,11 @@ using Archimedes.Extensions;
 
 namespace Archimedes.Logic {
     public class KnowledgeBase : IKnowledgeBase {
-        private readonly IDirectedGraph<ILogicNode, IWeightedDirectedEdge<ILogicNode>> _graph;
+        private readonly IDirectedGraph<ILogicNode, IDirectedEdge<ILogicNode>> _graph;
 		private readonly ISet<string> _satisfiedLiterals;
 
         public KnowledgeBase() {
-            _graph = new DirectedGraph<ILogicNode, IWeightedDirectedEdge<ILogicNode>>();
+            _graph = new DirectedGraph<ILogicNode, IDirectedEdge<ILogicNode>>();
 			_satisfiedLiterals = new HashSet<string> ();
         }
 
@@ -45,7 +45,7 @@ namespace Archimedes.Logic {
 					var node = _graph.GetNode(literal.Value) ?? _graph.AddNode(literal.Negated ? (ILogicNode)new ClauseNode(literal.Value) : new LiteralNode(literal.Value)).GetNode(literal.Value);
 
                     if (_graph.GetEdge(headNode, node) == null) {
-						_graph.AddEdge (new WeightedDirectedEdge<ILogicNode> (headNode, node, 1));
+						_graph.AddEdge (new DirectedEdge<ILogicNode> (headNode, node));
 					}
 				}
             } else if (clause.Body.Count > 1) {
@@ -56,7 +56,7 @@ namespace Archimedes.Logic {
 	                    var clauseNode = _graph.GetNode(clauseKey) ?? _graph.AddNode(new ClauseNode(clauseKey)).GetNode(clauseKey);
 
 	                    if (_graph.GetEdge(headNode, clauseNode) == null) {
-							_graph.AddEdge (new WeightedDirectedEdge<ILogicNode> (headNode, clauseNode, clause.Body.Count));
+							_graph.AddEdge (new DirectedEdge<ILogicNode> (headNode, clauseNode));
 						}
 
 						foreach (var literalNode in literals.Select(literal => _graph.GetNode(literal.Value) ?? _graph.AddNode(literal.Negated ? (ILogicNode)new ClauseNode(literal.Value) : new LiteralNode(literal.Value)).GetNode(literal.Value)).Where(literalNode => _graph.GetEdge(clauseNode, literalNode) == null)) {
@@ -68,7 +68,7 @@ namespace Archimedes.Logic {
                     var disjointLiteral = _graph.GetNode(disjointLiteralKey) ?? _graph.AddNode(new LiteralNode(disjointLiteralKey)).GetNode(disjointLiteralKey);
 
 					foreach (var literalNode in clause.Body.Select(literal => _graph.GetNode (literal.Value) ?? _graph.AddNode(literal.Negated ? (ILogicNode)new ClauseNode(literal.Value) : new LiteralNode(literal.Value)).GetNode(literal.Value)).Where(literalNode => _graph.GetEdge(disjointLiteral, literalNode) == null)) {
-					    _graph.AddEdge(new WeightedDirectedEdge<ILogicNode>(disjointLiteral, literalNode, 1));
+					    _graph.AddEdge(new DirectedEdge<ILogicNode>(disjointLiteral, literalNode));
 					}
 				}
             }
@@ -91,7 +91,7 @@ namespace Archimedes.Logic {
                         var nodesB = clause.Body.Select(literal => _graph.GetNode(literal.NegatedValue()));
                         if (SharedAncestor(nodesA, nodesB)) {
                             Console.WriteLine("Adding " + clause.ToProperString() + " will cause conflict skipping clause...");
-							//RemoveClause(clause);
+							RemoveClause(clause);
                         }
                     }
                 }
@@ -123,7 +123,7 @@ namespace Archimedes.Logic {
 						var negatedLiteral = _graph.GetNode(literal.Value) ?? _graph.AddNode (literal.Negated ? (ILogicNode)new ClauseNode(literal.Value) : new LiteralNode(literal.Value)).GetNode (literal.Value);
 
 						if (_graph.GetEdge (headNode, negatedLiteral) == null) {
-							_graph.AddEdge (new WeightedDirectedEdge<ILogicNode> (headNode, negatedLiteral, clause.Body.Count));
+							_graph.AddEdge (new DirectedEdge<ILogicNode> (headNode, negatedLiteral));
 						}
 					}
 				} else {
@@ -133,11 +133,11 @@ namespace Archimedes.Logic {
 						var disjointLiteral = _graph.GetNode (disjointLiteralKey) ?? _graph.AddNode (new LiteralNode (disjointLiteralKey)).GetNode (disjointLiteralKey);
 
 						if (_graph.GetEdge (headNode, disjointLiteral) == null) {
-							_graph.AddEdge (new WeightedDirectedEdge<ILogicNode> (headNode, disjointLiteral, clause.Body.Count));
+							_graph.AddEdge (new DirectedEdge<ILogicNode> (headNode, disjointLiteral));
 						}
 
 						foreach (var literalNode in literals.Select(literal => _graph.GetNode(literal.Value) ?? _graph.AddNode(literal.Negated ? (ILogicNode)new ClauseNode(literal.Value) : new LiteralNode(literal.Value)).GetNode(literal.Value)).Where(literalNode => _graph.GetEdge(disjointLiteral, literalNode) == null)) {
-							_graph.AddEdge (new WeightedDirectedEdge<ILogicNode> (disjointLiteral, literalNode, 1));
+							_graph.AddEdge (new DirectedEdge<ILogicNode> (disjointLiteral, literalNode));
 						}
 					}
 				}
@@ -146,7 +146,7 @@ namespace Archimedes.Logic {
                 var jointLiteral = _graph.GetNode(jointLiteralKey) ?? _graph.AddNode(new ClauseNode(jointLiteralKey)).GetNode(jointLiteralKey);
 
 				foreach (var literalNode in clause.Body.Select(literal => _graph.GetNode(literal.Value) ?? _graph.AddNode(new ClauseNode(literal.Value)).GetNode(literal.Value)).Where(literalNode => _graph.GetEdge(jointLiteral, literalNode) == null)) {
-				    _graph.AddEdge(new WeightedDirectedEdge<ILogicNode>(jointLiteral, literalNode, 1));
+				    _graph.AddEdge(new DirectedEdge<ILogicNode>(jointLiteral, literalNode));
 				}
 			}
 		}
@@ -355,8 +355,7 @@ namespace Archimedes.Logic {
                 foreach (var to in _graph.Outgoing(from)) {
                     if (!seen.ContainsKey(to.Id)) seen[to.Id] = ++cnt;
 
-                    var edge = _graph.GetEdge(from, to);
-                    sb.AppendLine(indent + seen[from.Id] + " -> " + seen[to.Id] + " [label=\"" + edge.Weight + "\"]");
+                    sb.AppendLine(indent + seen[from.Id] + " -> " + seen[to.Id]);
 
                     if (labeled.Contains(to.Id)) continue;
                     labeled.Add(to.Id);

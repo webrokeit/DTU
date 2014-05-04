@@ -16,6 +16,7 @@
 \usepackage{geometry}
 \usepackage{fancyref}
 \usepackage{hyperref}
+\usepackage{framed}
 \usepackage[hypcap]{caption}
 \parindent=0pt
 \frenchspacing
@@ -23,6 +24,8 @@
 \pagestyle{fancy}
 
 \newcommand{\pctlrepeat}[1]{{\buildrel{#1}\over\curvearrowleft}}
+\newcommand{\tbox}[1] {\begin{tabular}{| c |}\hline {#1} \\ \hline\end{tabular}}
+
 
 \fancyhead[L]{\slshape\footnotesize May 9, 2014\\\textsc{02180 Introduction to Artificial Intelligence}}
 \fancyhead[R]{\slshape\footnotesize \textsc{Andreas Kjeldsen (s092638)}\\\textsc{Morten Eskesen (s133304)}}
@@ -36,7 +39,8 @@
   	breaklines=true,
   	frame=single,
 	language={},
-  	basicstyle=\footnotesize\ttfamily\color{Black}
+  	basicstyle=\footnotesize\ttfamily\color{Black},
+	mathescape
 }
 \newcommand{\tab}{\hspace*{2em}}
 \newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
@@ -98,21 +102,39 @@ The two objectives for the project are:
 To solve both objectives, we decided to represent our data as graphs. The reasoning behinds this decision, is that a graph can both represent a map and a knowledge base.
 
 \subsection{Map}
-For the route planning problem, we are expecting a source file containing the map data. The source file is read and interpreted, generating a graph representing the map. Each node represents a coordinate pair {\tt (X, Y)} indicating either a crossing of two streets or an end of a street. Each edge has a name, a weight and represents a partial street. Edge names are not unique, as a street can consist of multiple edges.
+For the route planning problem, we are expecting a source file containing the map data. The source file is read and interpreted, generating a directed graph representing the map. Each node represents a coordinate pair {\tt (X, Y)} indicating either a crossing of two streets or an end of a street. Each edge has a name, a weight and represents a partial street. Edge names are not unique, as a street can consist of multiple edges.
 
 \subsubsection{Source File}
 The source file should be in plaintext, have one entry per line and use the following syntax:
-\begin{lstlisting}[style=logoutput]
-X1 Y1 StreetName X2 Y2
-\end{lstlisting}
-
-Where {\tt (X1, Y1)} and {\tt (X2, Y2)} are node coordinates and {\tt StreetName} is the edge name. The weight of the edge is then calculated as the straight line distance from {\tt (X1, Y1)} to {\tt (X2, Y2)}.
-
-\subsection{Knowledge Base}
-For the logical deduction problem, we are expecting a source file containing the knowledge base. The source file is read and interpreted, generating a graph representing the knowledge base.
+\begin{itemize}
+	\item \tbox{\tt X1 Y1 StreetName X2 Y2}\\
+	Where {\tt (X1, Y1)} and {\tt (X2, Y2)} are node coordinates and {\tt StreetName} is the edge name. The weight of the edge is then calculated as the straight line distance from {\tt (X1, Y1)} to {\tt (X2, Y2)}.
+\end{itemize}
 
 \subsubsection{Nodes}
-In the knowledge base, nodes represent multiple objects:
+
+\subsubsection{Edges}
+
+\subsection{Knowledge Base}
+For the logical deduction problem, we are expecting a source file containing the knowledge base. The source file is read and interpreted, generating a directed graph representing the knowledge base.
+
+\subsubsection{Source File}
+The source file should be in plaintext, have one entry per line and use one of the following syntaxes:
+\begin{itemize}
+	\item \tbox{\tt Literal}\\
+	Where {\tt Literal} is the ID of the literal. When a literal is stated alone, it is interpreted as being a fact and always satisfiable.
+	
+	\item \tbox{\tt Literal$_1$ if Literal$_2$ [ $\ldots$ Literal$_n$]}\\
+	Where {\tt Literal$_1$, Literal$_2$ $\ldots$ Literal$_n$} are the IDs of the literals. {\tt Literal$_1$} is satisfied if {\tt Literal$_2$ $\ldots$ Literal$_n$} are satisfied. There must be at least one literal to depend on, there is no specific upper limit.
+	
+	\item \tbox{\tt Literal$_1$ Literal$_2$  [ $\ldots$ Literal$_n$]}\\
+	Where {\tt Literal$_1$, Literal$_2$ $\ldots$ Literal$_n$} are the IDs of the literals. Literals listed this way, are being interpreted as a disjunction of the literals. There must be listed at least two literals.
+\end{itemize}
+
+Literals can be stated as negative by prepending their ID with a {\tt !}, example:\\ \tbox{\tt !Literal$_1$ if Literal$_2$ !Literal$_3$}
+
+\subsubsection{Nodes}
+In the knowledge base, nodes can represent different objects:
 \begin{description}
 	\item[Literal] Literals are what the knowledge base works with. Literals can be {\tt Positive} and {\tt Negative}, they have a unique ID. A negative literal has a {\tt !} prepended to it's ID, which means literal {\tt lit} is a positive literal and literal {\tt !lit} is a negative literal. Literals can be stated as facts, if the positive literal is a fact, the negative literal cannot be, as this would make the knowledge base inconsistent.
 	
@@ -121,13 +143,16 @@ In the knowledge base, nodes represent multiple objects:
 	\item[Disjunctive Literal] In cases where a literal has more than one way to be satisfied, a disjunctive literal can be used. The ID of the disjunction will be the IDs of the literals in sorted order separated by {\tt |}. An edge is made between the literal and the disjunction, and between the disjunction and the literals it represents. If any of the literals in the disjunction are facts, then so will the disjunction be.
 \end{description}
 
-The nodes are stored in the graph as either {\tt AND} nodes or {\tt OR} nodes. The scheme for determining the node type is:
+The nodes are stored in the graph as either {\tt AND} nodes or {\tt OR} nodes. An {\tt AND} node is satisfied if all all nodes it connects to are satisfied. An {\tt OR} node is satisfied if any of the nodes it connects to are satisfied. The scheme for determining the node type is:
 $$
 \text{Node type} = \begin{cases}
   {\text{\tt AND}} & \text{if {\tt Negative} or {\tt Conjunctive}} \\
   {\text {\tt OR}} & \text{if {\tt Positive} or {\tt Disjunctive}}
 \end{cases}
 $$
+
+\subsubsection{Edges}
+In the knowledge base, edges represent a dependency. If node $n_1$ has an edge to node $n_2$ it indicates that $n_1$ depends on $n_2$.
 
 \section{Conclusion}
 We've done smart stuff
