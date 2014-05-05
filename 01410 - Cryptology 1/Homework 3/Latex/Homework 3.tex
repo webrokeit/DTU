@@ -78,76 +78,87 @@ Morten Chabert \textsc{Eskesen}\\
 \section*{Exercise 3.1}
 \subsection*{3.1.1}
 We have to show that $n + d^2$ is a square in $\mathbb{Z}$ where $q - p = 2d > 0$ and $n = pq$ and d, p and q are integers.
-\begin{center}
-$n + d^2 = pq + (\frac{q-p}{2})^2 = pq + \frac{q^2}{4} + \frac{p^2}{4} - \frac{pq}{2} = \frac{q^2}{4} + \frac{p^2}{4}+\frac{pq}{2} = (\frac{p+q}{2})^2$
-\end{center}
+
+$$n + d^2 = pq + (\frac{q-p}{2})^2 = pq + \frac{q^2}{4} + \frac{p^2}{4} - \frac{pq}{2} = \frac{q^2}{4} + \frac{p^2}{4}+\frac{pq}{2} = (\frac{p+q}{2})^2$$
+
 Now $p + q = 2d + 2p$ so $\frac{p+q}{2} \in \mathbb{Z}$. This show that $n + d^2$ is a square in $\mathbb{Z}$.
 
 \subsection*{3.1.2}
 Given two integers $n$ and $d$ where $n$ is the product of two odd primes $p$ and $q$ and $d$ is a small integer defined as in 3.1.1. We have to show how this information can be used to factor $n$. The primes $p$ and $q$ must be close to each other since $d > 0$ is a small integer given as $\frac{q-p}{2}$ and $q > p$. Since
 $$n = (\frac{q + p}{2})^2 - d^2$$
 We define the integer $u$ as $u = \frac{p+q}{2}$. $u$ can only be slightly larger than $\sqrt{n}$ and $u^2 - n$ is a square in $\mathbb{Z}$. Therefore we can try the following:
-\begin{center}
-$u = \lceil \sqrt{n}$ $\rceil + k$, ${}$ ${}$ $k =0,1,2,\dots$
-\end{center}
+
+$$u = \lceil \sqrt{n} \; \rceil + k\,,\;\;\;k =0,1,2,\dots$$
+
 We try this until $u$ becomes a square in $\mathbb{Z}$. Then we calculate the two primes $p$ and $q$ by $p = u - d$ and $q = u + d$ since $n = pq$ with $q > p$ and $n = (\frac{q + p}{2})^2 - d^2$.
 
 
 \subsection*{3.1.3}
 We will use the technique from 3.1.2 to factor $n = 551545081$. We find $\sqrt{n} \approx 23484.99\dots$. We therefore begin our technique with $k = 0$ and find that $u = 23485$.
 $$d = \sqrt{u^2 - n} = \sqrt{23485^2 - 551545081} = 12$$
+
 We then get that:\\
 $p = u - d = 23485 - 12 = 23473$ and\\
 $q = u + d = 23485 + 12 = 23497$\\
 
 \section*{Exercise 3.2}
 \subsection*{3.2.1}
-Let $n$ be a product of two odd, distinct primes $p_1$ and $p_2$. We have to find the maxmium order of an element modulo $n$.\\
-Let $r_1$ be a primitive root mod $p_1$ and let $r_2$ be a primitive root mod $p_2$ and let $t$ = lcm($p_1 -1$, $p_2 - 1$). We use the Chinese Remainder Theorem to find an $x$ such that:
+Let $n$ be a product of two odd, distinct primes $p_1$ and $p_2$. We have to find the maximum order of an element modulo $n$.\\
+\\
+Let $r_1$ be a primitive root mod $p_1$, let $r_2$ be a primitive root mod $p_2$. We use the Chinese Remainder Theorem to find an $x$ such that:
 \begin{center}
 $x \equiv r_1$ mod $p_1$\\
 $x \equiv r_2$ mod $p_2$
 \end{center}
-We have to show the following:
+Where $x$ is an element of ($\mathbb{Z} / n\mathbb{Z}$)$^*$.\\
+\\
+This has the following properties:
 \begin{enumerate}
-\item $x^t \equiv 1$ mod $p_1p_2$.
-\item If $0 < k < t$, then $x^k \not\equiv 1$ mod $p_1p_2$.
-\item If y $\in$ ($\mathbb{Z}_{p_1p_2}\mathbb{Z}$)$^*$, then $y^t \equiv 1$ mod $p_1p_2$.
+\item $x^t \equiv 1$ mod $n$.
+\item If $0 < k < t$, then $x^k \not\equiv 1$ mod $n$.
+\item If y is any element of ($\mathbb{Z} / n\mathbb{Z}$)$^*$, then $y^t \equiv 1$ mod $n$.
 \end{enumerate}
+
+Then we can calculate maximum order $t$ by finding the least common multiple of $p_1-1$ and $p_2-1$.
+$$t = \text{lcm}(p_1-1, p_2 -1)$$
 
 
 \subsection*{3.2.2}
 Let $n = 2051152801041163$ (product of two primes) and define the hash function
-\begin{center}
-$H_F(m) = 8^m$ mod $n$
-\end{center}
+
+$$H_F(m) = 8^m \text{ mod } n$$
+
 for $m \in \mathbb{Z}$. The order of 8 modulo $n$ is the maximum possible.\\
+\\
 Let $p = 2189284635404723$ which is a prime and $\frac{p-1}{2}$ is also a prime.\\
 We have to find a primitive element $\alpha \in \mathbb{Z}^*_p$ and choose a valid, private key $a \in \mathbb{Z}_{p-1}$.
 The only prime factors in $|\mathbb{Z}^*_p| = p - 1$ are 2 and $\frac{p-1}{2}$ since $\frac{p-1}{2}$ is prime. The order of an element must divide $p - 1$ therefore there are only 4 possible orders: 1 (the identity), 2 (the element - 1), $\frac{p-1}{2}$ and $p - 1$ (the primitive elements).\\
+\\
 Any element $\alpha \not\equiv \pm 1$ mod $p$ such that $\alpha^{\frac{p-1}{2}} \not\equiv 1$ mod $p$ must have the order $p - 1$ and therefore it is primitive.\\
 We use $\alpha = 42$ and use the following command in Maple.
 \begin{lstlisting}[style=Maple]
 p:=2189284635404723: 42&^((p-1)/2) mod p;
 \end{lstlisting}
 This shows us that $42^{\frac{p-1}{2}} \not\equiv 1$ mod $p$. It is also clear that $42^2 \not\equiv 1$ mod $p$. Therefore 42 has order $p - 1$ and it is primitive in $\mathbb{Z}^*_p$.\\
+\\
 We choose the private key $a \in \mathbb{Z}_{p-1}$ at random. Which gives us $a = 815782344718261$.
 
 \subsection*{3.2.3}
 We have to use $\alpha, a$ and $p$ to set up the El-Gamal digital signature system. $m$ is an integer describing a 6-digit DTU student number where the leading 0 is discarded if there is any. We compute the signature of $m$ using the El-Gamal system with the hash function $H_F$ and the "random" number $k = 1234567$.\\
+\\
 We use Morten's student number (133304) as the message, $m = 133304$. We hash $m$ with $H_F$ and we get the following:
-\begin{center}
-$H_F(133304) \equiv 8^{133304}$\\
-$H_F(133304) \equiv 1327930088214640$ mod $2051152801041163$
-\end{center}
+
+$$H_F(133304) \equiv 8^{133304}$$
+$$H_F(133304) \equiv 1327930088214640 \text{ mod } 2051152801041163$$
+\\
 Now we have our value of $x$. The signature ($\gamma$, $\delta$) $\in \mathbb{Z}_{p} \times \mathbb{Z}_{p-1}$ is then given as:
-\begin{center}
-$\gamma \equiv 42^{1234567}$\\
-$\gamma \equiv 2076571105570857$ mod $2189284635404723$\\
-$\delta \equiv (1327930088214640 - 815782344718261 * 2076571105570857)(1234567)^{-1}$\\
-$\delta \equiv -1694030045476783892477149105037 * 427810349476471$\\
-$\delta \equiv 1297737808822113$ mod $2189284635404722$
-\end{center}
+
+$$\gamma \equiv 42^{1234567}$$
+$$\gamma \equiv 2076571105570857 \text{ mod } 2189284635404723$$
+$$\delta \equiv (1327930088214640 - 815782344718261 * 2076571105570857)(1234567)^{-1}$$
+$$\delta \equiv -1694030045476783892477149105037 * 427810349476471$$
+$$\delta \equiv 1297737808822113 \text{ mod } 2189284635404722$$
+
 Therefore ($\gamma$, $\delta$) = (2076571105570857, 1297737808822113). We found the multiplicative inverse of 1234567 in $\mathbb{Z}^*_{p-1}$ by using the following command in Maple:
 \begin{lstlisting}[style=Maple]
 1234567^(-1) mod 2189284635404722
@@ -161,16 +172,14 @@ $(\alpha^a)^\gamma \gamma^\delta \equiv \alpha^x$ mod $p$
 \end{center}
 
 We start by computing the left-hand side individually.
-\begin{center}
-$(\alpha^a)^\gamma \equiv (42^{815782344718261})^{2076571105570857} \equiv 1330881686950231$ mod $2189284635404723$\\
-$\gamma^\delta \equiv 2076571105570857^{1297737808822113} \equiv 1584897462290462$ mod $2189284635404723$
-\end{center}
-$(\alpha^a)^\gamma \gamma^\delta \equiv 571999655777925$ mod $2189284635404723$
+
+$$(\alpha^a)^\gamma \equiv (42^{815782344718261})^{2076571105570857} \equiv 1330881686950231 \text{ mod } 2189284635404723$$
+$$\gamma^\delta \equiv 2076571105570857^{1297737808822113} \equiv 1584897462290462 \text{ mod } 2189284635404723$$
+$$(\alpha^a)^\gamma \gamma^\delta \equiv 571999655777925 \text{ mod } 2189284635404723$$
 \\
 The right-hand side is
-\begin{center}
-$\alpha^x \equiv 42^{1327930088214640} \equiv 571999655777925$ mod $2189284635404723$
-\end{center}
+$$\alpha^x \equiv 42^{1327930088214640} \equiv 571999655777925 \text{ mod } 2189284635404723$$
+
 Therefore $(\alpha^a)^\gamma \gamma^\delta \equiv \alpha^x$ mod $p$ is fulfilled, thus showing that ($\gamma$, $\delta$) = (2076571105570857, 1297737808822113) is verified as the signature on $m$.
 
 \end{document}

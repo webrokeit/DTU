@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Archimedes.Logic;
+﻿using System.Collections.Generic;
 
 namespace Archimedes.Logic {
 	public interface IQuery {

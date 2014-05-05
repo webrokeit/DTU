@@ -1,0 +1,48 @@
+﻿a if x
+b if x
+c if x
+d if x
+e if x
+f if x
+
+a if b
+b if c
+c if d
+d if e
+e if f
+f if a
+
+a if c
+b if d
+c if e
+d if f
+e if a
+f if b
+
+a if d
+b if e
+c if f
+d if a
+e if b
+f if c
+
+a if e
+b if f
+c if a
+d if b
+e if c
+f if d
+
+a if f
+b if a
+c if b
+d if c
+e if d
+f if e
+
+!a if x
+!b if x
+!c if x
+!d if x
+!e if x
+!f if x

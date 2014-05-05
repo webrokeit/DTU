@@ -1,17 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Archimedes.Logic {
+﻿namespace Archimedes.Logic {
     public class Literal : ILiteral {
         public string Value { get; private set; }
-		public bool Negated { get; private set; }
+        public bool Negated { get; private set; }
 
         public Literal(string value) {
             Value = value;
-			Negated = value [0] == '!';// ? value.Substring(1) : "!" + Value;
+            Negated = value[0] == '!';
         }
 
         public IExpression Reduce() {
@@ -19,7 +13,7 @@ namespace Archimedes.Logic {
         }
 
 		public string NegatedValue(){
-			return Negated ? Value.Substring (1) : "!" + Value;
+            return Negated ? Value.Substring(1) : "!" + Value;
 		}
 
         public string ToProperString() {
@@ -38,7 +32,6 @@ namespace Archimedes.Logic {
 
         public override string ToString() {
 			return Value;
-			//return "[" + Value + ":" + (Valid ? "true" : "false") + "]";
         }
     }
 }

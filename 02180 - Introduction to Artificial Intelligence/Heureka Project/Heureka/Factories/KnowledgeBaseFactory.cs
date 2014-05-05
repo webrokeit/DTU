@@ -9,6 +9,7 @@ using Archimedes.Extensions;
 using Archimedes.Graph;
 using Archimedes.Logic;
 using Archimedes;
+using System.Text.RegularExpressions;
 
 namespace Heureka.Factories {
     public static class KnowledgeBaseFactory {
@@ -32,6 +33,7 @@ namespace Heureka.Factories {
         }
 
 		public static IClause ClauseFromLine(string line){
+			line = CleanLine (line);
 			var parts = line.ToLower().Split(' ');
 			var head = new Literal(parts[0]);
 			var clause = new Clause(head);
@@ -50,23 +52,35 @@ namespace Heureka.Factories {
 					var literal = new Literal (parts [i++]);
 					clause.Body.Add (literal);
 				}
+
+			    if (clause.Head == null && clause.Body.Count == 1) {
+			        clause = new Clause(clause.Body.First());
+			    }
 			}
 
 			return clause;
 		}
 
 		public static IQuery QueryFromLine(string line){
-			var parts = line.ToLower().Split(' ');
 			var query = new Query();
+			line = CleanLine (line);
 
-			if (parts.Length > 0) {
-				for (var i = 0; i < parts.Length; i++) {
-					var literal = new Literal (parts [i]);
-					query.Literals.Add (literal);
-				}
-			}
+		    if (!string.IsNullOrEmpty(line)) {
+                var parts = line.ToLower().Split(' '); 
+                for (var i = 0; i < parts.Length; i++) {
+                    parts[i] = parts[i].Trim();
+                    if (string.IsNullOrEmpty(parts[i])) continue;
+                    var literal = new Literal(parts[i]);
+                    query.Literals.Add(literal);
+                }
+		    }
 
 			return query;
+		}
+
+		private static readonly Regex cleanLineRegex = new Regex (@"[^a-zA-Z_0-9 !-]+", RegexOptions.Compiled);
+		private static string CleanLine(string line){
+			return cleanLineRegex.Replace (line, string.Empty).Trim();
 		}
     }
 }

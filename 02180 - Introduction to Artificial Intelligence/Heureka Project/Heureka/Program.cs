@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -25,7 +26,7 @@ namespace Heureka {
 
 		    var defaultInput = function + "-input.txt";
 			var input = _arguments.GetOrDefault ("file", defaultInput);
-            input = "TestInputs/logic02simple.txt";
+			input = "TestInputs/logic05breakfast.txt";
 
 			if (input == null) {
 				ExitWithMsg ("No input file specified");
@@ -113,7 +114,7 @@ namespace Heureka {
 		}
 
 	    private static void Inference(string fileName) {
-	        try {
+            try {
                 IKnowledgeBase kb;
                 using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.Read)) {
                     kb = KnowledgeBaseFactory.FromInput(fs);
@@ -122,6 +123,7 @@ namespace Heureka {
                 OutputKnowledgeBaseGraph(kb, "graphviz.txt");
 
                 Console.WriteLine("Type exit to quit the program.");
+                Console.WriteLine("A query is a space separated list of literals to test for satisfiability.");
                 Console.WriteLine();
 
 	            while (true) {
@@ -130,8 +132,7 @@ namespace Heureka {
 	                if (read == "quit") ExitWithMsg(null);
 
 	                var query = KnowledgeBaseFactory.QueryFromLine(read);
-	                var qStr = string.Join(" & ", query.Literals);
-	                var negQStr = string.Join(" | ", query.Literals.Select(literal => literal.NegatedValue()));
+	                var qStr = query.ToString();
 
 	                Console.WriteLine("[Direct] Is " + qStr + " satisfiable?");
 	                var satisfied = kb.DirectQuery(query);
@@ -145,13 +146,13 @@ namespace Heureka {
 	                                  " satisfiable");
                     Console.WriteLine();
 	            }
-	        } catch (Exception ex) {
-	            ExitWithMsg("Error: " + ex.Message);
-	        }
+            } catch (Exception ex) {
+                ExitWithMsg("Error: " + ex.Message);
+            }
 	    }
 
 	    private static void OutputKnowledgeBaseGraph(IKnowledgeBase kb, string outputFileName) {
-            using (var fs = new StreamWriter(new FileStream(outputFileName, FileMode.OpenOrCreate, FileAccess.Write, FileShare.Write))) {
+	        using (var fs = new StreamWriter(new FileStream(outputFileName, FileMode.Create, FileAccess.Write, FileShare.Write))) {
                 fs.Write(kb.ToString());
             }
 	    }

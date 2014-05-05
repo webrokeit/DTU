@@ -1,11 +1,7 @@
-﻿using System;
-using System.CodeDom;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using Archimedes.Extensions;
 
 namespace Archimedes.Logic {
     public class Clause : IClause {
@@ -32,20 +28,15 @@ namespace Archimedes.Logic {
                     var cnt = 0;
 					foreach (var literal in Body) {
                         cnt++;
-						var clause = (IClause) literal;
-                        if (clause != null) {
-                            sb.Append(clause.ToProperString());
-							if (cnt < Body.Count) {
-                                sb.Append(") & (");
-                            }
-                        } else {
-							sb.Append(literal.ToProperString());
-							if (cnt < Body.Count) {
-                                sb.Append(" & ");
-                            }
+						sb.Append(literal.ToProperString());
+						if (cnt < Body.Count) {
+                            sb.Append(" & ");
                         }
                     }
                     sb.Append(")");
+                }
+                if (Head != null) {
+                    sb.Insert(0, Head.Value + " <- ");
                 }
                 _properString = sb.ToString();
             }
