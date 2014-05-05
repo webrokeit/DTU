@@ -105,19 +105,22 @@ $q = u + d = 23485 + 12 = 23497$\\
 \subsection*{3.2.1}
 Let $n$ be a product of two odd, distinct primes $p_1$ and $p_2$. We have to find the maximum order of an element modulo $n$.\\
 \\
-Let $r_1$ be a primitive root mod $p_1$, let $r_2$ be a primitive root mod $p_2$ and let $t$ = lcm($p_1 -1$, $p_2 - 1$). We use the Chinese Remainder Theorem to find an $x$ such that:
+Let $r_1$ be a primitive root mod $p_1$, let $r_2$ be a primitive root mod $p_2$. We use the Chinese Remainder Theorem to find an $x$ such that:
 \begin{center}
 $x \equiv r_1$ mod $p_1$\\
 $x \equiv r_2$ mod $p_2$
 \end{center}
 Where $x$ is an element of ($\mathbb{Z} / n\mathbb{Z}$)$^*$.\\
 \\
-We have to show the following:
+This has the following properties:
 \begin{enumerate}
 \item $x^t \equiv 1$ mod $n$.
 \item If $0 < k < t$, then $x^k \not\equiv 1$ mod $n$.
 \item If y is any element of ($\mathbb{Z} / n\mathbb{Z}$)$^*$, then $y^t \equiv 1$ mod $n$.
 \end{enumerate}
+
+Then we can calculate maximum order $t$ by finding the least common multiple of $p_1-1$ and $p_2-1$.
+$$t = \text{lcm}(p_1-1, p_2 -1)$$
 
 
 \subsection*{3.2.2}
