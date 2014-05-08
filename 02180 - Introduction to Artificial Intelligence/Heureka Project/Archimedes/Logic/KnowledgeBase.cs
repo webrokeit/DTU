@@ -316,10 +316,11 @@ namespace Archimedes.Logic {
 
 		    if (source.Fact) {
 		        satisfied = true;
-		    } else if (source is ILiteralNode) {
+			} else if (source is ILiteralNode) {
 				satisfied = _graph.Outgoing(source).Any(dependency => Satisfied(dependency, checkedLiterals));
 			} else if(source is IClauseNode) {
-			    satisfied = _graph.Outgoing(source).All(dependency => Satisfied(dependency, checkedLiterals));
+				var dependencies = _graph.Outgoing (source).ToList ();
+				satisfied = dependencies.Count > 0 && dependencies.All(dependency => Satisfied(dependency, checkedLiterals));
 			}
 
 			if (satisfied) {

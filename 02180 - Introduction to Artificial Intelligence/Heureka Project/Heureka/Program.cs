@@ -21,12 +21,12 @@ namespace Heureka {
 		public static void Main(string[] args) {
 			_arguments = ArgumentsFactory.ArgumentsAsDictionary (args);
 
-			const string defaultFunction = "path";
+			const string defaultFunction = "logic";
 			var function = _arguments.GetOrDefault ("func", defaultFunction);
 
 		    var defaultInput = function + "-input.txt";
 			var input = _arguments.GetOrDefault ("file", defaultInput);
-			input = "TestInputs/pathtestinput01.txt";
+			input = "TestInputs/logic02simple.txt";
 
 			if (input == null) {
 				ExitWithMsg ("No input file specified");
