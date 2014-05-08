@@ -45,10 +45,15 @@ namespace Archimedes.PathFinding {
 					if (!queue.ContainsKey(neighbor.Id) || score < gScore[neighbor.Id]) {
 						cameFrom[neighbor.Id] = current.Id;
 						gScore[neighbor.Id] = score;
-						fScore[neighbor.Id] = score + Heuristic.Evaluate(neighbor, goal);
+
+						var tmpFScore = score + Heuristic.Evaluate (neighbor, goal);
 						if (queue.ContainsKey(neighbor.Id)) {
-							queue.SetValue(neighbor.Id, fScore[neighbor.Id]);
+							if (tmpFScore < fScore [neighbor.Id]) {
+								fScore[neighbor.Id] = tmpFScore;
+								queue.SetValue (neighbor.Id, tmpFScore);
+							}
 						} else {
+							fScore[neighbor.Id] = tmpFScore;
 							queue.Insert(neighbor.Id, fScore[neighbor.Id]);
 						}
 					}
@@ -57,18 +62,6 @@ namespace Archimedes.PathFinding {
 
 			return null;
 		}
-
-		//public IList<TNode> ShortestPath(IDirectedGraph<TNode, TEdge> graph, TNode source, ICollection<TNode> goals) {
-		//	return ShortestPath(graph, new[] { source }, goals);
-		//}
-
-		//public IList<TNode> ShortestPath(IDirectedGraph<TNode, TEdge> graph, ICollection<TNode> sources, TNode goal) {
-		//	return ShortestPath(graph, sources, new[] { goal });
-		//}
-
-		//public IList<TNode> ShortestPath(IDirectedGraph<TNode, TEdge> graph, ICollection<TNode> sources, ICollection<TNode> goals) {
-			
-		//}
 
 		private static IList<TNode> ReconstructPath(IDirectedGraph<TNode, TEdge> graph, IReadOnlyDictionary<string, string> cameFrom, string currentNodeId) {
 			var path = new List<TNode>();

@@ -18,6 +18,7 @@
 \usepackage{hyperref}
 \usepackage{framed}
 \usepackage[hypcap]{caption}
+\usepackage[toc,page]{appendix}
 \parindent=0pt
 \frenchspacing
 
@@ -94,7 +95,7 @@ The two objectives for the project are:
 	\item[] \textbf{Route Planning}\\
 	Be able to find a route within a map.
 	
-	\item[] \textbf{Logic Deduction}\\
+	\item[] \textbf{Logical Deduction}\\
 	Be able to deduce whether a query is satisfied using a knowledge base, either as a direct proof or as a refutation proof. 
 \end{enumerate}
 
@@ -110,10 +111,6 @@ The source file should be in plaintext, have one entry per line and use the foll
 	\item \tbox{\tt X1 Y1 StreetName X2 Y2}\\
 	Where {\tt (X1, Y1)} and {\tt (X2, Y2)} are node coordinates and {\tt StreetName} is the edge name. The weight of the edge is then calculated as the straight line distance from {\tt (X1, Y1)} to {\tt (X2, Y2)}.
 \end{itemize}
-
-\subsubsection{Nodes}
-
-\subsubsection{Edges}
 
 \subsection{Knowledge Base}
 For the logical deduction problem, we are expecting a source file containing the knowledge base. The source file is read and interpreted, generating a directed graph representing the knowledge base.
@@ -154,7 +151,52 @@ $$
 \subsubsection{Edges}
 In the knowledge base, edges represent a dependency. If node $n_1$ has an edge to node $n_2$ it indicates that $n_1$ depends on $n_2$.
 
+\section{Route Planning}
+For the route planning problem, we wanted to focus on finding an optimal route according to distance. Our solution does not take speeding limits into considerations nor routes requiring payment (bridges, ferries etc.).
+
+\subsection{Initiating A Search}
+To initiate a search, a start node and an end node must be specified. The start and end node are identified by giving two street names and then finding the node corresponding to the crossing of the two streets.
+
+\subsection{Finding A Route}
+We chose to use the A* algorithm, with the straight line distance (henceforth \emph{SLD}) as our heuristic function. The SLD heuristic can only be applied if the triangle inequality is satisfied, therefore we assume that the data set supplied satisfies this. Further the SLD heuristic is both admissible and monotonic.\\
+\\
+The A* algorithm makes use of a priority queue to keep track of which node to expand next. The priority queue prioritizes the nodes based on their score, where their score is the cost of going to the node + the SLD to the goal node. The priority queue should be able to update values, due to the scenario when a node is found multiple times, the best possible score should be used. To support this, we implemented a priority queue using a binary heap supported by a dictionary. This gave us the possibility of making constant time look ups, and cutdown value updates by $O(n)$ time.
+
+\subsection{Example Run}
+Running our route planner on Data Set '\nameref{subsec:oneway}' (see \ref{subsec:oneway}), using the corner of {\tt SktPedersStraede} and {\tt Larsbjoernsstraede} as starting point, and the corner of {\tt Studiestraede} and {\tt Larsbjoernsstraede} as ending point, gave the following result:
+\begin{lstlisting}[style=logoutput]
+SktPedersStraede -> LarslejStraede -> Noerrevoldgade ->
+Vestervoldgade -> Studiestraede
+\end{lstlisting}
+
+\section{Logical Deduction}
+
+
 \section{Conclusion}
-We've done smart stuff
+We have managed to encode the data sets for both problems as graphs, making it possible to use the same code to solve both problems.
+
+\subsection{Route Planning}
+Our route planner works, it's fast and finds an optimal route according to distance. An improvement would be to include speeding limits on the roads, this would make it possible to plan the route according to traveling time instead of distance, or even make a hybrid that would take both into consideration. It would also be advantageous to include bridges, ferries and the like, also stating the cost of using these.
+
+\subsection{Logical Deduction}
+
+\clearpage
+\pagenumbering{Roman}
+\begin{appendices}
+
+\section{Data Sets}
+Below are some of the data sets we used for testing.
+
+\subsection{Route Planning}
+\subsubsection{One-way Streets}
+\label{subsec:oneway}
+\lstinputlisting[style=logoutput]{../Heureka/TestInputs/pathtestinput01.txt}
+
+\section{Knowledge Base Illustrations}
+Below are some illustrations of the graphs used by the knowledge base. The illustrations are generated using Graphviz \footnote{Graphviz - Graph Visualization Software:  \url{http://www.graphviz.org/}.}
+
+\subsection{Breakfast Example}
+Breakfast example goes here.
+\end{appendices}
 
 \end{document}
