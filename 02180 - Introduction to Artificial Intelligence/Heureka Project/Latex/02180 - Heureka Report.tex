@@ -93,7 +93,7 @@ This report will focus on our work on the \emph{Heureka Project}, given as an as
 The two objectives for the project are:
 \begin{enumerate}
 	\item[] \textbf{Route Planning}\\
-	Be able to find a route within a map.
+	Be able to find a route from one point to another point within a map.
 	
 	\item[] \textbf{Logical Deduction}\\
 	Be able to deduce whether a query is satisfied using a knowledge base, either as a direct proof or as a refutation proof. 
@@ -140,7 +140,7 @@ In the knowledge base, nodes can represent different objects:
 	\item[Disjunctive Literal] In cases where a literal has more than one way to be satisfied, a disjunctive literal can be used. The ID of the disjunction will be the IDs of the literals in sorted order separated by {\tt |}. An edge is made between the literal and the disjunction, and between the disjunction and the literals it represents. If any of the literals in the disjunction are facts, then so will the disjunction be.
 \end{description}
 
-The nodes are stored in the graph as either {\tt AND} nodes or {\tt OR} nodes. An {\tt AND} node is satisfied if all all nodes it connects to are satisfied. An {\tt OR} node is satisfied if any of the nodes it connects to are satisfied. The scheme for determining the node type is:
+The nodes are stored in the graph as either {\tt AND} nodes or {\tt OR} nodes. An {\tt AND} node is satisfied if all nodes it connects to are satisfied. An {\tt OR} node is satisfied if any of the nodes it connects to are satisfied. The scheme for determining the node type is:
 $$
 \text{Node type} = \begin{cases}
   {\text{\tt AND}} & \text{if {\tt Negative} or {\tt Conjunctive}} \\
@@ -249,7 +249,7 @@ Our route planner works, it's fast and finds an optimal route according to dista
 \subsection{Logical Deduction}
 Our inference engine can properly answer queries using both direct proof and indirect proof within the closed world assumption. Though we do optimize our knowledge base by removing some redundant clauses and dependencies, there are still ways to optimize it further (removing circular dependencies etc.).\\
 \\
-The way we're conducting our indirect proof, can sometimes result in false positives, this is not satisfactory but we believe its a quirk 
+The way we're conducting our indirect proof, can sometimes result in false positives, this is not satisfactory but we believe its a quirk. 
 \\
 \\
 We didn't choose to implement our inference engine using heuristics, but putting more research into finding a proper heuristic function would most likely be beneficial.
