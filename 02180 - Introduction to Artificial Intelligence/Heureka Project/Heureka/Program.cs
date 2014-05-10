@@ -21,12 +21,12 @@ namespace Heureka {
 		public static void Main(string[] args) {
 			_arguments = ArgumentsFactory.ArgumentsAsDictionary (args);
 
-		    const string defaultFunction = "logic";
+			const string defaultFunction = "logic";
 			var function = _arguments.GetOrDefault ("func", defaultFunction);
 
 		    var defaultInput = function + "-input.txt";
 			var input = _arguments.GetOrDefault ("file", defaultInput);
-			input = "TestInputs/logic05breakfast.txt";
+			input = "TestInputs/logic02simple.txt";
 
 			if (input == null) {
 				ExitWithMsg ("No input file specified");
@@ -96,15 +96,19 @@ namespace Heureka {
 					Console.WriteLine ("Path found: Just stand still, you're already there");
 				}else if (path.Count > 1) {
 					var prev = path [0];
+					var prevName = string.Empty;
 
 					Console.WriteLine ("Path found:");
 					for (var i = 1; i < path.Count; i++) {
 						var edge = graph.GetEdge (prev, path [i]);
-						Console.Write (edge.Name);
-						if (i + 1 < path.Count) {
-							Console.Write (" - > ");
+						if (edge.Name != prevName) {
+							Console.Write (edge.Name);
+							if (i + 1 < path.Count) {
+								Console.Write (" -> ");
+							}
 						}
 						prev = path [i];
+						prevName = edge.Name;
 					}
 				} else {
 					Console.WriteLine ("No path found");
