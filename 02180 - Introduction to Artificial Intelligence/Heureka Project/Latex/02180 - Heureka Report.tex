@@ -133,7 +133,7 @@ Literals can be stated as negative by prepending their ID with a {\tt !}, exampl
 \subsubsection{Nodes}
 In the knowledge base, nodes can represent different objects:
 \begin{description}
-	\item[Literal] Literals are what the knowledge base works with. Literals can be {\tt Positive} and {\tt Negative}, they have a unique ID. A negative literal has a {\tt !} prepended to it's ID, which means literal {\tt lit} is a positive literal and literal {\tt !lit} is a negative literal. Literals can be stated as facts, if the positive literal is a fact, the negative literal cannot be, as this would make the knowledge base inconsistent.
+	\item[Literal] Literals are what the knowledge base works with. Literals can be {\tt Positive} and {\tt Negative}, they have a unique ID. A negative literal has a {\tt !} prepended to its ID, which means literal {\tt lit} is a positive literal and literal {\tt !lit} is a negative literal. Literals can be stated as facts, if the positive literal is a fact, the negative literal cannot be, as this would make the knowledge base inconsistent.
 	
 	\item[Conjunctive Literal] Literals can depend on more than one other literal to be satisfied. In this case we make a node representing the conjunction of the depending literals. The ID of the conjunction will be the IDs of the depending literals in sorted order separated by {\tt \&}. An edge is then made between the literal and the conjunction, and between the conjunction and the literals it represents. If all the literals of a conjunction are facts, then so will the conjunction be.
 	
@@ -152,7 +152,7 @@ $$
 In the knowledge base, edges represent a dependency. If node $n_1$ has an edge to node $n_2$ it indicates that $n_1$ depends on $n_2$.
 
 \subsubsection{Illustration}
-View the appendix '\nameref{sec:illustration}' (section \autoref{sec:illustration}), to see illustrations of how the graph looks internally.
+View the appendix '\nameref{sec:illustration}' (section \autoref{sec:illustration}), to see an illustration of how the graph looks internally.
 
 \section{Route Planning}
 For the route planning problem, we wanted to focus on finding an optimal route according to distance. Our solution does not take speeding limits into considerations nor routes requiring payment (bridges, ferries etc.).
@@ -163,7 +163,7 @@ To initiate a search, a start node and an end node must be specified. The start 
 \subsection{Finding A Route}
 We chose to use the A* algorithm, with the straight line distance (henceforth \emph{SLD}) as our heuristic function. The SLD heuristic can only be applied if the triangle inequality is satisfied, therefore we assume that the data set supplied satisfies this. Further the SLD heuristic is both admissible and monotonic.\\
 \\
-The A* algorithm makes use of a priority queue to keep track of which node to expand next. The priority queue prioritizes the nodes based on their score, where their score is the cost of going to the node + the SLD to the goal node. The priority queue should be able to update values, due to the scenario when a node is found multiple times, the best possible score should be used. To support this, we implemented a priority queue using a binary heap supported by a dictionary. This gave us the possibility of making constant time look ups, and cutdown value updates by $O(n)$ time.
+The A* algorithm makes use of a priority queue to keep track of which node to expand next. The priority queue prioritizes the nodes based on their score, where their score is the cost of going to the node + the SLD to the goal node. The priority queue should be able to update values, due to the scenario when a node is found multiple times, the best possible score should be used. To support this, we implemented a priority queue using a binary heap supported by a dictionary. This gave us the possibility of making constant time look ups, and decrease value updates by $O(n)$ time.
 
 \subsection{Example Run}
 Running our route planner on data set '\nameref{subsec:oneway}' (see \ref{subsec:oneway}), using the corner of {\tt SktPedersStraede} and {\tt Larsbjoernsstraede} as starting point, and the corner of {\tt Studiestraede} and {\tt Larsbjoernsstraede} as ending point, gave the following result:
@@ -196,7 +196,7 @@ If the head of a clause is also stated as one of the dependent literals, the hea
 The inference engine can answer queries. We interpret the queries as a conjunction of all the literals listed in the query. A query of {\tt "a b c"} would be interpreted as {\tt "a $\wedge$ b $\wedge$ c"}.
 
 \subsection{Searching For Proof}
-A search for a proof is carried out by having a set of start nodes. Our algorithm will then do a \emph{Depth First Search} (henceforth DFS), starting at all the start nodes. Every time a node is reached that is not listed as satisfied and that has not been visited already, a search for proving that literal is initiated. When a node is reached and all of its dependencies (if any) have already been checked and the node is not a fact, its assumed that the literal is not satisfied. The inference engine always answers {\tt true} or {\tt false} to a query, never {\tt unknown/maybe} or something similar.
+A search for a proof is carried out by having a set of start nodes. Our algorithm will then do a \emph{Depth First Search} (henceforth DFS), starting at all the start nodes. Every time a node is reached that is not listed as satisfied and that has not been visited already, a search for proving that literal is initiated. When a node is reached and all of its dependencies (if any) have already been checked and the node is not a fact, its assumed that the literal is not satisfied. The inference engine always answers {\tt true} or {\tt false} to a query, never {\tt unknown/maybe}.
 
 \subsubsection{Direct Proof}
 When conducting the direct proof, we start the search at the literals from the query. All the literals have to be satisfied for the query to be satisfied.
@@ -209,7 +209,7 @@ We do not use any heuristics when performing our search. This is due to several 
 \\
 We wanted to give the nodes coordinates, in such a way that if a node were dependent on another, they were close by. If the nodes had coordinates, that satisfied the triangle inequality we could have used SLD as our heuristic. Unfortunately, we didn't have a proper algorithm for clustering the nodes together, therefore we discarded the idea of using SLD as our heuristic.\\
 \\
-We also tried to give the edges between the nodes weights, where the weight was equal to the amount of literals in the end node. Using $h(0)$ as our heuristic function in combination with the edge weights, we could use A* for searching. Doing so would make the inference engine prioritize paths that had the least amount of literals to be checked. We did some benchmarking, but it showed that just doing a normal DFS instead was faster or at least as fast, as using A*. Therefore we decided not to include any heuristics in our search.
+We also tried to give the edges between the nodes weights, where the weight was equal to the amount of literals in the end node. Using $h(0)$ as our heuristic function in combination with the edge weights, we could use A* for searching. Doing so would make the inference engine prioritize paths that had the least amount of literals to be checked. We did some benchmarking, but it showed that doing a normal DFS instead was at least as fast, as using A*. Therefore we decided not to include any heuristics in our search.
 
 \subsection{Example Run}
 Running our inference engine on data set '\nameref{subsec:simplesamp}' (see \ref{subsec:simplesamp}), we get the following results querying for '{\tt q}':
@@ -282,9 +282,9 @@ Below are some of the data sets we used for testing.
 
 \clearpage
  
-\section{Knowledge Base Illustrations}
+\section{Knowledge Base Illustration}
 \label{sec:illustration}
-Below are some illustrations of the graphs used by the knowledge base. The illustrations are generated using Graphviz\footnote{Graphviz - Graph Visualization Software:  \url{http://www.graphviz.org/}.}. The shape of the nodes indicate what kind of node they are, rectangular nodes are {\tt AND} nodes, circular nodes are {\tt OR} nodes. The color of the nodes indicate whether or not the nodes are facts, a {\tt grey} or {\tt yellow} node is not known to be a fact, a {\tt blue} or {\tt green} node is known to be a fact.
+Below is an illustration of the graph used by the knowledge base. The illustration is generated using Graphviz\footnote{Graphviz - Graph Visualization Software:  \url{http://www.graphviz.org/}.}. The shape of the nodes indicate what kind of node they are, rectangular nodes are {\tt AND} nodes, circular nodes are {\tt OR} nodes. The color of the nodes indicate whether or not the nodes are facts, a {\tt grey} or {\tt yellow} node is not known to be a fact, a {\tt blue} or {\tt green} node is known to be a fact.
 
 \subsection{Breakfast Example}
 The example below is build upon the data set '\nameref{subsec:breakfastsamp}' (see \ref{subsec:breakfastsamp}).\\
