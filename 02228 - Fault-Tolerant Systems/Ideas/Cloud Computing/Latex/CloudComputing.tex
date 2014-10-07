@@ -1,0 +1,86 @@
+\documentclass[11pt]{report}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{titling}
+\usepackage{fancyhdr}
+\usepackage{enumerate}
+\usepackage{latexsym}
+\usepackage{float}
+\usepackage[labelfont=bf]{caption}
+\usepackage[usenames,dvipsnames,svgnames,table]{xcolor}
+\usepackage{listings}
+\usepackage{hyperref}
+\parindent=0pt
+%\frenchspacing
+
+\pagestyle{fancy}
+
+\fancyhead[L]{\slshape\footnotesize October 7, 2014\\\textsc{02228 Fault-Tolerant Systems}}
+\fancyhead[R]{\slshape\footnotesize \textsc{Andreas Kjeldsen (s092638)}\\\textsc{Morten Eskesen (s133304)}}
+\fancyfoot[C]{\thepage}
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
+
+\begin{document}
+
+\begin{titlepage}
+\begin{center}
+
+\includegraphics[scale=2.0]{../GFX/dtu_logo.pdf}\\[1cm]
+\textsc{\LARGE Technical University of Denmark}\\[1.5cm]
+\textsc{\Large 02228 Fault-Tolerant Systems}\\[0.5cm]
+
+% Title
+\HRule \\[0.4cm]
+{\huge \bfseries Fault-Tolerant Cloud Computing Architectures}\\[0.1cm]
+\HRule \\[1.5cm]
+
+% Author and supervisor
+{\large
+\emph{Authors:} \\[10pt]
+Andreas Hallberg \textsc{Kjeldsen}\\
+\emph{s092638@student.dtu.dk} \\[10pt]
+Morten Chabert \textsc{Eskesen}\\
+\emph{s133304@student.dtu.dk}
+}
+\vfill
+
+% Bottom of the page
+{\large October 7, 2014}
+
+\end{center}
+\end{titlepage}
+
+\chapter{Introduction}
+In this report we will describe what cloud computing is, further we will give a detailed description of the architecture and fault-tolerant features of two cloud system, at last we will compare how the systems handle failures and discuss the pros and cons of these methods. As a result of the comparison, we will be able to conclude on what the systems do well and where they might be able to improve.
+
+\section{Scope}
+We will focus on the fault-tolerant features of the cloud computing architecture within the two selected cloud systems (Amazon Web Services and Google Cluster).
+
+\section{Cloud Computing}
+Brief description of what cloud computing is...
+
+\chapter{Amazon Web Services}
+The Amazon Web Services, henceforth \emph{AWS}....
+
+\section{Architecture}
+\section{Fault-Tolerant Features}
+
+\chapter{Google Cluster}
+\section{Architecture}
+\section{Fault-Tolerant Features}
+
+\chapter{Comparison of Failure Handling}
+List of faults that the systems handle along with a description of how it's handled and why it works. If the methods for handling the failure differ, we will discuss the methods, highlighting their pros and cons.
+
+\chapter{Conclusion}
+Conclude on our findings, focus on what the systems do well and where it might be possible to improve.
+
+\begin{thebibliography}{99}
+
+\bibitem{AWS_ac_ra_ftha_04}
+	AWS Reference Architectures, \emph{Fault Tolerance \& High Availability}, 2014.
+	\url{http://media.amazonwebservices.com/architecturecenter/AWS_ac_ra_ftha_04.pdf}
+
+\end{thebibliography}
+
+\end{document}
