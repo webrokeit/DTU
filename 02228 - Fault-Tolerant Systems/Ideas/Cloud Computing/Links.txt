@@ -1,1 +1,3 @@
 http://aws.amazon.com/architecture/
+
+http://www.slideshare.net/nakov/cloud-for-developers-azure-vs-google-app-engine-vs-amazon-vs-appharbor
