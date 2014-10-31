@@ -3,3 +3,28 @@ Practice performing core exercises correctly to avoid injuries.
 - Squat
 - Deadlift
 - Military Press/Weightlifting Press
+
+Flappy Bird
+- Jump to make the bird go up
+- Height of jump reflects height bird increases with
+- Helps with exercise, pulse and motor skills
+
+2048
+- Different movements for moving the blocks in a direction, movements should rotate every now and then
+- Time the game so performing movements quicker grants better score
+
+Temple Run
+- Step to move
+- “Monster” trying to catch you
+- Jump over obstacles, duck under obstacles, move from side to side to catch coins/avoid holes
+
+Jump’n’Duck
+- Jump over obstacles
+- Duck under obstacles
+- Varying placement of the obstacles, requiring different height in jumps etc.
+
+Crossword/Sudoku
+- Letters/numbers available in the bottom, player has to bend down, pick up letter and put it in place
+
+GuitarHero clone
+- Tap boxes/node at specific times
