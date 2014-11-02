@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+	<Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+	<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+	<ProductVersion>10.0.20506</ProductVersion>
+	<SchemaVersion>2.0</SchemaVersion>
+	<ProjectGuid>{6311E6C6-0A20-383B-320B-694068DE37A5}</ProjectGuid>
+	<OutputType>Library</OutputType>
+	<AppDesignerFolder>Properties</AppDesignerFolder>
+	<RootNamespace></RootNamespace>
+	<AssemblyName>Assembly-CSharp-Editor</AssemblyName>
+	<TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+	<FileAlignment>512</FileAlignment>
+	<BaseDirectory>Assets</BaseDirectory>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+	<DebugSymbols>true</DebugSymbols>
+	<DebugType>full</DebugType>
+	<Optimize>false</Optimize>
+	<OutputPath>Temp\bin\Debug\</OutputPath>
+	<DefineConstants>DEBUG;TRACE;UNITY_4_5_4;UNITY_4_5;UNITY_STANDALONE_WIN;ENABLE_MICROPHONE;ENABLE_TEXTUREID_MAP;ENABLE_UNITYEVENTS;ENABLE_NEW_HIERARCHY ;ENABLE_AUDIO_FMOD;UNITY_STANDALONE;ENABLE_MONO;ENABLE_TERRAIN;ENABLE_SUBSTANCE;ENABLE_GENERICS;INCLUDE_WP8SUPPORT;ENABLE_MOVIES;ENABLE_WWW;ENABLE_IMAGEEFFECTS;INCLUDE_WP_BLUE_SUPPORT;ENABLE_WEBCAM;INCLUDE_METROSUPPORT;RENDER_SOFTWARE_CURSOR;ENABLE_NETWORK;ENABLE_PHYSICS;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_2D_PHYSICS;ENABLE_SHADOWS;ENABLE_AUDIO;ENABLE_NAVMESH_CARVING;ENABLE_DUCK_TYPING;ENABLE_SINGLE_INSTANCE_BUILD_SETTING;ENABLE_PROFILER;UNITY_EDITOR;UNITY_EDITOR_WIN</DefineConstants>
+	<ErrorReport>prompt</ErrorReport>
+	<WarningLevel>4</WarningLevel>
+	<NoWarn>0169</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+	<DebugType>pdbonly</DebugType>
+	<Optimize>true</Optimize>
+	<OutputPath>Temp\bin\Release\</OutputPath>
+	<DefineConstants>TRACE</DefineConstants>
+	<ErrorReport>prompt</ErrorReport>
+	<WarningLevel>4</WarningLevel>
+	<NoWarn>0169</NoWarn>
+  </PropertyGroup>
+  <ItemGroup>
+	<Reference Include="System" />
+    <Reference Include="System.XML" />
+	<Reference Include="System.Core" />
+	<Reference Include="System.Xml.Linq" />
+	<Reference Include="UnityEngine">
+	  <HintPath>C:/Program Files (x86)/Unity/Editor/Data/Managed/UnityEngine.dll</HintPath>
+	</Reference>
+	<Reference Include="UnityEditor">
+	  <HintPath>C:/Program Files (x86)/Unity/Editor/Data/Managed/UnityEditor.dll</HintPath>
+	</Reference>
+  </ItemGroup>
+  <ItemGroup>
+     <Compile Include="Assets\UMA\Editor\BRDFLookupTextureInspector.cs" />
+     <Compile Include="Assets\UMA\Editor\CharacterBaseEditor.cs" />
+     <Compile Include="Assets\UMA\Editor\CodeGenTemplate.cs" />
+     <Compile Include="Assets\UMA\Editor\CreateCleanAnimationMenu.cs" />
+     <Compile Include="Assets\UMA\Editor\DictionaryCustomFormatter.cs" />
+     <Compile Include="Assets\UMA\Editor\OverlayLibraryEditor.cs" />
+     <Compile Include="Assets\UMA\Editor\RecipeEditor.cs" />
+     <Compile Include="Assets\UMA\Editor\SlotLibraryEditor.cs" />
+     <Compile Include="Assets\UMA\Editor\UMAAssetCollectionEditor.cs" />
+     <Compile Include="Assets\UMA\Editor\UMAAvatarLoadSaveMenuItems.cs" />
+     <Compile Include="Assets\UMA\Editor\UMACrowdRandomSetEditor.cs" />
+     <Compile Include="Assets\UMA\Editor\UMACrowdRandomSetPropertyDrawers.cs" />
+     <Compile Include="Assets\UMA\Editor\UMADNAHelperTools.cs" />
+     <Compile Include="Assets\UMA\Editor\UMADataEditor.cs" />
+     <Compile Include="Assets\UMA\Editor\UMAEditorGenerator.cs" />
+     <Compile Include="Assets\UMA\Editor\UMASaveToolEditor.cs" />
+     <Compile Include="Assets\UMA\UMA_Project\Scripts\Editor\GUIHelper.cs" />
+     <None Include="Assets\UMA\Editor\Templates\UmaDna_Save_Fragment.cs.txt" />
+     <None Include="Assets\UMA\Editor\Templates\UmaDnaChild_GetIndex_Fragment.cs.txt" />
+     <None Include="Assets\UMA\Editor\Templates\UmaDnaChild_GetNames_Fragment.cs.txt" />
+     <None Include="Assets\UMA\UMA_Project\Shaders\UnLogickShaders\Debug_Normals.shader" />
+     <None Include="Assets\UMA\UMA_Project\Shaders\UnLogickShaders\Human-Normal-Diffuse-Metallic.shader" />
+     <None Include="Assets\Skyboxes\_skybox info.txt" />
+     <None Include="Assets\UMA\UMA_Project\Shaders\UnLogickShaders\Human-Normal-Diffuse.shader" />
+     <None Include="Assets\UMA\UMA_Project\Shaders\CombineTexture.shader" />
+     <None Include="Assets\UMA\Editor\Templates\UmaDna_Template.cs.txt" />
+     <None Include="Assets\UMA\_ReleaseNotes.txt" />
+     <None Include="Assets\UMA\Editor\Templates\UmaDnaChild_Byte_FromDna_Fragment.cs.txt" />
+     <None Include="Assets\UMA\Editor\Templates\UmaDnaChild_Byte_Fields_Fragment.cs.txt" />
+     <None Include="Assets\UMA\UMA_Project\Shaders\TransparentTwoSided.shader" />
+     <None Include="Assets\UMA\Editor\Templates\UmaDna_GetNames_Fragment.cs.txt" />
+     <None Include="Assets\UMA\UMA_Project\Shaders\UnLogickShaders\AtlasShader.shader" />
+     <None Include="Assets\UMA\Editor\Templates\UmaDna_GetType_Fragment.cs.txt" />
+     <None Include="Assets\UMA\Editor\Templates\UmaDna_GetTypes_Fragment.cs.txt" />
+     <None Include="Assets\UMA\Editor\Templates\UmaDnaChild_Template.cs.txt" />
+     <None Include="Assets\UMA\UMA_Project\Shaders\Normal-BumpSpec.shader" />
+     <None Include="Assets\UMA\UMA_Project\Shaders\UnLogickShaders\Debug_Tangents.shader" />
+     <None Include="Assets\UMA\Editor\Templates\UmaDnaChild_Byte_ToDna_Fragment.cs.txt" />
+     <None Include="Assets\UMA\Editor\Templates\UmaDna_Load_Fragment.cs.txt" />
+     <None Include="Assets\UMA\Editor\Templates\UmaDnaChild_SetIndex_Fragment.cs.txt" />
+     <None Include="Assets\UMA\Editor\Templates\UmaDnaChild_SetValue_Fragment.cs.txt" />
+     <None Include="Assets\UMA\UMA_Project\Shaders\Rim.shader" />
+     <None Include="Assets\UMA\UMA_Project\Shaders\Normal-BumpSpec_Rim.shader" />
+     <None Include="Assets\UMA\Editor\Templates\UmaDnaChild_GetValue_Fragment.cs.txt" />
+     <None Include="Assets\UMA\UMA_Project\DLL\DLL Source Code.txt" />
+ <Reference Include="LitJson">
+ <HintPath>C:/Git/DTU/02515 - Healthcare Technology/Duck and Jump/Unity/Assets/UMA/UMA_Project/DLL/LitJson.dll</HintPath>
+ </Reference>
+ <Reference Include="UMA">
+ <HintPath>C:/Git/DTU/02515 - Healthcare Technology/Duck and Jump/Unity/Assets/UMA/UMA_Project/DLL/UMA.dll</HintPath>
+ </Reference>
+ <Reference Include="Editor.ReorderableList">
+ <HintPath>C:/Git/DTU/02515 - Healthcare Technology/Duck and Jump/Unity/Assets/UMA/UMA_Project/DLL/Editor/Editor.ReorderableList.dll</HintPath>
+ </Reference>
+ <Reference Include="UMAEditor">
+ <HintPath>C:/Git/DTU/02515 - Healthcare Technology/Duck and Jump/Unity/Assets/UMA/UMA_Project/DLL/Editor/UMAEditor.dll</HintPath>
+ </Reference>
+ <Reference Include="UnityEditor.Graphs">
+ <HintPath>C:/Program Files (x86)/Unity/Editor/Data/Managed/UnityEditor.Graphs.dll</HintPath>
+ </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="Assembly-CSharp.csproj">
+      <Project>{CD8C9303-404B-FB8D-6B9B-21988D5CAC0A}</Project>      <Name>Assembly-CSharp</Name>    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+	   Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  
+</Project>
