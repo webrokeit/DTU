@@ -46,6 +46,7 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\Managers\GameEventManager.cs" />
      <Compile Include="Assets\Platform\PlatformManager.cs" />
      <Compile Include="Assets\Runner\Runner.cs" />
      <Compile Include="Assets\Scripts\BrainScript.cs" />
