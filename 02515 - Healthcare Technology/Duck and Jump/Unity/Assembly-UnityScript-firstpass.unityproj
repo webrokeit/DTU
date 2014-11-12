@@ -19,7 +19,7 @@
 	<DebugType>full</DebugType>
 	<Optimize>false</Optimize>
 	<OutputPath>Temp\bin\Debug\</OutputPath>
-	<DefineConstants>DEBUG;TRACE;UNITY_4_5_4;UNITY_4_5;UNITY_STANDALONE_WIN;ENABLE_MICROPHONE;ENABLE_TEXTUREID_MAP;ENABLE_UNITYEVENTS;ENABLE_NEW_HIERARCHY ;ENABLE_AUDIO_FMOD;UNITY_STANDALONE;ENABLE_MONO;ENABLE_TERRAIN;ENABLE_SUBSTANCE;ENABLE_GENERICS;INCLUDE_WP8SUPPORT;ENABLE_MOVIES;ENABLE_WWW;ENABLE_IMAGEEFFECTS;INCLUDE_WP_BLUE_SUPPORT;ENABLE_WEBCAM;INCLUDE_METROSUPPORT;RENDER_SOFTWARE_CURSOR;ENABLE_NETWORK;ENABLE_PHYSICS;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_2D_PHYSICS;ENABLE_SHADOWS;ENABLE_AUDIO;ENABLE_NAVMESH_CARVING;ENABLE_DUCK_TYPING;ENABLE_SINGLE_INSTANCE_BUILD_SETTING;ENABLE_PROFILER;UNITY_EDITOR;UNITY_EDITOR_WIN</DefineConstants>
+	<DefineConstants>DEBUG;TRACE;UNITY_4_5_5;UNITY_4_5;UNITY_STANDALONE_WIN;ENABLE_MICROPHONE;ENABLE_TEXTUREID_MAP;ENABLE_UNITYEVENTS;ENABLE_NEW_HIERARCHY ;ENABLE_AUDIO_FMOD;UNITY_STANDALONE;ENABLE_MONO;ENABLE_TERRAIN;ENABLE_SUBSTANCE;ENABLE_GENERICS;INCLUDE_WP8SUPPORT;ENABLE_MOVIES;ENABLE_WWW;ENABLE_IMAGEEFFECTS;INCLUDE_WP_BLUE_SUPPORT;ENABLE_WEBCAM;INCLUDE_METROSUPPORT;RENDER_SOFTWARE_CURSOR;ENABLE_NETWORK;ENABLE_PHYSICS;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_2D_PHYSICS;ENABLE_SHADOWS;ENABLE_AUDIO;ENABLE_NAVMESH_CARVING;ENABLE_DUCK_TYPING;ENABLE_SINGLE_INSTANCE_BUILD_SETTING;ENABLE_PROFILER;UNITY_EDITOR;UNITY_EDITOR_WIN</DefineConstants>
 	<ErrorReport>prompt</ErrorReport>
 	<WarningLevel>4</WarningLevel>
 	<NoWarn>0169</NoWarn>
@@ -46,52 +46,10 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\Standard Assets\Character Controllers\Sources\Scripts\CharacterMotor.js" />
-     <Compile Include="Assets\Standard Assets\Character Controllers\Sources\Scripts\FPSInputController.js" />
-     <Compile Include="Assets\Standard Assets\Character Controllers\Sources\Scripts\PlatformInputController.js" />
-     <Compile Include="Assets\Standard Assets\Character Controllers\Sources\Scripts\ThirdPersonCamera.js" />
-     <Compile Include="Assets\Standard Assets\Character Controllers\Sources\Scripts\ThirdPersonController.js" />
      <Compile Include="Assets\Standard Assets\Particles\Legacy Particles\TimedObjectDestructor.js" />
-     <Compile Include="Assets\Standard Assets\Scripts\Camera Scripts\MouseOrbit.js" />
-     <Compile Include="Assets\Standard Assets\Scripts\Camera Scripts\SmoothFollow.js" />
-     <Compile Include="Assets\Standard Assets\Scripts\Camera Scripts\SmoothLookAt.js" />
-     <Compile Include="Assets\Standard Assets\Scripts\General Scripts\DragRigidbody.js" />
-     <None Include="Assets\UMA\Editor\Templates\UmaDna_Save_Fragment.cs.txt" />
-     <None Include="Assets\UMA\Editor\Templates\UmaDnaChild_GetIndex_Fragment.cs.txt" />
-     <None Include="Assets\UMA\Editor\Templates\UmaDnaChild_GetNames_Fragment.cs.txt" />
-     <None Include="Assets\UMA\UMA_Project\Shaders\UnLogickShaders\Debug_Normals.shader" />
-     <None Include="Assets\UMA\UMA_Project\Shaders\UnLogickShaders\Human-Normal-Diffuse-Metallic.shader" />
      <None Include="Assets\Standard Assets\Particles\Sources\Shaders\Particle Alpha Blend (Queue +100).shader" />
+     <None Include="Assets\Plugins\README.txt" />
      <None Include="Assets\Skyboxes\_skybox info.txt" />
-     <None Include="Assets\UMA\UMA_Project\Shaders\UnLogickShaders\Human-Normal-Diffuse.shader" />
-     <None Include="Assets\UMA\UMA_Project\Shaders\CombineTexture.shader" />
-     <None Include="Assets\UMA\Editor\Templates\UmaDna_Template.cs.txt" />
-     <None Include="Assets\UMA\_ReleaseNotes.txt" />
-     <None Include="Assets\UMA\Editor\Templates\UmaDnaChild_Byte_FromDna_Fragment.cs.txt" />
-     <None Include="Assets\UMA\Editor\Templates\UmaDnaChild_Byte_Fields_Fragment.cs.txt" />
-     <None Include="Assets\UMA\UMA_Project\Shaders\TransparentTwoSided.shader" />
-     <None Include="Assets\UMA\Editor\Templates\UmaDna_GetNames_Fragment.cs.txt" />
-     <None Include="Assets\UMA\UMA_Project\Shaders\UnLogickShaders\AtlasShader.shader" />
-     <None Include="Assets\Standard Assets\Water (Basic)\Sources\Shaders\FX-Water Simple.shader" />
-     <None Include="Assets\UMA\Editor\Templates\UmaDna_GetType_Fragment.cs.txt" />
-     <None Include="Assets\UMA\Editor\Templates\UmaDna_GetTypes_Fragment.cs.txt" />
-     <None Include="Assets\UMA\Editor\Templates\UmaDnaChild_Template.cs.txt" />
-     <None Include="Assets\UMA\UMA_Project\Shaders\Normal-BumpSpec.shader" />
-     <None Include="Assets\UMA\UMA_Project\Shaders\UnLogickShaders\Debug_Tangents.shader" />
-     <None Include="Assets\UMA\Editor\Templates\UmaDnaChild_Byte_ToDna_Fragment.cs.txt" />
-     <None Include="Assets\UMA\Editor\Templates\UmaDna_Load_Fragment.cs.txt" />
-     <None Include="Assets\UMA\Editor\Templates\UmaDnaChild_SetIndex_Fragment.cs.txt" />
-     <None Include="Assets\UMA\Editor\Templates\UmaDnaChild_SetValue_Fragment.cs.txt" />
-     <None Include="Assets\UMA\UMA_Project\Shaders\Rim.shader" />
-     <None Include="Assets\UMA\UMA_Project\Shaders\Normal-BumpSpec_Rim.shader" />
-     <None Include="Assets\UMA\Editor\Templates\UmaDnaChild_GetValue_Fragment.cs.txt" />
-     <None Include="Assets\UMA\UMA_Project\DLL\DLL Source Code.txt" />
- <Reference Include="LitJson">
- <HintPath>C:/Git/DTU/02515 - Healthcare Technology/Duck and Jump/Unity/Assets/UMA/UMA_Project/DLL/LitJson.dll</HintPath>
- </Reference>
- <Reference Include="UMA">
- <HintPath>C:/Git/DTU/02515 - Healthcare Technology/Duck and Jump/Unity/Assets/UMA/UMA_Project/DLL/UMA.dll</HintPath>
- </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

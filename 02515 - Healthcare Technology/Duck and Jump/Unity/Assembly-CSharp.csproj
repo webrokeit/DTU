@@ -19,7 +19,7 @@
 	<DebugType>full</DebugType>
 	<Optimize>false</Optimize>
 	<OutputPath>Temp\bin\Debug\</OutputPath>
-	<DefineConstants>DEBUG;TRACE;UNITY_4_5_3;UNITY_4_5;UNITY_STANDALONE_WIN;ENABLE_MICROPHONE;ENABLE_TEXTUREID_MAP;ENABLE_UNITYEVENTS;ENABLE_NEW_HIERARCHY ;ENABLE_AUDIO_FMOD;UNITY_STANDALONE;ENABLE_MONO;ENABLE_TERRAIN;ENABLE_SUBSTANCE;ENABLE_GENERICS;INCLUDE_WP8SUPPORT;ENABLE_MOVIES;ENABLE_WWW;ENABLE_IMAGEEFFECTS;INCLUDE_WP_BLUE_SUPPORT;ENABLE_WEBCAM;INCLUDE_METROSUPPORT;RENDER_SOFTWARE_CURSOR;ENABLE_NETWORK;ENABLE_PHYSICS;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_2D_PHYSICS;ENABLE_SHADOWS;ENABLE_AUDIO;ENABLE_NAVMESH_CARVING;ENABLE_DUCK_TYPING;ENABLE_SINGLE_INSTANCE_BUILD_SETTING;ENABLE_PROFILER;UNITY_EDITOR;UNITY_EDITOR_WIN</DefineConstants>
+	<DefineConstants>DEBUG;TRACE;UNITY_4_5_5;UNITY_4_5;UNITY_STANDALONE_WIN;ENABLE_MICROPHONE;ENABLE_TEXTUREID_MAP;ENABLE_UNITYEVENTS;ENABLE_NEW_HIERARCHY ;ENABLE_AUDIO_FMOD;UNITY_STANDALONE;ENABLE_MONO;ENABLE_TERRAIN;ENABLE_SUBSTANCE;ENABLE_GENERICS;INCLUDE_WP8SUPPORT;ENABLE_MOVIES;ENABLE_WWW;ENABLE_IMAGEEFFECTS;INCLUDE_WP_BLUE_SUPPORT;ENABLE_WEBCAM;INCLUDE_METROSUPPORT;RENDER_SOFTWARE_CURSOR;ENABLE_NETWORK;ENABLE_PHYSICS;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_2D_PHYSICS;ENABLE_SHADOWS;ENABLE_AUDIO;ENABLE_NAVMESH_CARVING;ENABLE_DUCK_TYPING;ENABLE_SINGLE_INSTANCE_BUILD_SETTING;ENABLE_PROFILER;UNITY_EDITOR;UNITY_EDITOR_WIN</DefineConstants>
 	<ErrorReport>prompt</ErrorReport>
 	<WarningLevel>4</WarningLevel>
 	<NoWarn>0169</NoWarn>
@@ -46,13 +46,44 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\KinectScripts\AvatarController.cs" />
+     <Compile Include="Assets\KinectScripts\Filters\BoneOrientationsConstraint.cs" />
+     <Compile Include="Assets\KinectScripts\Filters\BoneOrientationsFilter.cs" />
+     <Compile Include="Assets\KinectScripts\Filters\ClippedLegsFilter.cs" />
+     <Compile Include="Assets\KinectScripts\Filters\JointPositionsFilter.cs" />
+     <Compile Include="Assets\KinectScripts\Filters\KinectHelper.cs" />
+     <Compile Include="Assets\KinectScripts\Filters\SelfIntersectionConstraint.cs" />
+     <Compile Include="Assets\KinectScripts\Filters\TimedLerp.cs" />
+     <Compile Include="Assets\KinectScripts\Filters\TrackingStateFilter.cs" />
+     <Compile Include="Assets\KinectScripts\KinectGestures.cs" />
+     <Compile Include="Assets\KinectScripts\KinectManager.cs" />
+     <Compile Include="Assets\KinectScripts\KinectWrapper.cs" />
+     <Compile Include="Assets\KinectScripts\Samples\GetJointPositionDemo.cs" />
+     <Compile Include="Assets\KinectScripts\Samples\LoadMainLevel.cs" />
+     <Compile Include="Assets\KinectScripts\Samples\MouseControl.cs" />
+     <Compile Include="Assets\KinectScripts\Samples\SetSceneAvatars.cs" />
+     <Compile Include="Assets\KinectScripts\Samples\SimpleGestureListener.cs" />
+     <Compile Include="Assets\Managers\GUIManager.cs" />
+     <Compile Include="Assets\Managers\GameEventManager.cs" />
+     <Compile Include="Assets\OverlayDemo\Scripts\KinectJointTracker.cs" />
+     <Compile Include="Assets\OverlayDemo\Scripts\KinectOverlayer.cs" />
      <Compile Include="Assets\Platform\PlatformManager.cs" />
      <Compile Include="Assets\Runner\Runner.cs" />
+     <Compile Include="Assets\Scripts\BrainScript.cs" />
      <Compile Include="Assets\Scripts\DangerousObjectManagerScript.cs" />
+     <Compile Include="Assets\Scripts\JointPositioner.cs" />
+     <Compile Include="Assets\Scripts\KUInterface.cs" />
+     <Compile Include="Assets\Scripts\LimbPositioner.cs" />
      <Compile Include="Assets\Scripts\MovingObjectScript.cs" />
      <Compile Include="Assets\Scripts\PersonaControl.cs" />
      <Compile Include="Assets\Skyline\SkylineManager.cs" />
+     <None Include="Assets\Standard Assets\Particles\Sources\Shaders\Particle Alpha Blend (Queue +100).shader" />
+     <None Include="Assets\Plugins\README.txt" />
      <None Include="Assets\Skyboxes\_skybox info.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="Assembly-UnityScript-firstpass.unityproj">
+      <Project>{4464F9EF-777D-E971-944B-0D2B43AA417D}</Project>      <Name>Assembly-UnityScript-firstpass</Name>    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
