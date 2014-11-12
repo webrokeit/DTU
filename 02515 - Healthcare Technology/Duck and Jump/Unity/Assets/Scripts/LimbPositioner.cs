@@ -1,9 +1,9 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 public class LimbPositioner : MonoBehaviour {
 	
-	public KUInterface Kinect;
+	/*public KUInterface Kinect;
 	public KinectWrapper.Joints FromJoint;
 	public KinectWrapper.Joints ToJoint;
 	
@@ -44,5 +44,5 @@ public class LimbPositioner : MonoBehaviour {
 		//Scale so we reach the points
 		transform.localScale = new Vector3(1,1,armLength);
 	
-	}
+	}*/
 }

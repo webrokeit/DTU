@@ -19,7 +19,6 @@ using System.Collections;
 /// Kinect method access
 /// </summary>
 public class KUInterface : MonoBehaviour {
-
     //public variables
     /// <summary>
     /// scales all joint positions by given amount. Do not set to zero.
@@ -51,8 +50,8 @@ public class KUInterface : MonoBehaviour {
     public bool displayDepthImage = false;
 
     //constants
-    private const int IM_W = 640;
-    private const int IM_H = 480;
+    public const int ColorImageWidth = 640;
+    public const int ColorImageHeight = 480;
 
     //private variables
     private bool NUIisReady = false;
@@ -65,6 +64,9 @@ public class KUInterface : MonoBehaviour {
     private Texture2D depthImg;
     private short[][] depth;
 
+	public bool IsCameryReady {
+		get{ return NUIisReady; }
+	}
 
 /********************************************************************************
 *           USER METHODS -> Call these methods from your scripts
@@ -101,9 +103,50 @@ public class KUInterface : MonoBehaviour {
         return GetJointPos(1, joint);
     }
 
+	public bool IsJointTracked(int player, KinectWrapper.Joints joint) {
+		return !GetJointPos(player, joint).Equals (Vector3.zero);
+	}
 
-    /// <summary>
-    /// gets color texture image from Kinect RGB camera
+	public bool IsJointTracked(KinectWrapper.Joints joint) {
+		return IsJointTracked (1, joint);
+	}
+
+	public bool IsUserDetected(){
+		return IsJointTracked (1, KinectWrapper.Joints.HIP_CENTER) && IsJointTracked (1, KinectWrapper.Joints.SHOULDER_CENTER);
+	}
+
+	public Vector2 GetDepthMapPosForJointPos(int player, KinectWrapper.Joints joint){
+		var pos3 = GetJointPos (player, joint);
+		var pos2 = new Vector2 (pos3.x, pos3.y);
+		return pos2;
+	}
+
+	public Vector2 GetDepthMapPosForJointPos(KinectWrapper.Joints joint){
+		return GetDepthMapPosForJointPos (1, joint);
+	}
+
+	public Vector2 GetColorMapPosForDepthPos(Vector2 posDepth) {
+		int cx, cy;
+		
+		KinectWrapper.NuiImageViewArea pcViewArea = new KinectWrapper.NuiImageViewArea 
+		{
+			eDigitalZoom = 0,
+			lCenterX = 0,
+			lCenterY = 0
+		};
+		
+		KinectWrapper.NuiImageGetColorPixelCoordinatesFromDepthPixelAtResolution(
+			KinectWrapper.Constants.ColorImageResolution,
+			KinectWrapper.Constants.DepthImageResolution,
+			ref pcViewArea,
+			(int)posDepth.x, (int)posDepth.y, GetDepthForPixel((int)posDepth.x, (int)posDepth.y),
+			out cx, out cy);
+		
+		return new Vector2(cx, cy);
+	}
+	
+	/// <summary>
+	/// gets color texture image from Kinect RGB camera
     /// </summary>
     /// <returns>RGB image</returns>
     public Texture2D GetTextureImage() {
@@ -180,16 +223,16 @@ public class KUInterface : MonoBehaviour {
             Debug.Log("WARNING: KUInterface.scaleFactor is set to zero. All joint positions will be the zero vector.");
 
         //set up image memory
-        seqTex = new byte[IM_W * IM_H * 4];
-        cols = new Color32[IM_W * IM_H];
-        texture = new Texture2D(IM_W, IM_H);
+        seqTex = new byte[ColorImageWidth * ColorImageHeight * 4];
+        cols = new Color32[ColorImageWidth * ColorImageHeight];
+        texture = new Texture2D(ColorImageWidth, ColorImageHeight);
 
-        seqDepth = new byte[IM_W * IM_H * 2];
-        dcols = new Color32[IM_W * IM_H];
-        depthImg = new Texture2D(IM_W, IM_H);
-        depth = new short[IM_W][];
+        seqDepth = new byte[ColorImageWidth * ColorImageHeight * 2];
+        dcols = new Color32[ColorImageWidth * ColorImageHeight];
+        depthImg = new Texture2D(ColorImageWidth, ColorImageHeight);
+        depth = new short[ColorImageWidth][];
         for (int i = 0; i < depth.Length; i++) {
-            depth[i] = new short[IM_H];
+            depth[i] = new short[ColorImageHeight];
         }
     }
 
@@ -212,12 +255,10 @@ public class KUInterface : MonoBehaviour {
             KinectWrapper.NuiUpdate();
 
             //update RGB texture
-            if (useRGB)
-                UpdateTextureImage();
+            if (useRGB) UpdateTextureImage();
 
             //update Depth data
-            if (useDepth)
-                UpdateDepth();
+            if (useDepth) UpdateDepth();
         }
     }
 
@@ -226,22 +267,22 @@ public class KUInterface : MonoBehaviour {
     private void UpdateTextureImage() {
 
         int size = 0;
+		var bytes = ColorImageWidth * ColorImageHeight * 4;
 
         //copy pixel data from unmanaged memory
         IntPtr ptr = KinectWrapper.GetTextureImage(ref size);
 
-        if (ptr != IntPtr.Zero)
-        {
+        if (ptr != IntPtr.Zero) {
             Marshal.Copy(ptr, seqTex, 0, size);
             //Debug.Log(size.ToString());
 
             //create color matrix
-            for (int i = 0; i < (IM_W * IM_H * 4); i += 4)
-            {
-                cols[(IM_W * IM_H) - (i / 4) - 1] = new Color32(seqTex[i + 2], seqTex[i + 1], seqTex[i], 255);
-            }
-
-            //set texture
+			for (int i = 0; i < bytes; i += 4) {
+				//cols[(IM_W * IM_H) - (i / 4) - 1] = new Color32(seqTex[i + 2], seqTex[i + 1], seqTex[i], 255);
+				cols[i/4] = new Color32(seqTex[i + 2], seqTex[i + 1], seqTex[i], 255);
+			}
+			
+			//set texture
             texture.SetPixels32(cols);
             texture.Apply();
         }
@@ -261,22 +302,22 @@ public class KUInterface : MonoBehaviour {
             Marshal.Copy(ptr, seqDepth, 0, size);
 
             //create depth array
-            for (int x = 0; x < IM_W; x++)
+            for (int x = 0; x < ColorImageWidth; x++)
             {
-                for (int y = 0; y < IM_H; y++)
+                for (int y = 0; y < ColorImageHeight; y++)
                 {
-                    depth[IM_W - x - 1][IM_H - y - 1] = BitConverter.ToInt16(seqDepth, (x*2)+(y*IM_W*2));
+                    depth[ColorImageWidth - x - 1][ColorImageHeight - y - 1] = BitConverter.ToInt16(seqDepth, (x*2)+(y*ColorImageWidth*2));
                 }
             }
 
             if (displayDepthImage)
             {
                 //create color matrix as bytes (loops resolution)
-                for (int x = 0; x < IM_W; x++)
+                for (int x = 0; x < ColorImageWidth; x++)
                 {
-                    for (int y = 0; y < IM_H; y++)
+                    for (int y = 0; y < ColorImageHeight; y++)
                     {
-                        dcols[x + (y * IM_W)] = new Color32((byte)depth[x][y], (byte)depth[x][y], (byte)depth[x][y], 255);
+                        dcols[x + (y * ColorImageWidth)] = new Color32((byte)depth[x][y], (byte)depth[x][y], (byte)depth[x][y], 255);
                     }
                 }
 
@@ -307,12 +348,12 @@ public class KUInterface : MonoBehaviour {
 
         if (displayTextureImage && useRGB && NUIisReady) {
             //scaled to half-res
-            GUI.DrawTexture(new Rect(600, 50, IM_W / 2, IM_H / 2), texture, ScaleMode.ScaleToFit, false);
+            GUI.DrawTexture(new Rect(600, 50, ColorImageWidth / 2, ColorImageHeight / 2), texture, ScaleMode.ScaleToFit, false);
         }
 
         if (displayDepthImage && useDepth && NUIisReady) {
             //scaled to half-res
-            GUI.DrawTexture(new Rect(600, 300, IM_W / 2, IM_H / 2), depthImg, ScaleMode.ScaleToFit, false);
+            GUI.DrawTexture(new Rect(600, 300, ColorImageWidth / 2, ColorImageHeight / 2), depthImg, ScaleMode.ScaleToFit, false);
         }
     }
 
