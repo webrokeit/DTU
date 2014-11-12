@@ -22,7 +22,7 @@ public class DangerousObjectManagerScript : MonoBehaviour {
     public float IncrementMovingSpeed = 0.75f;
     private float _movingSpeed;
 
-    private int _objectsPassed = 0;
+    public int ObjectsPassed = 0;
     private readonly Queue<MovingObjectScript> _startingObjects = new Queue<MovingObjectScript>();
     private readonly Queue<MovingObjectScript> _endingObjects = new Queue<MovingObjectScript>();
 
@@ -53,7 +53,7 @@ public class DangerousObjectManagerScript : MonoBehaviour {
 	    if (_endingObjects.Count > 0 && _endingObjects.Peek().transform.localPosition.z < EndSpot.transform.localPosition.z) {
 	        var obj = _endingObjects.Dequeue();
 	        Destroy(obj.gameObject);
-	        _objectsPassed++;
+	        ObjectsPassed++;
 	    }
 	}
 
