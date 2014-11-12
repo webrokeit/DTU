@@ -48,11 +48,19 @@
   <ItemGroup>
      <Compile Include="Assets\Platform\PlatformManager.cs" />
      <Compile Include="Assets\Runner\Runner.cs" />
+     <Compile Include="Assets\Scripts\BrainScript.cs" />
      <Compile Include="Assets\Scripts\DangerousObjectManagerScript.cs" />
+     <Compile Include="Assets\Scripts\JointPositioner.cs" />
+     <Compile Include="Assets\Scripts\KUInterface.cs" />
+     <Compile Include="Assets\Scripts\LimbPositioner.cs" />
      <Compile Include="Assets\Scripts\MovingObjectScript.cs" />
      <Compile Include="Assets\Scripts\PersonaControl.cs" />
      <Compile Include="Assets\Skyline\SkylineManager.cs" />
+     <None Include="Assets\Standard Assets\Particles\Sources\Shaders\Particle Alpha Blend (Queue +100).shader" />
      <None Include="Assets\Skyboxes\_skybox info.txt" />
+ <Reference Include="Assembly-UnityScript-firstpass">
+ <HintPath>C:/Git/DTU/02515 - Healthcare Technology/Duck and Jump/Unity/Library/ScriptAssemblies/Assembly-UnityScript-firstpass.dll</HintPath>
+ </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
