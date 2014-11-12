@@ -3,7 +3,6 @@ using System.Collections;
 
 public class KinectOverlayer : MonoBehaviour 
 {
-	public KUInterface KinectInterface;
 	public GUITexture backgroundImage;
 
 	public bool DebugOutput = false;
@@ -12,12 +11,12 @@ public class KinectOverlayer : MonoBehaviour
 	void Start() {}
 	
 	void Update() {
-		var manager = KinectInterface;
+		var manager = KinectManager.Instance;
 		
-		if(manager && manager.IsCameryReady) {
+		if(manager && manager.IsInitialized()) {
 			if(DebugOutput) Debug.Log("Camera is ready!");
 			if(backgroundImage && (backgroundImage.texture == null)) {
-				backgroundImage.texture = manager.GetTextureImage();
+				backgroundImage.texture = manager.GetUsersClrTex();
 			}
 		}
 	}

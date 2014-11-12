@@ -46,6 +46,23 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\KinectScripts\AvatarController.cs" />
+     <Compile Include="Assets\KinectScripts\Filters\BoneOrientationsConstraint.cs" />
+     <Compile Include="Assets\KinectScripts\Filters\BoneOrientationsFilter.cs" />
+     <Compile Include="Assets\KinectScripts\Filters\ClippedLegsFilter.cs" />
+     <Compile Include="Assets\KinectScripts\Filters\JointPositionsFilter.cs" />
+     <Compile Include="Assets\KinectScripts\Filters\KinectHelper.cs" />
+     <Compile Include="Assets\KinectScripts\Filters\SelfIntersectionConstraint.cs" />
+     <Compile Include="Assets\KinectScripts\Filters\TimedLerp.cs" />
+     <Compile Include="Assets\KinectScripts\Filters\TrackingStateFilter.cs" />
+     <Compile Include="Assets\KinectScripts\KinectGestures.cs" />
+     <Compile Include="Assets\KinectScripts\KinectManager.cs" />
+     <Compile Include="Assets\KinectScripts\KinectWrapper.cs" />
+     <Compile Include="Assets\KinectScripts\Samples\GetJointPositionDemo.cs" />
+     <Compile Include="Assets\KinectScripts\Samples\LoadMainLevel.cs" />
+     <Compile Include="Assets\KinectScripts\Samples\MouseControl.cs" />
+     <Compile Include="Assets\KinectScripts\Samples\SetSceneAvatars.cs" />
+     <Compile Include="Assets\KinectScripts\Samples\SimpleGestureListener.cs" />
      <Compile Include="Assets\Managers\GUIManager.cs" />
      <Compile Include="Assets\Managers\GameEventManager.cs" />
      <Compile Include="Assets\OverlayDemo\Scripts\KinectJointTracker.cs" />
