@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Assets.Managers;
+using UnityEngine;
 using System.Collections;
 
 public class JointPositioner : MonoBehaviour {
@@ -12,7 +13,9 @@ public class JointPositioner : MonoBehaviour {
 	
 	// Use this for initialization
 	void Start () {
-
+	    GameEventManager.GameStart += GameStart;
+	    GameEventManager.GameOver += GameOver;
+	    this.enabled = false;
 	}
 	
 	// Update is called once per frame
@@ -30,4 +33,12 @@ public class JointPositioner : MonoBehaviour {
 		transform.localPosition = Kinect.GetJointPos(JointToTrack) - center;
 	
 	}
+
+    private void GameStart() {
+        this.enabled = true;
+    }
+
+    private void GameOver() {
+        this.enabled = false;
+    }
 }

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Assets.Managers;
+using UnityEngine;
 using System.Collections;
 
 public class LimbPositioner : MonoBehaviour {
@@ -13,7 +14,9 @@ public class LimbPositioner : MonoBehaviour {
 	
 	// Use this for initialization
 	void Start () {
-	
+	    GameEventManager.GameStart += GameStart;
+	    GameEventManager.GameOver += GameOver;
+	    this.enabled = false;
 	}
 	
 	// Update is called once per frame
@@ -45,4 +48,12 @@ public class LimbPositioner : MonoBehaviour {
 		transform.localScale = new Vector3(1,1,armLength);
 	
 	}
+
+    private void GameStart() {
+        this.enabled = true;
+    }
+
+    private void GameOver() {
+        this.enabled = false;
+    }
 }

@@ -12,7 +12,9 @@ public class BrainScript : MonoBehaviour {
     private readonly Vector3 _playerResetPosition = new Vector3(0f, 1.235f, 0f);
 
     // Use this for initialization
-    private void Start() {}
+    private void Start() {
+        
+    }
 
     public void Reset() {
         PlayerAvatar.transform.position = _playerResetPosition;

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Assets.Managers;
+using UnityEngine;
 using System.Collections.Generic;
 
 public class PlatformManager : MonoBehaviour {
@@ -16,6 +17,8 @@ public class PlatformManager : MonoBehaviour {
 	private Queue<Transform> objectQueue;
 
 	void Start () {
+	    GameEventManager.GameStart += GameStart;
+	    GameEventManager.GameOver += GameOver;
 		objectQueue = new Queue<Transform>(numberOfObjects);
 		for(int i = 0; i < numberOfObjects; i++){
 			objectQueue.Enqueue((Transform)Instantiate(prefab));
@@ -62,4 +65,12 @@ public class PlatformManager : MonoBehaviour {
 			nextPosition.y = maxY - maxGap.y;
 		}
 	}
+
+    private void GameStart() {
+        this.enabled = true;
+    }
+
+    private void GameOver() {
+        this.enabled = false;
+    }
 }

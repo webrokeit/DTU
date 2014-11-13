@@ -7,7 +7,7 @@ namespace Assets.Managers {
     public class GameEventManager {
         public delegate void GameEvent();
 
-        public static event GameEvent GameStart , GameOver;
+        public static event GameEvent GameStart , GameOver , ReCalibrate;
 
         public static void StartGame() {
             if (GameStart != null) {
@@ -18,6 +18,12 @@ namespace Assets.Managers {
         public static void EndGame() {
             if (GameOver != null) {
                 GameOver();
+            }
+        }
+
+        public static void Calibration() {
+            if (ReCalibrate != null) {
+                ReCalibrate();
             }
         }
     }

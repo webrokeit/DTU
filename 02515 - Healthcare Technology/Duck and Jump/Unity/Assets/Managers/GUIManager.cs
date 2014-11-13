@@ -5,7 +5,7 @@ using UnityEngine.SocialPlatforms.Impl;
 
 public class GUIManager : MonoBehaviour {
 
-    public GUIText GameOverText, ScoreText;
+    public GUIText GameOverText, ScoreText, RunningScoreText;
     public DangerousObjectManagerScript Doms;
 
 	// Use this for initialization
@@ -18,16 +18,19 @@ public class GUIManager : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-
+	    RunningScoreText.text = Doms.ObjectsPassed + "";
 	}
 
     private void GameStart() {
         GameOverText.enabled = false;
         ScoreText.text = "";
         ScoreText.enabled = false;
+        RunningScoreText.text = "";
+        RunningScoreText.enabled = true;
     }
 
     private void GameOver() {
+        RunningScoreText.enabled = false;
         GameOverText.enabled = true;
         ScoreText.text = "You have avoided "+Doms.ObjectsPassed+"objects";
     }

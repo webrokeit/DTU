@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Assets.Managers;
 using UnityEngine;
 using System.Collections;
 using Random = UnityEngine.Random;
@@ -31,11 +32,13 @@ public class DangerousObjectManagerScript : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-	    DangerousObjects = DangerousObjects.Where(obj => obj != null).ToArray();
+	    GameEventManager.GameStart += GameStart;
+	    GameEventManager.GameOver += GameOver;
+	    /*DangerousObjects = DangerousObjects.Where(obj => obj != null).ToArray();
 	    foreach (var obj in DangerousObjects) {
 	        obj.gameObject.SetActive(false);
 	    }
-	    _movingSpeed = InitialMovingSpeed;
+	    _movingSpeed = InitialMovingSpeed;*/
 	}
 	
 	// Update is called once per frame
@@ -149,5 +152,19 @@ public class DangerousObjectManagerScript : MonoBehaviour {
 
         LeftOrRight,
         TopOrBottomMiddle
+    }
+
+    private void GameStart() {
+        DangerousObjects = DangerousObjects.Where(obj => obj != null).ToArray();
+        foreach (var obj in DangerousObjects) {
+            obj.gameObject.SetActive(false);
+        }
+        _movingSpeed = InitialMovingSpeed;
+        ObjectsPassed = 0;
+        this.enabled = true;
+    }
+
+    private void GameOver() {
+        this.enabled = false;
     }
 }
