@@ -7,11 +7,11 @@ public class KinectJointTracker : MonoBehaviour  {
 	public float SmoothFactor = 5f;
 
 	public bool DebugOutput = false;
-	private float distanceToCamera = 10f;
+	private float _distanceToCamera = 10f;
 
 	void Start() {
 		if(OverlayObject) {
-			distanceToCamera = (OverlayObject.transform.position - Camera.main.transform.position).magnitude;
+			_distanceToCamera = (OverlayObject.transform.position - Camera.main.transform.position).magnitude;
 		}
 	}
 	
@@ -19,26 +19,26 @@ public class KinectJointTracker : MonoBehaviour  {
 		var manager = KinectManager.Instance;
 		
 		if(manager && manager.IsInitialized()) {	
-			int jointIndex = (int)TrackedJoint;
+			var jointIndex = (int)TrackedJoint;
 			
 			if(manager.IsUserDetected()) {
-				uint userId = manager.GetPlayer1ID();
+				var userId = manager.GetPlayer1ID();
 				
 				if(manager.IsJointTracked(userId, jointIndex)) {
-					Vector3 posJoint = manager.GetRawSkeletonJointPos(userId, jointIndex);
+					var posJoint = manager.GetRawSkeletonJointPos(userId, jointIndex);
 					
 					if(posJoint != Vector3.zero) {
 						// 3d position to depth
-						Vector2 posDepth = manager.GetDepthMapPosForJointPos(posJoint);
+						var posDepth = manager.GetDepthMapPosForJointPos(posJoint);
 						
 						// depth pos to color pos
-						Vector2 posColor = manager.GetColorMapPosForDepthPos(posDepth);
+						var posColor = manager.GetColorMapPosForDepthPos(posDepth);
 						
-						float scaleX = (float)posColor.x / KinectWrapper.Constants.ColorImageWidth;
-						float scaleY = 1.0f - (float)posColor.y / KinectWrapper.Constants.ColorImageHeight;
+						var scaleX = posColor.x / KinectWrapper.Constants.ColorImageWidth;
+						var scaleY = 1.0f - posColor.y / KinectWrapper.Constants.ColorImageHeight;
 						
 						if(OverlayObject){ 
-							Vector3 vPosOverlay = Camera.main.ViewportToWorldPoint(new Vector3(scaleX, scaleY, distanceToCamera));
+							var vPosOverlay = Camera.main.ViewportToWorldPoint(new Vector3(scaleX, scaleY, _distanceToCamera));
 							OverlayObject.transform.position = Vector3.Lerp(OverlayObject.transform.position, vPosOverlay, SmoothFactor * Time.deltaTime);
 						}
 					}
