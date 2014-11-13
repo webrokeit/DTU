@@ -1,10 +1,9 @@
-﻿using Assets.Managers;
 using UnityEngine;
 using System.Collections;
 
 public class JointPositioner : MonoBehaviour {
 	
-	public KinectWrapper.Joints JointToTrack;
+	/*public KinectWrapper.Joints JointToTrack;
 	public KUInterface Kinect;
 	
 	public bool FixateX = true;
@@ -13,9 +12,7 @@ public class JointPositioner : MonoBehaviour {
 	
 	// Use this for initialization
 	void Start () {
-	    GameEventManager.GameStart += GameStart;
-	    GameEventManager.GameOver += GameOver;
-	    this.enabled = false;
+
 	}
 	
 	// Update is called once per frame
@@ -32,13 +29,5 @@ public class JointPositioner : MonoBehaviour {
 		//Position this object according to chosen joint, but do it relative to the ShoulderCenter position
 		transform.localPosition = Kinect.GetJointPos(JointToTrack) - center;
 	
-	}
-
-    private void GameStart() {
-        this.enabled = true;
-    }
-
-    private void GameOver() {
-        this.enabled = false;
-    }
+	}*/
 }
