@@ -7,14 +7,6 @@ using UnityEngine;
 using System.Collections;
 
 public class GestureTracker : MonoBehaviour {
-    public const int LeftKneeIndex = (int)KinectWrapper.SkeletonJoint.LEFT_KNEE;
-    public const int RightKneeIndex = (int)KinectWrapper.SkeletonJoint.RIGHT_KNEE;
-    public const int HipIndex = (int)KinectWrapper.SkeletonJoint.HIPS;
-
-    public GameObject LeftKneeOverlayObject;
-    public GameObject RightKneeOverlayObject;
-    public GameObject HipOverlayObject;
-
     public bool DisplayOverlays = false;
     public JointOverlays Overlays;
     public float SmoothFactor = 5f;
@@ -26,17 +18,8 @@ public class GestureTracker : MonoBehaviour {
     public bool DebugMode;
     public GUIText DebugText;
     public GUIText GestureText;
-
-    private readonly MinMax _minMaxLeft = new MinMax();
-    private readonly MinMax _minMaxRight = new MinMax();
-    private readonly MinMax _minMaxHip = new MinMax();
     
-    private float _distanceToCameraLeftKnee = 10f;
-    private float _distanceToCameraRightKnee = 10f;
-    private float _distanceToCameraHip = 10f;
-
     private float _gestureDisplay;
-    private int _jumps;
 
 	// Use this for initialization
 	void Start () {
@@ -88,9 +71,7 @@ public class GestureTracker : MonoBehaviour {
                 }
             } else {
                 if (DebugText) {
-                    DebugText.text = "(" + Math.Round(_minMaxLeft.Min, 4) + " ; " + Math.Round(_minMaxLeft.Max, 4) + ") " +
-                                     "(" + Math.Round(_minMaxRight.Min, 4) + " ; " + Math.Round(_minMaxRight.Max, 4) + ") " +
-                                     "(" + Math.Round(_minMaxHip.Min, 4) + " ; " + Math.Round(_minMaxHip.Max, 4) + ")";
+                    
                 }
             }
         }
@@ -123,21 +104,6 @@ public class GestureTracker : MonoBehaviour {
                 overlay.SetActive(false);
             }
             _displayState = false;
-        }
-    }
-
-    private class MinMax {
-        public float Min { get; private set; }
-        public float Max { get; private set; }
-
-        public MinMax() {
-            Min = float.MaxValue;
-            Max = float.MinValue;
-        }
-
-        public void Update(float val) {
-            if (Min > val) Min = val;
-            if (Max < val) Max = val;
         }
     }
 }
