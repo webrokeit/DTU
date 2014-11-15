@@ -93,7 +93,7 @@ public class GestureTracker : MonoBehaviour {
                     if (DataStream != null && (LogMode == LogModes.EachFrame || (LogMode == LogModes.GesturesOnly && gesturesDetected.Count > 0))) {
                         positions.InitIfNotSetExt(Fnc.Values<Joints>());
 
-                        var timestamp = DateTime.Now.ToString("s");
+                        var timestamp = DateTime.Now.ToString("O");
                         var player = userId.ToString(CultureInfo.InvariantCulture);
                         var positionsDump = string.Join(",", Fnc.Values<Joints>().Select(joint => positions[joint].x + "," + positions[joint].y + "," + positions[joint].z).ToArray());
                         var baseDataLine = timestamp + "," + player + "," + positionsDump + ",";
