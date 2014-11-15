@@ -65,7 +65,7 @@
      <Compile Include="Assets\KinectScripts\Samples\SimpleGestureListener.cs" />
      <Compile Include="Assets\Managers\GUIManager.cs" />
      <Compile Include="Assets\Managers\GameEventManager.cs" />
-     <Compile Include="Assets\OverlayDemo\Scripts\JumpGestureTracker.cs" />
+     <Compile Include="Assets\OverlayDemo\Scripts\GestureTracker.cs" />
      <Compile Include="Assets\OverlayDemo\Scripts\KinectJointTracker.cs" />
      <Compile Include="Assets\OverlayDemo\Scripts\KinectOverlayer.cs" />
      <Compile Include="Assets\Platform\PlatformManager.cs" />
