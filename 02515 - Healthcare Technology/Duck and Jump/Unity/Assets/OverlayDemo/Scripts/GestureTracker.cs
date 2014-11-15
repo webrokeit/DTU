@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using UnityEngine;
@@ -18,6 +19,10 @@ public class GestureTracker : MonoBehaviour {
     public bool DebugMode;
     public GUIText DebugText;
     public GUIText GestureText;
+
+    public LogModes LogMode;
+    public string DataFile = "C:/Logs/{app_name}/{session}_data.csv";
+    private StreamWriter DataStream;
     
     private float _gestureDisplay;
 
@@ -47,6 +52,19 @@ public class GestureTracker : MonoBehaviour {
                 }
 	        }
 	    }
+
+        if (LogMode > LogModes.None) {
+            var appName = Application.dataPath.Split('/').NthLast(2).EscapePath();
+            var session = ((long)(DateTime.Now - new DateTime(1970, 1, 1)).TotalMilliseconds).ToString(CultureInfo.InvariantCulture);
+            var dataFileInfo = !string.IsNullOrEmpty(DataFile) ? new FileInfo(DataFile.Replace("{app_name}", appName).Replace("{session}", session)) : null;
+
+            if (dataFileInfo != null && dataFileInfo.Directory != null) {
+                if (!dataFileInfo.Directory.Exists) dataFileInfo.Directory.Create();
+                DataStream = new StreamWriter(new FileStream(dataFileInfo.FullName, FileMode.Append, FileAccess.Write));
+                var header = "Timestamp,PlayerId," + string.Join(",", Enum.GetNames(typeof(Joints)).Select(joint => joint + ".x," + joint + ".y," + joint + ".z").ToArray()) + ",Gesture";
+                DataStream.WriteLine(header);
+            }
+        }
 	}
 	
 	// Update is called once per frame
@@ -55,19 +73,36 @@ public class GestureTracker : MonoBehaviour {
         
         var manager = KinectManager.Instance;
         if (manager && manager.IsInitialized()) {
+            Debug.Log("User detected: " + manager.IsUserDetected());
             if (manager.IsUserDetected()) {
                 var userId = manager.GetPlayer1ID();
                 if (userId > 0) {
                     var positions = new JointPositions(manager, userId);
+                    var gesturesDetected = new List<IGesture>();
 
                     foreach (var gestureTracker in _gestureTrackers) {
                         if (gestureTracker == null) continue;
                         if (gestureTracker.Update(positions)) {
+                            gesturesDetected.Add(gestureTracker);
                             GestureRecognized(gestureTracker);
                         }
                     }
 
                     HandleDisplayOverlays(manager, positions);
+
+                    if (DataStream != null && (LogMode == LogModes.EachFrame || (LogMode == LogModes.GesturesOnly && gesturesDetected.Count > 0))) {
+                        positions.InitIfNotSetExt(Fnc.Values<Joints>());
+
+                        var timestamp = DateTime.Now.ToString("s");
+                        var player = userId.ToString(CultureInfo.InvariantCulture);
+                        var positionsDump = string.Join(",", Fnc.Values<Joints>().Select(joint => positions[joint].x + "," + positions[joint].y + "," + positions[joint].z).ToArray());
+                        var baseDataLine = timestamp + "," + player + "," + positionsDump + ",";
+                        if (gesturesDetected.Count < 1) gesturesDetected.Add(null);
+
+                        foreach (var dataLine in gesturesDetected.Select(gestureDetected => baseDataLine + (gestureDetected != null ? gestureDetected.Gesture.ToString() : "None"))) {
+                            DataStream.WriteLine(dataLine);
+                        }
+                    }
                 }
             } else {
                 if (DebugText) {
@@ -281,7 +316,7 @@ public class DuckGestureState {
 }
 
 public class JointPositions {
-    public const int JointCount = (int)Joints.Count;
+    public static readonly int JointCount = Enum.GetNames(typeof (Joints)).Length;
     private readonly Vector3[] _positions;
     private readonly bool[] _isSet;
     private readonly uint _userId;
@@ -304,12 +339,16 @@ public class JointPositions {
 
     public bool IsSet(Joints joint) {
         return _isSet[(int) joint];
-    }
+    } 
 
     public void InitIfNotSet(params Joints[] jointsToCheck) {
-        if (jointsToCheck == null || jointsToCheck.Length < 1) return;
-        foreach (var joint in jointsToCheck.Where(joint => !IsSet(joint))) {
-            this[joint] = _manager.GetRawSkeletonJointPos(_userId, (int) joint);
+        InitIfNotSetExt(jointsToCheck);
+    }
+
+    public void InitIfNotSetExt(IEnumerable<Joints> jointsToCheckEnumerable) {
+        if (jointsToCheckEnumerable == null) return;
+        foreach (var joint in jointsToCheckEnumerable.Where(joint => !IsSet(joint))) {
+            this[joint] = _manager.GetRawSkeletonJointPos(_userId, (int)joint);
         }
     }
 
@@ -322,6 +361,16 @@ public class JointPositions {
         if (jointsToCheck == null || jointsToCheck.Length < 1) return false;
         return jointsToCheck.All(joint => _manager.IsJointTracked(_userId, (int) joint));
     }
+
+    private static readonly Joints[] AvailableJoints = {
+        Joints.Hips, Joints.Spine, Joints.Neck, Joints.Head, Joints.LeftShoulder, Joints.LeftElbow, Joints.LeftWrist,
+        Joints.LeftHand, Joints.RightShoulder, Joints.RightElbow, Joints.RightWrist, Joints.RightHand, Joints.LeftHip,
+        Joints.LeftKnee, Joints.LeftAnkle, Joints.LeftFoot, Joints.RightHip, Joints.RightKnee, Joints.RightAnkle, Joints.RightFoot
+    };
+
+    public static IEnumerable<Joints> AllJoints() {
+        return AvailableJoints;
+    } 
 }
 
 // Basically a rename of NuiSkeletonPositionIndex, DO NOT REORDER
@@ -345,13 +394,33 @@ public enum Joints {
     RightHip,
     RightKnee,
     RightAnkle,
-    RightFoot,
-    Count
+    RightFoot
 }
 
 public enum Gestures {
     Jump,
     Duck
+}
+
+public enum LogModes {
+    None = 0,
+    EachFrame,
+    GesturesOnly
+}
+
+public static class Fnc {
+    public static IEnumerable<T> Values<T>() {
+        var t = typeof (T);
+        return t.IsEnum ? Enum.GetValues(t).Cast<T>() : new T[]{};
+    }
+
+    public static T NthLast<T>(this T[] arr, int n) {
+        return arr[arr.Length - n];
+    }
+
+    public static string EscapePath(this string path, char escapeCharacter = '_') {
+        return Path.GetInvalidPathChars().Aggregate(path, (current, c) => current.Replace(c, escapeCharacter));
+    }
 }
 
 [Serializable]
