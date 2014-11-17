@@ -8,27 +8,58 @@ public class BrainScript : MonoBehaviour {
 
     public int Round;
     public int Score;
-    private readonly List<string> _possibleMoves = new List<string>() {"Duck", "Jump"};
+    private readonly List<string> _possibleMoves = new List<string>() {"Squat", "Jump"};
     private List<string> _correctCombi;
     private List<string> _userCombi;
+    private bool timeout;
+    private bool wrongCombi;
     private readonly int timePerExercise = 5000;
-    private Stopwatch displayTime;
     private Stopwatch exerciseTime;
     private bool inputReady;
     private System.Random rand;
+    public GUIManager GUIManager;
+    private Stopwatch roundCountdown;
 
 	// Use this for initialization
 	void Start () {
         GameEventManager.GameStart += GameStart;
         GameEventManager.GameOver += GameOver;
+        GameEventManager.RoundStart += RoundStart;
         Score = 0;
         Round = 0;
         _correctCombi = new List<string>();
-        displayTime = new Stopwatch();
         exerciseTime = new Stopwatch();
         rand = new System.Random();
+        timeout = false;
+        wrongCombi = false;
+        roundCountdown = new Stopwatch();
 	}
-	
+
+    public string GetCountdownLeft()
+    {
+        if (roundCountdown.ElapsedMilliseconds < 1000)
+        {
+            return "3";
+        }
+        else if (roundCountdown.ElapsedMilliseconds < 2000)
+        {
+            return "2";
+        }
+        else if (roundCountdown.ElapsedMilliseconds < 3000)
+        {
+            return "1";
+        }
+        else
+        {
+            return "GO!";
+        }
+    }
+
+    public long GetTimeLeft()
+    {
+        return (5000 - exerciseTime.ElapsedMilliseconds < 0) ? 0 : (5000 - exerciseTime.ElapsedMilliseconds);
+    }
+
 	// Update is called once per frame
 	void Update () {
         bool up = Input.GetKeyDown(KeyCode.UpArrow);
@@ -38,20 +69,21 @@ public class BrainScript : MonoBehaviour {
             GameEventManager.StartGame();
         }
 
-        if (displayTime.IsRunning && displayTime.ElapsedMilliseconds <= 3000)
+        if (roundCountdown.IsRunning && roundCountdown.ElapsedMilliseconds <= 3000)
         {
             return;
         }
 
-        if (displayTime.IsRunning && displayTime.ElapsedMilliseconds > 3000)
+        if (roundCountdown.IsRunning && roundCountdown.ElapsedMilliseconds > 3000)
         {
-            displayTime.Reset();
-            GUIManager.RemoveNextMove();
+            roundCountdown.Reset();
+            GUIManager.RemoveCountdown();
             exerciseTime.Start();
         }
 
         if (exerciseTime.IsRunning && exerciseTime.ElapsedMilliseconds > timePerExercise)
         {
+            timeout = true;
             GameEventManager.EndGame();
         }
 
@@ -62,15 +94,16 @@ public class BrainScript : MonoBehaviour {
             exerciseTime.Reset();
             if (WrongCombination())
             {
+                wrongCombi = true;
                 GameEventManager.EndGame();
                 return;
             }
-            
+            UpdateScore(time);
             if (_correctCombi.Count == _userCombi.Count)
             {
                 NewRound();
+                return;
             }
-            UpdateScore(time);
             exerciseTime.Start();
         }
         if (down && exerciseTime.IsRunning && exerciseTime.ElapsedMilliseconds <= timePerExercise)
@@ -80,15 +113,16 @@ public class BrainScript : MonoBehaviour {
             exerciseTime.Reset();
             if (WrongCombination())
             {
+                wrongCombi = true;
                 GameEventManager.EndGame();
                 return;
             }
-            
+            UpdateScore(time);
             if (_correctCombi.Count == _userCombi.Count)
             {
                 NewRound();
+                return;
             }
-            UpdateScore(time);
             exerciseTime.Start();
         }
 	}
@@ -108,29 +142,30 @@ public class BrainScript : MonoBehaviour {
         var secondsFactor = ((timePerExercise * Round) - time) / 1000f;
         var totalScore = 10 * (1.0 + secondsFactor);
         Score += (int)totalScore;
+        GUIManager.GainedPoints((int)totalScore);
     }
 
     private void NewRound()
     {
-        //int pickRandom = Random.Range(1,2);
         int pickRandom = rand.Next(0, 2);
         string move = _possibleMoves[pickRandom];
         _correctCombi.Add(move);
-        //UnityEngine.Debug.Log(_correctCombi.Count+": " + move);
         Round++;
-        displayTime.Start();
-        GUIManager.SetNextMove(_correctCombi);
+        GUIManager.SetNextMove(move);
         _userCombi = new List<string>();
-        //UnityEngine.Debug.Log("UserCombi: " + _userCombi.Count);
     }
 
     private void AddUserCombination(string move)
     {
         if (_possibleMoves.Contains(move))
         {
-            //UnityEngine.Debug.Log("UserCombi: "+_userCombi.Count+" - "+move);
             _userCombi.Add(move);
         }
+    }
+
+    private void RoundStart()
+    {
+        roundCountdown.Start();
     }
 
     private void GameStart()
@@ -144,6 +179,18 @@ public class BrainScript : MonoBehaviour {
 
     private void GameOver()
     {
+        if (timeout == true)
+        {
+            GUIManager.EndGameReason("Time ran out!");
+            timeout = false;
+        }
+        if (wrongCombi == true)
+        {
+            GUIManager.EndGameReason("You made the wrong move!");
+            wrongCombi = false;
+        }
+        exerciseTime.Reset();
+        roundCountdown.Reset();
         Round = 0;
         //this.enabled = false;
     }

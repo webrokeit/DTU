@@ -1,0 +1,74 @@
+\documentclass[12pt]{report}
+\usepackage{graphicx}
+\usepackage{titling}
+\usepackage{fancyhdr}
+\usepackage[latin1]{inputenc}
+\usepackage{enumerate}
+\usepackage{float}
+\usepackage{latexsym}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{amsfonts}
+\usepackage[usenames,dvipsnames,svgnames,table]{xcolor}
+\usepackage{listings}
+\parindent=0pt
+\frenchspacing
+
+\pagestyle{fancy}
+
+\fancyhead[L]{\slshape\footnotesize November 18, 2014\\\textsc{02515 Health Care Technology}}
+\fancyhead[R]{\slshape\footnotesize \textsc{Andreas Kjeldsen (s092638)}\\\textsc{Morten Eskesen (s133304)}}
+\fancyfoot[C]{\thepage}
+
+\newcommand{\tab}{\hspace*{2em}}
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
+
+\begin{document}
+
+\begin{titlepage}
+\begin{center}
+
+\includegraphics[scale=2.0]{../GFX/dtu_logo.pdf}\\[1cm]
+
+\textsc{\LARGE Technical University of Denmark}\\[1.5cm]
+
+\textsc{\Large 02515 Health Care Technology}\\[0.5cm]
+
+
+% Title
+\HRule \\[0.4cm]
+{\huge \bfseries 1st Group Report}\\[0.1cm]
+\HRule \\[1.5cm]
+
+% Author and supervisor
+\large
+\emph{Authors:}
+\\[10pt]
+Andreas Hallberg \textsc{Kjeldsen}\\
+\emph{s092638@student.dtu.dk}
+\\[10pt]
+Morten Chabert \textsc{Eskesen}\\
+\emph{s133304@student.dtu.dk}
+
+\vfill
+
+% Bottom of the page
+{\large November 18, 2014}
+
+\end{center}
+\end{titlepage}
+
+\section*{Progress}
+\subsection*{Things that are going well}
+We have managed to finish implementing the game. It recognizes when the user squats or jumps.
+
+\subsection*{Things that are not going so well}
+We found out that the old game was not doable the way we wanted to do it. Therefore we have changed the game - see next section.
+
+\subsection*{Any changes in the project}
+The game has been changed to a Memory Game of training exercises. Round 1 has 1 exercise the user has to remember and then perform. The numbers of exercises increase with the number of rounds. Round 1 would for example be jump and then round 2 would be jump, squat and so forth. So each round it only adds one more exercise to be performed. The order of exercises will stay the same throughout the game.
+
+\subsection*{Brief summary of what has been done since last report}
+The old game was discarded and the new game has been implemented. It is ready for testing by our chosen test groups.
+
+\end{document}

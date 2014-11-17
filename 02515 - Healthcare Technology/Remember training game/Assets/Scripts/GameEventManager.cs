@@ -7,7 +7,7 @@ public class GameEventManager
 {
     public delegate void GameEvent();
 
-    public static event GameEvent GameStart, GameOver;
+    public static event GameEvent GameStart, GameOver, RoundStart;
 
     public static void StartGame()
     {
@@ -22,6 +22,14 @@ public class GameEventManager
         if (GameOver != null)
         {
             GameOver();
+        }
+    }
+
+    public static void StartRound()
+    {
+        if (RoundStart != null)
+        {
+            RoundStart();
         }
     }
 }
