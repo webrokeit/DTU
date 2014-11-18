@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System;
+using System.Globalization;
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,15 +10,14 @@ public class BrainScript : MonoBehaviour {
 
     public int Round;
     public int Score;
-    private readonly List<string> _possibleMoves = new List<string>() {"Squat", "Jump"};
+    private readonly string[] _possibleMoves = {"Squat", "Jump"};
     private List<string> _correctCombi;
     private List<string> _userCombi;
     private bool timeout;
     private bool wrongCombi;
-    private readonly int timePerExercise = 5000;
+    private const int TimePerExercise = 5000;
     private Stopwatch exerciseTime;
     private bool inputReady;
-    private System.Random rand;
     public GUIManager GUIManager;
     private Stopwatch roundCountdown;
 
@@ -29,41 +30,23 @@ public class BrainScript : MonoBehaviour {
         Round = 0;
         _correctCombi = new List<string>();
         exerciseTime = new Stopwatch();
-        rand = new System.Random();
         timeout = false;
         wrongCombi = false;
         roundCountdown = new Stopwatch();
 	}
 
-    public string GetCountdownLeft()
-    {
-        if (roundCountdown.ElapsedMilliseconds < 1000)
-        {
-            return "3";
-        }
-        else if (roundCountdown.ElapsedMilliseconds < 2000)
-        {
-            return "2";
-        }
-        else if (roundCountdown.ElapsedMilliseconds < 3000)
-        {
-            return "1";
-        }
-        else
-        {
-            return "GO!";
-        }
+    public string GetCountdownLeft() {
+        return roundCountdown.ElapsedMilliseconds >= 3000 ? "GO!" : (3 - Math.Floor(roundCountdown.ElapsedMilliseconds / 1000.0)).ToString(CultureInfo.InvariantCulture);
     }
 
-    public long GetTimeLeft()
-    {
-        return (5000 - exerciseTime.ElapsedMilliseconds < 0) ? 0 : (5000 - exerciseTime.ElapsedMilliseconds);
+    public long GetTimeLeft() {
+        return Math.Max(5000*Round - exerciseTime.ElapsedMilliseconds, 0);
     }
 
 	// Update is called once per frame
 	void Update () {
-        bool up = Input.GetKeyDown(KeyCode.UpArrow);
-        bool down = Input.GetKeyDown(KeyCode.DownArrow);
+        var up = Input.GetKeyDown(KeyCode.UpArrow);
+        var down = Input.GetKeyDown(KeyCode.DownArrow);
         if (Input.GetKeyDown(KeyCode.Space))
         {
             GameEventManager.StartGame();
@@ -81,15 +64,15 @@ public class BrainScript : MonoBehaviour {
             exerciseTime.Start();
         }
 
-        if (exerciseTime.IsRunning && exerciseTime.ElapsedMilliseconds > timePerExercise)
+        if (exerciseTime.IsRunning && exerciseTime.ElapsedMilliseconds > TimePerExercise)
         {
             timeout = true;
             GameEventManager.EndGame();
         }
 
-        if (up && exerciseTime.IsRunning && exerciseTime.ElapsedMilliseconds <= timePerExercise)
+        if (up && exerciseTime.IsRunning && exerciseTime.ElapsedMilliseconds <= TimePerExercise)
         {
-            long time = exerciseTime.ElapsedMilliseconds;
+            var time = exerciseTime.ElapsedMilliseconds;
             AddUserCombination(_possibleMoves[1]);
             exerciseTime.Reset();
             if (WrongCombination())
@@ -106,9 +89,9 @@ public class BrainScript : MonoBehaviour {
             }
             exerciseTime.Start();
         }
-        if (down && exerciseTime.IsRunning && exerciseTime.ElapsedMilliseconds <= timePerExercise)
+        if (down && exerciseTime.IsRunning && exerciseTime.ElapsedMilliseconds <= TimePerExercise)
         {
-            long time = exerciseTime.ElapsedMilliseconds;
+            var time = exerciseTime.ElapsedMilliseconds;
             AddUserCombination(_possibleMoves[0]);
             exerciseTime.Reset();
             if (WrongCombination())
@@ -129,7 +112,7 @@ public class BrainScript : MonoBehaviour {
 
     private bool WrongCombination()
     {
-        for (int i = 0; i < _userCombi.Count; i++)
+        for (var i = 0; i < _userCombi.Count; i++)
         {
             if(!_correctCombi[i].Equals(_userCombi[i])) {
                 return true;
@@ -139,16 +122,15 @@ public class BrainScript : MonoBehaviour {
     }
 
     private void UpdateScore(long time) {
-        var secondsFactor = ((timePerExercise * Round) - time) / 1000f;
+        var secondsFactor = ((TimePerExercise * Round) - time) / 1000f;
         var totalScore = 10 * (1.0 + secondsFactor);
         Score += (int)totalScore;
         GUIManager.GainedPoints((int)totalScore);
     }
 
-    private void NewRound()
-    {
-        int pickRandom = rand.Next(0, 2);
-        string move = _possibleMoves[pickRandom];
+    private void NewRound() {
+        var pickRandom = UnityEngine.Random.Range(0, _possibleMoves.Length);
+        var move = _possibleMoves[pickRandom];
         _correctCombi.Add(move);
         Round++;
         GUIManager.SetNextMove(move);
@@ -170,7 +152,6 @@ public class BrainScript : MonoBehaviour {
 
     private void GameStart()
     {
-        //this.enabled = true;
         _correctCombi = new List<string>();
         Score = 0;
         Round = 0;
@@ -179,12 +160,12 @@ public class BrainScript : MonoBehaviour {
 
     private void GameOver()
     {
-        if (timeout == true)
+        if (timeout)
         {
             GUIManager.EndGameReason("Time ran out!");
             timeout = false;
         }
-        if (wrongCombi == true)
+        if (wrongCombi)
         {
             GUIManager.EndGameReason("You made the wrong move!");
             wrongCombi = false;
@@ -192,6 +173,5 @@ public class BrainScript : MonoBehaviour {
         exerciseTime.Reset();
         roundCountdown.Reset();
         Round = 0;
-        //this.enabled = false;
     }
 }

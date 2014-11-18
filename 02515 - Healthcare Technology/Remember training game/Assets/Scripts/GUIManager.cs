@@ -153,13 +153,6 @@ public class GUIManager : MonoBehaviour {
         return new Vector3(randomX, randomY, 0);
     }
 
-    /*public void RemoveNextMove()
-    {
-        NextMoveText.text = "";
-        NextMoveText.enabled = false;
-        RoundCountdownText.enabled = true;
-    }*/
-
     public void RemoveCountdown()
     {
         RoundCountdownText.enabled = false;
