@@ -47,11 +47,10 @@
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets\Scripts\BrainScript.cs" />
+     <Compile Include="Assets\Scripts\FadeoutText.cs" />
      <Compile Include="Assets\Scripts\GUIManager.cs" />
      <Compile Include="Assets\Scripts\GameEventManager.cs" />
-     <Compile Include="Assets\Scripts\PointPopup.cs" />
-     <Compile Include="Assets\Scripts\TextStyling.cs" />
-     <None Include="Assets\Help.txt" />
+     <Compile Include="Assets\Scripts\TextBorder.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

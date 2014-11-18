@@ -40,7 +40,7 @@ public class BrainScript : MonoBehaviour {
     }
 
     public long GetTimeLeft() {
-        return Math.Max(5000*Round - exerciseTime.ElapsedMilliseconds, 0);
+        return exerciseTime != null ? Math.Max(5000*Round - exerciseTime.ElapsedMilliseconds, 0) : 0;
     }
 
 	// Update is called once per frame
@@ -57,11 +57,13 @@ public class BrainScript : MonoBehaviour {
             return;
         }
 
-        if (roundCountdown.IsRunning && roundCountdown.ElapsedMilliseconds > 3000)
-        {
-            roundCountdown.Reset();
-            GUIManager.RemoveCountdown();
-            exerciseTime.Start();
+        if (roundCountdown.IsRunning && roundCountdown.ElapsedMilliseconds > 3750) {
+            if (roundCountdown.ElapsedMilliseconds < 3000) return;
+            if(!exerciseTime.IsRunning) exerciseTime.Start();
+            if (roundCountdown.ElapsedMilliseconds > 3750) {
+                roundCountdown.Reset();
+                GUIManager.RemoveCountdown();
+            }
         }
 
         if (exerciseTime.IsRunning && exerciseTime.ElapsedMilliseconds > TimePerExercise)
@@ -125,12 +127,11 @@ public class BrainScript : MonoBehaviour {
         var secondsFactor = ((TimePerExercise * Round) - time) / 1000f;
         var totalScore = 10 * (1.0 + secondsFactor);
         Score += (int)totalScore;
-        GUIManager.GainedPoints((int)totalScore);
+        GUIManager.GainedPoints((int) totalScore, _userCombi.Count - 1);
     }
 
     private void NewRound() {
-        var pickRandom = UnityEngine.Random.Range(0, _possibleMoves.Length);
-        var move = _possibleMoves[pickRandom];
+        var move = _possibleMoves[UnityEngine.Random.Range(0, _possibleMoves.Length)];
         _correctCombi.Add(move);
         Round++;
         GUIManager.SetNextMove(move);

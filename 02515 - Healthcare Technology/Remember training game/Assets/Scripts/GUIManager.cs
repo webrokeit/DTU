@@ -3,20 +3,18 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using System.Diagnostics;
+using Debug = UnityEngine.Debug;
 
 public class GUIManager : MonoBehaviour {
     public BrainScript Brain;
 
-    public GUIText GameOverText, ScoreText, RunningScoreText, RunningRoundText, NextMoveText, PointsGainedText, RoundTimeText, EndGameText, RoundCountdownText;
+    public GUIText GameOverText, ScoreText, RunningScoreText, RunningRoundText, RoundTimeText, EndGameText, RoundCountdownText;
+    public GameObject PointsScoredPrefab;
+    public GameObject MoveToPerformPrefab;
     private Stopwatch _newRoundTimer;
-    private Stopwatch _pointsGainedTimer;
-    private Stopwatch _nextMoveTimer;
-    private List<Vector3> _possiblePointsPositions = new List<Vector3>() {new Vector3(0.75f,0.25f,0), new Vector3(0.25f,0.75f,0), new Vector3(0.50f,0.75f,0), new Vector3(0.50f,0.25f,0), new Vector3(0.75f,0.50f,0)};
-    private System.Random rnd;
     private static GUIManager instance;
     private List<Vector3> _movePositions;
     private List<string> moves;
-    private int _index;
     private readonly long _moveDisplayTime = 1500;
     private readonly long _finalMoveDisplayTime = 3000;
 
@@ -30,18 +28,12 @@ public class GUIManager : MonoBehaviour {
         RunningScoreText.enabled = false;
         ScoreText.enabled = false;
         GameOverText.enabled = false;
-        NextMoveText.enabled = false;
-        PointsGainedText.enabled = false;
         RoundTimeText.enabled = false;
         EndGameText.enabled = false;
         RoundCountdownText.enabled = false;
         _newRoundTimer = new Stopwatch();
-        _nextMoveTimer = new Stopwatch();
-        _pointsGainedTimer = new Stopwatch();
-        rnd = new System.Random();
         _movePositions = new List<Vector3>();
         moves = new List<string>();
-        _index = 0;
 	}
 	
 	// Update is called once per frame
@@ -57,34 +49,6 @@ public class GUIManager : MonoBehaviour {
             RunningRoundText.anchor = TextAnchor.UpperLeft;
             RunningRoundText.alignment = TextAlignment.Left;
             _newRoundTimer.Reset();
-        }
-        if (_pointsGainedTimer.IsRunning && _pointsGainedTimer.ElapsedMilliseconds > 1000)
-        {
-            PointsGainedText.enabled = false;
-            _pointsGainedTimer.Reset();
-        }
-
-        if (_index == (moves.Count-1) && _nextMoveTimer.IsRunning && _nextMoveTimer.ElapsedMilliseconds > _moveDisplayTime)
-        {
-            NextMoveText.text = moves[_index];
-            NextMoveText.transform.position = _movePositions[_index];
-            _index++;
-            _nextMoveTimer.Reset();
-            _nextMoveTimer.Start();
-        } else if(_index <= (moves.Count - 1) && _nextMoveTimer.IsRunning && _nextMoveTimer.ElapsedMilliseconds > _moveDisplayTime) {
-            NextMoveText.text = moves[_index];
-            NextMoveText.transform.position = _movePositions[_index];
-            _index++;
-            _nextMoveTimer.Reset();
-            _nextMoveTimer.Start();
-        }
-        else if (_index == moves.Count && _nextMoveTimer.IsRunning && _nextMoveTimer.ElapsedMilliseconds > _finalMoveDisplayTime)
-        {
-            GameEventManager.StartRound();
-            _index = 0;
-            NextMoveText.enabled = false;
-            NextMoveText.text = "";
-            _nextMoveTimer.Reset();
         }
 	}
 
@@ -112,6 +76,10 @@ public class GUIManager : MonoBehaviour {
         ScoreText.text = "You achieved a score of "+Brain.Score+" points";
     }
 
+    void StartRound() {
+        GameEventManager.StartRound();
+    }
+
     public void EndGameReason(string text)
     {
         EndGameText.text = text;
@@ -120,37 +88,41 @@ public class GUIManager : MonoBehaviour {
     public void SetNextMove(string move)
     {
         moves.Add(move);
-        Vector3 pos = GenerateVector();
+        var pos = GenerateVector();
         while (_movePositions.Contains(pos))
         {
             pos = GenerateVector();
         }
         _movePositions.Add(pos);
-        NextMoveText.text = moves[_index];
-        NextMoveText.transform.position = _movePositions[_index];
-        NextMoveText.enabled = true;
         RoundTimeText.enabled = false;
         RunningRoundText.transform.position = new Vector3(0.5f, 0.60f, 0);
         RunningRoundText.fontSize = 30;
         RunningRoundText.anchor = TextAnchor.MiddleCenter;
         RunningRoundText.alignment = TextAlignment.Center;
         _newRoundTimer.Start();
-        _nextMoveTimer.Start();
+        DisplayMoves();
     }
 
-    private Vector3 GenerateVector() {
-        float randomX = (float) rnd.NextDouble();
-        float randomY = (float)rnd.NextDouble();
-        while (randomX < 0.20f || randomX > 0.75f)
-        {
-            randomX = (float)rnd.NextDouble();
+    private void DisplayMoves(int index = 0) {
+        if (index < 0) index = 0;
+        if (index >= moves.Count) {
+            StartRound();
+            return;
         }
 
-        while (randomY < 0.20f || randomY > 0.75f)
-        {
-            randomY = (float)rnd.NextDouble();
+        var movePrefabObj = Instantiate(MoveToPerformPrefab, _movePositions[index], Quaternion.identity) as GameObject;
+        FadeoutText fadeoutObj;
+        if (movePrefabObj == null || (fadeoutObj = movePrefabObj.GetComponent<FadeoutText>()) == null) {
+            Debug.LogError("MoveToPerformPrefab does not have a FadeoutText object attached");
+            return;
         }
-        return new Vector3(randomX, randomY, 0);
+
+        movePrefabObj.guiText.text = moves[index];
+        fadeoutObj.TextFaded += (script, obj) => DisplayMoves(index + 1);
+    }
+
+    private static Vector3 GenerateVector() {
+        return new Vector3(Random.Range(0.2f, 0.75f), Random.Range(0.2f, 0.75f), 0);
     }
 
     public void RemoveCountdown()
@@ -159,21 +131,16 @@ public class GUIManager : MonoBehaviour {
         RoundTimeText.enabled = true;
     }
 
-    public void GainedPoints(int points)
-    {
-        int pickRandomPosition = rnd.Next(0,_possiblePointsPositions.Count);
-        PointsGainedText.transform.position = _possiblePointsPositions[pickRandomPosition];
-        PointsGainedText.text = "+"+points;
-        PointsGainedText.enabled = true;
-        if (_pointsGainedTimer.IsRunning)
-        {
-            _pointsGainedTimer.Reset();
-            _pointsGainedTimer.Start();
+    public void GainedPoints(int points, int moveIndex) {
+        var startPosition = _movePositions[moveIndex];
+        var pointsGainedObj = Instantiate(PointsScoredPrefab, startPosition, Quaternion.identity) as GameObject;
+        if (pointsGainedObj == null || pointsGainedObj.GetComponent<GUIText>() == null) {
+            Debug.LogError("PointsScoredPrefab does not have a GUIText object attached");
+            return;
         }
-        else
-        {
-            _pointsGainedTimer.Start();
-        }
+
+        pointsGainedObj.guiText.text = "+" + points;
+        pointsGainedObj.guiText.pixelOffset = new Vector2(0, 15);
     }
 
     private void RoundStart()
