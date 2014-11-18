@@ -46,44 +46,26 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\KinectScripts\AvatarController.cs" />
-     <Compile Include="Assets\KinectScripts\Filters\BoneOrientationsConstraint.cs" />
-     <Compile Include="Assets\KinectScripts\Filters\BoneOrientationsFilter.cs" />
-     <Compile Include="Assets\KinectScripts\Filters\ClippedLegsFilter.cs" />
-     <Compile Include="Assets\KinectScripts\Filters\JointPositionsFilter.cs" />
-     <Compile Include="Assets\KinectScripts\Filters\KinectHelper.cs" />
-     <Compile Include="Assets\KinectScripts\Filters\SelfIntersectionConstraint.cs" />
-     <Compile Include="Assets\KinectScripts\Filters\TimedLerp.cs" />
-     <Compile Include="Assets\KinectScripts\Filters\TrackingStateFilter.cs" />
-     <Compile Include="Assets\KinectScripts\KinectGestures.cs" />
-     <Compile Include="Assets\KinectScripts\KinectManager.cs" />
-     <Compile Include="Assets\KinectScripts\KinectWrapper.cs" />
-     <Compile Include="Assets\KinectScripts\Samples\GetJointPositionDemo.cs" />
-     <Compile Include="Assets\KinectScripts\Samples\LoadMainLevel.cs" />
-     <Compile Include="Assets\KinectScripts\Samples\MouseControl.cs" />
-     <Compile Include="Assets\KinectScripts\Samples\SetSceneAvatars.cs" />
-     <Compile Include="Assets\KinectScripts\Samples\SimpleGestureListener.cs" />
-     <Compile Include="Assets\Managers\GUIManager.cs" />
-     <Compile Include="Assets\Managers\GameEventManager.cs" />
-     <Compile Include="Assets\OverlayDemo\Scripts\GestureTracker.cs" />
-     <Compile Include="Assets\OverlayDemo\Scripts\KinectJointTracker.cs" />
-     <Compile Include="Assets\OverlayDemo\Scripts\KinectOverlayer.cs" />
-     <Compile Include="Assets\Platform\PlatformManager.cs" />
-     <Compile Include="Assets\Runner\Runner.cs" />
-     <Compile Include="Assets\Scripts\BrainScript.cs" />
-     <Compile Include="Assets\Scripts\DangerousObjectManagerScript.cs" />
-     <Compile Include="Assets\Scripts\JointPositioner.cs" />
-     <Compile Include="Assets\Scripts\KUInterface.cs" />
-     <Compile Include="Assets\Scripts\LimbPositioner.cs" />
-     <Compile Include="Assets\Scripts\MovingObjectScript.cs" />
-     <Compile Include="Assets\Scripts\PersonaControl.cs" />
-     <Compile Include="Assets\Skyline\SkylineManager.cs" />
-     <None Include="Assets\Standard Assets\Particles\Sources\Shaders\Particle Alpha Blend (Queue +100).shader" />
-     <None Include="Assets\Plugins\README.txt" />
-     <None Include="Assets\Skyboxes\_skybox info.txt" />
- <Reference Include="Assembly-UnityScript-firstpass">
- <HintPath>C:/Git/DTU/02515 - Healthcare Technology/Duck and Jump/Unity/Library/ScriptAssemblies/Assembly-UnityScript-firstpass.dll</HintPath>
- </Reference>
+     <Compile Include="Assets\DEMO KinectScripts\AvatarController.cs" />
+     <Compile Include="Assets\DEMO KinectScripts\Filters\BoneOrientationsConstraint.cs" />
+     <Compile Include="Assets\DEMO KinectScripts\Filters\BoneOrientationsFilter.cs" />
+     <Compile Include="Assets\DEMO KinectScripts\Filters\ClippedLegsFilter.cs" />
+     <Compile Include="Assets\DEMO KinectScripts\Filters\JointPositionsFilter.cs" />
+     <Compile Include="Assets\DEMO KinectScripts\Filters\KinectHelper.cs" />
+     <Compile Include="Assets\DEMO KinectScripts\Filters\SelfIntersectionConstraint.cs" />
+     <Compile Include="Assets\DEMO KinectScripts\Filters\TimedLerp.cs" />
+     <Compile Include="Assets\DEMO KinectScripts\Filters\TrackingStateFilter.cs" />
+     <Compile Include="Assets\DEMO KinectScripts\KinectGestures.cs" />
+     <Compile Include="Assets\DEMO KinectScripts\KinectManager.cs" />
+     <Compile Include="Assets\DEMO KinectScripts\KinectWrapper.cs" />
+     <Compile Include="Assets\DEMO KinectScripts\Samples\GetJointPositionDemo.cs" />
+     <Compile Include="Assets\DEMO KinectScripts\Samples\LoadMainLevel.cs" />
+     <Compile Include="Assets\DEMO KinectScripts\Samples\MouseControl.cs" />
+     <Compile Include="Assets\DEMO KinectScripts\Samples\SetSceneAvatars.cs" />
+     <Compile Include="Assets\DEMO KinectScripts\Samples\SimpleGestureListener.cs" />
+     <Compile Include="Assets\Scripts\GestureTracker.cs" />
+     <Compile Include="Assets\Scripts\KinectJointTracker.cs" />
+     <Compile Include="Assets\Scripts\KinectOverlayer.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
