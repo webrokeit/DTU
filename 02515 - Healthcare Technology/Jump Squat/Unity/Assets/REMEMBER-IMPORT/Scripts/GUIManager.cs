@@ -11,7 +11,7 @@ using Random = UnityEngine.Random;
 public class GUIManager : MonoBehaviour {
     public BrainScript Brain;
 
-    public GUIText GameOverText, ScoreText, RunningScoreText, RunningRoundText, RoundTimeText, EndGameText, RoundCountdownText, MissingPlayerText;
+    public GUIText GameOverText, ScoreText, RunningScoreText, RunningRoundText, RoundTimeText, EndGameText, RoundCountdownText;
     private List<Vector3> _movePositions;
     private List<Gestures> moves;
     private FadeoutText roundPointsGained;
@@ -31,7 +31,6 @@ public class GUIManager : MonoBehaviour {
         RoundTimeText.enabled = false;
         EndGameText.enabled = false;
         RoundCountdownText.enabled = false;
-        MissingPlayerText.enabled = false;
         _movePositions = new List<Vector3>();
         moves = new List<Gestures>();
 	}
