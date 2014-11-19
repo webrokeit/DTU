@@ -12,17 +12,13 @@ public class GUIManager : MonoBehaviour {
     public BrainScript Brain;
 
     public GUIText GameOverText, ScoreText, RunningScoreText, RunningRoundText, RoundTimeText, EndGameText, RoundCountdownText;
-    private static GUIManager instance;
     private List<Vector3> _movePositions;
     private List<Gestures> moves;
-    private readonly long _moveDisplayTime = 1500;
-    private readonly long _finalMoveDisplayTime = 3000;
 
     public PrefabCol Prefabs;
 
 	// Use this for initialization
 	void Start () {
-        instance = this;
         GameEventManager.GameStart += GameStart;
         GameEventManager.GameOver += GameOver;
         GameEventManager.RoundStart += RoundStart;
