@@ -20,7 +20,7 @@ public class BrainScript : MonoBehaviour {
     private bool _wrongCombi;
     private const int TimePerExercise = 5000;
     private Stopwatch _exerciseTime;
-
+    private bool playerMissing;
     public GUIManager GuiManager;
     private Stopwatch _roundCountdown;
     public GestureTracker GestureTracker;
@@ -31,6 +31,7 @@ public class BrainScript : MonoBehaviour {
         GameEventManager.GameStart += GameStart;
         GameEventManager.GameOver += GameOver;
         GameEventManager.RoundStart += RoundStart;
+        playerMissing = true;
         _exerciseTime = new Stopwatch();
         _timeout = false;
         _wrongCombi = false;
@@ -56,7 +57,7 @@ public class BrainScript : MonoBehaviour {
     public bool IsPlayerMissing()
     {
         var manager = KinectManager.Instance;
-        return manager != null || !manager || !manager.IsInitialized() || !manager.IsUserDetected();
+        return !manager || !manager.IsInitialized() || !manager.IsUserDetected();
     }
 
 	void Update () {
