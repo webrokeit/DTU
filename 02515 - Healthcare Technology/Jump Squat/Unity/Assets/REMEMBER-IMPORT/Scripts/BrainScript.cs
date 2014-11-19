@@ -12,6 +12,7 @@ using System.Diagnostics;
 public class BrainScript : MonoBehaviour {
     public int Round { get; private set; }
     public int Score { get; private set; }
+    public int RoundScore { get; private set; }
     private readonly Gestures[] _possibleMoves = {Gestures.Jump, Gestures.Squat};
     private List<Gestures> _correctCombi = new List<Gestures>();
     private List<Gestures> _userCombi = new List<Gestures>();
@@ -34,6 +35,7 @@ public class BrainScript : MonoBehaviour {
         _timeout = false;
         _wrongCombi = false;
         _roundCountdown = new Stopwatch();
+        RoundScore = 0;
 
 	    if (GestureTracker) {
 	        GestureTracker.GestureDetected += (id, gesture) => AddUserCombination(gesture.Gesture);
@@ -49,6 +51,12 @@ public class BrainScript : MonoBehaviour {
 
     public long GetTimeLeft() {
         return _exerciseTime != null ? Math.Max(5000 - _exerciseTime.ElapsedMilliseconds, 0) : 0;
+    }
+
+    public bool IsPlayerMissing()
+    {
+        var manager = KinectManager.Instance;
+        return manager != null || !manager || !manager.IsInitialized() || !manager.IsUserDetected();
     }
 
 	void Update () {
@@ -75,6 +83,7 @@ public class BrainScript : MonoBehaviour {
         var secondsFactor = ((TimePerExercise * Round) - time) / 1000f;
         var totalScore = 10 * (1.0 + secondsFactor);
         Score += (int)totalScore;
+        RoundScore += (int)totalScore;
         GuiManager.GainedPoints((int) totalScore, _userCombi.Count - 1);
     }
 
@@ -88,6 +97,7 @@ public class BrainScript : MonoBehaviour {
 
     private void AddUserCombination(Gestures gesture) {
         if (!_possibleMoves.Contains(gesture)) return;
+        if (!_exerciseTime.IsRunning) return;
 
         var index = _userCombi.Count;
         if (_correctCombi[index] != gesture) {
@@ -110,6 +120,7 @@ public class BrainScript : MonoBehaviour {
     }
 
     private void RoundStart() {
+        RoundScore = 0;
         _roundCountdown.Start();
     }
 
