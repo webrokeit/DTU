@@ -7,7 +7,7 @@ public class GameEventManager
 {
     public delegate void GameEvent();
 
-    public static event GameEvent GameStart, GameOver, RoundStart;
+    public static event GameEvent GameStart, GameOver, RoundStart, RoundOver;
 
     public static void StartGame()
     {

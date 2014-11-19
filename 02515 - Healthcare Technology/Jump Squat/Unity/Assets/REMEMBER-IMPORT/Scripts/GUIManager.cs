@@ -11,9 +11,11 @@ using Random = UnityEngine.Random;
 public class GUIManager : MonoBehaviour {
     public BrainScript Brain;
 
-    public GUIText GameOverText, ScoreText, RunningScoreText, RunningRoundText, RoundTimeText, EndGameText, RoundCountdownText;
+    public GUIText GameOverText, ScoreText, RunningScoreText, RunningRoundText, RoundTimeText, EndGameText, RoundCountdownText, MissingPlayerText;
     private List<Vector3> _movePositions;
     private List<Gestures> moves;
+    private FadeoutText roundPointsGained;
+    private FadeoutText roundCompleted;
 
     public PrefabCol Prefabs;
 
@@ -29,6 +31,7 @@ public class GUIManager : MonoBehaviour {
         RoundTimeText.enabled = false;
         EndGameText.enabled = false;
         RoundCountdownText.enabled = false;
+        MissingPlayerText.enabled = false;
         _movePositions = new List<Vector3>();
         moves = new List<Gestures>();
 	}
@@ -85,7 +88,13 @@ public class GUIManager : MonoBehaviour {
         _movePositions.Add(pos);
 
         RoundTimeText.enabled = false;
-        DisplayNewRound();
+        
+        if (Brain.Round == 1) {
+            DisplayNewRound();
+        }
+        else {
+            DisplayLastRoundResults();
+        }
     }
 
     void DisplayNewRound() {
@@ -98,6 +107,63 @@ public class GUIManager : MonoBehaviour {
         
         roundPrefabObj.guiText.text = "Round " + Brain.Round;
         fadeoutObj.TextFaded += (script, obj) => DisplayMoves();
+    }
+
+    void DisplayLastRoundResults()
+    {
+        var roundCompletedPrefabObj = Instantiate(Prefabs.RoundCompleted, new Vector3(0.5f, 0.60f, 0), Quaternion.identity) as GameObject;
+        var roundPointsGainedPrefabObj = Instantiate(Prefabs.RoundPointsGained, new Vector3(0.5f, 0.4f, 0), Quaternion.identity) as GameObject;
+        FadeoutText fadeoutObj;
+        if (roundCompletedPrefabObj == null || (fadeoutObj = roundCompletedPrefabObj.GetComponent<FadeoutText>()) == null)
+        {
+            Debug.LogError("Prefabs.RoundCompleted does not have a FadeoutText object attached");
+            return;
+        }
+        FadeoutText roundPointsfadeoutObj;
+        if (roundPointsGainedPrefabObj == null || (roundPointsfadeoutObj = roundPointsGainedPrefabObj.GetComponent<FadeoutText>()) == null)
+        {
+            Debug.LogError("Prefabs.RoundPointsGained does not have a FadeoutText object attached");
+            return;
+        }
+        roundCompletedPrefabObj.guiText.text = "Round " + (Brain.Round - 1) + " completed";
+        roundPointsGainedPrefabObj.guiText.text = "You have gained " + Brain.RoundScore + " points this round";
+        fadeoutObj.TextFaded += (script, obj) => DisplayNewRound();
+        if (Brain.IsPlayerMissing())
+        {
+            fadeoutObj.enabled = false;
+            roundPointsfadeoutObj.enabled = false;
+            roundPointsGained = roundPointsfadeoutObj;
+            roundCompleted = fadeoutObj;
+            DisplayMissingPlayer();
+        }
+    }
+
+    void PlayerIsBack()
+    {
+        roundCompleted.enabled = true;
+        roundPointsGained.enabled = true;
+    }
+
+    void DisplayMissingPlayer()
+    {
+        var missingPlayerPrefabObj = Instantiate(Prefabs.MissingPlayer, new Vector3(0.5f, 0.75f, 0), Quaternion.identity) as GameObject;
+
+        FadeoutText fadeoutObj;
+        if (missingPlayerPrefabObj == null || (fadeoutObj = missingPlayerPrefabObj.GetComponent<FadeoutText>()) == null)
+        {
+            Debug.LogError("Prefabs.MissingPlayer does not have a FadeoutText object attached");
+            return;
+        }
+
+        missingPlayerPrefabObj.guiText.text = "MISSING PLAYER";
+        if (Brain.IsPlayerMissing())
+        {
+            fadeoutObj.TextFaded += (script, obj) => DisplayMissingPlayer();
+        }
+        else
+        {
+            fadeoutObj.TextFaded += (script, obj) => PlayerIsBack();
+        }
     }
 
     private void DisplayMoves(int index = 0) {
@@ -160,5 +226,8 @@ public class GUIManager : MonoBehaviour {
         public GameObject MoveCorrect;
         public GameObject MoveWrong;
         public GameObject PointsScored;
+        public GameObject RoundCompleted;
+        public GameObject RoundPointsGained;
+        public GameObject MissingPlayer;
     }
 }
