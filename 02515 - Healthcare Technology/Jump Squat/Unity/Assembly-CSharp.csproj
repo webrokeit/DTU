@@ -67,6 +67,7 @@
      <Compile Include="Assets\REMEMBER-IMPORT\Scripts\FadeoutText.cs" />
      <Compile Include="Assets\REMEMBER-IMPORT\Scripts\GUIManager.cs" />
      <Compile Include="Assets\REMEMBER-IMPORT\Scripts\GameEventManager.cs" />
+     <Compile Include="Assets\REMEMBER-IMPORT\Scripts\ScaleText.cs" />
      <Compile Include="Assets\REMEMBER-IMPORT\Scripts\TextBorder.cs" />
      <Compile Include="Assets\Scripts\Kinect\Gesture\IGesture.cs" />
      <Compile Include="Assets\Scripts\Kinect\Gesture\JumpGesture.cs" />
