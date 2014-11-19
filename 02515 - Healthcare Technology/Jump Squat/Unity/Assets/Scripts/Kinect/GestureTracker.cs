@@ -77,7 +77,7 @@ public class GestureTracker : MonoBehaviour {
 	    }
 
 	    HandleDisplayOverlays(manager, positions);
-
+        
 	    if (_logger != null && (LogMode == LogModes.EachFrame || (LogMode == LogModes.GesturesOnly && gesturesDetected.Count > 0))) {
 	        _logger.Log(positions, userId, gesturesDetected);
 	    }

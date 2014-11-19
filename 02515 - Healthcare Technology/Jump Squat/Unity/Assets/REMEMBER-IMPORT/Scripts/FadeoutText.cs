@@ -1,5 +1,4 @@
-﻿using TreeEditor;
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections;
 
 [RequireComponent(typeof(GUIText))]

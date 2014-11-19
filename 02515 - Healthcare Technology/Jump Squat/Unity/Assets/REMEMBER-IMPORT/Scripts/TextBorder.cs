@@ -1,15 +1,19 @@
-﻿using TreeEditor;
+﻿using System.Text.RegularExpressions;
 using UnityEngine;
 using System.Collections;
 
+[ExecuteInEditMode]
 [RequireComponent(typeof(GUIText))]
 public class TextBorder : MonoBehaviour {
-    [Range(0, 3)]
-    public int BorderWidth = 0;
+    [Range(1, 3)]
+    public int BorderWidth = 1;
     public Color BorderColor = Color.black;
+
+    public bool EditorMode;
 
     private GameObject[] _borders;
     private Vector3 _prevPos = new Vector3(-1.234f, -1.345f, -1.456f);
+    private int _prevBorderWidth;
 
     private bool MustUpdate {
         get {
@@ -26,34 +30,34 @@ public class TextBorder : MonoBehaviour {
     }
 
 	// Use this for initialization
-	void Start () {
-	    if (BorderWidth > 0) {
-	        _borders = new GameObject[4*BorderWidth];
-	        for (var i = 0; i < _borders.Length; i++) {
-                _borders[i] = new GameObject(name + "_border[" + i + "]", typeof(GUIText));
-	            _borders[i].guiText.text = string.Empty;
-                _borders[i].guiText.font = guiText.font;
-                _borders[i].guiText.color = BorderColor;
-	            _borders[i].guiText.fontSize = guiText.fontSize;
-	            _borders[i].guiText.fontStyle = guiText.fontStyle;
-	            _borders[i].guiText.richText = guiText.richText;
-	            _borders[i].guiText.anchor = guiText.anchor;
-	            _borders[i].guiText.alignment = guiText.alignment;
-                _borders[i].transform.parent = transform;
-	            _borders[i].transform.localPosition = new Vector3(0, 0, -1);
-	            _borders[i].guiText.enabled = guiText.enabled;
-	        }
-	    }
-	}
+    void Start() {
+        if (!Application.isPlaying && !EditorMode && Application.isEditor) return;
+        RemoveBorders();
+        InitBorders();
+        _prevBorderWidth = BorderWidth;
+    }
 	
 	// Update is called once per frame
 	void Update () {
+        if (!Application.isPlaying && !EditorMode && Application.isEditor) {
+	        if (transform.childCount > 0) {
+	            RemoveBorders();
+	        }
+            return;
+        }
+
 	    if (_borders != null) {
 	        if (guiText.text.Length > 0) {
                 var createBorders = transform.position != _prevPos;
 
-	            if (MustUpdate) {
-	                Debug.Log("Must update!");
+	            var forceUpdate = false;
+	            if (_prevBorderWidth != BorderWidth || _borders.Length < 1 || _borders[0] == null) {
+	                RemoveBorders();
+                    InitBorders();
+	                forceUpdate = true;
+	            }
+
+	            if (forceUpdate || MustUpdate) {
                     foreach (var border in _borders) {
                         border.guiText.text = guiText.text;
                         border.guiText.font = guiText.font;
@@ -65,6 +69,7 @@ public class TextBorder : MonoBehaviour {
                         border.guiText.alignment = guiText.alignment;
                         border.guiText.enabled = guiText.enabled;
                     }
+	                createBorders = true;
 	            }
 
                 if (createBorders) {
@@ -76,6 +81,7 @@ public class TextBorder : MonoBehaviour {
                         _borders[i * 4 + 3].guiText.pixelOffset = new Vector2(guiText.pixelOffset.x, guiText.pixelOffset.y + offset);
                     }
 	                _prevPos = transform.position;
+                    _prevBorderWidth = BorderWidth;
                 }
 	        } else if (_borders[0].guiText.text.Length > 0) {
 	            foreach (var border in _borders) {
@@ -83,5 +89,38 @@ public class TextBorder : MonoBehaviour {
 	            }
 	        }
 	    }
+    }
+
+    void InitBorders() {
+        Debug.Log("INit borders");
+        _borders = new GameObject[4 * BorderWidth];
+        for (var i = 0; i < _borders.Length; i++) {
+            _borders[i] = new GameObject(name + "_border[" + i + "]", typeof(GUIText));
+            _borders[i].guiText.text = string.Empty;
+            _borders[i].guiText.font = guiText.font;
+            _borders[i].guiText.color = BorderColor;
+            _borders[i].guiText.fontSize = guiText.fontSize;
+            _borders[i].guiText.fontStyle = guiText.fontStyle;
+            _borders[i].guiText.richText = guiText.richText;
+            _borders[i].guiText.anchor = guiText.anchor;
+            _borders[i].guiText.alignment = guiText.alignment;
+            _borders[i].transform.parent = transform;
+            _borders[i].transform.localPosition = new Vector3(0, 0, -1);
+            _borders[i].guiText.enabled = guiText.enabled;
+        }
+    }
+
+    void RemoveBorders() {
+        Debug.Log("remove borders");
+        var children = transform.childCount;
+        if (children < 1) return;
+
+        var properChildRegex = new Regex(Regex.Escape(name) + @"(\(Clone\))?_border\[[0-9]+\]");
+        for (var i = children - 1; i >= 0; i--) {
+            var child = transform.GetChild(i);
+            if (child.GetComponent(typeof (GUIText)) == null) continue;
+            if (!properChildRegex.IsMatch(child.name)) continue;
+            DestroyImmediate(child.gameObject);
+        }
     }
 }
