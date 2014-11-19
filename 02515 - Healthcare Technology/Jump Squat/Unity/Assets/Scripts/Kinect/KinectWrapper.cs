@@ -12,48 +12,14 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
 using System.IO;
-using System.Text; 
+using System.Text;
+
+// Taken from Asset Store: https://www.assetstore.unity3d.com/en/#!/content/7747
 
 // Wrapper class that holds the various structs and dll imports
 // needed to set up a model with the Kinect.
 public class KinectWrapper
 {
-	// Kinect-given Variables to keep track of the skeleton's joints.
-	public enum SkeletonJoint
-	{ 
-		//NONE = 0,
-		HEAD = NuiSkeletonPositionIndex.Head,
-        NECK = NuiSkeletonPositionIndex.ShoulderCenter, 
-        SPINE = NuiSkeletonPositionIndex.Spine,  // TORSO_CENTER
-		HIPS = NuiSkeletonPositionIndex.HipCenter,  // WAIST
-
-		LEFT_COLLAR = -1,
-		LEFT_SHOULDER = NuiSkeletonPositionIndex.ShoulderLeft,
-        LEFT_ELBOW = NuiSkeletonPositionIndex.ElbowLeft,
-        LEFT_WRIST = NuiSkeletonPositionIndex.WristLeft,
-        LEFT_HAND = NuiSkeletonPositionIndex.HandLeft,
-        LEFT_FINGERTIP = -1,
-
-        RIGHT_COLLAR = -1,
-		RIGHT_SHOULDER = NuiSkeletonPositionIndex.ShoulderRight,
-		RIGHT_ELBOW = NuiSkeletonPositionIndex.ElbowRight,
-		RIGHT_WRIST = NuiSkeletonPositionIndex.WristRight,
-		RIGHT_HAND = NuiSkeletonPositionIndex.HandRight,
-        RIGHT_FINGERTIP = -1,
-
-        LEFT_HIP = NuiSkeletonPositionIndex.HipLeft,
-        LEFT_KNEE = NuiSkeletonPositionIndex.KneeLeft,
-        LEFT_ANKLE = NuiSkeletonPositionIndex.AnkleLeft,
-        LEFT_FOOT = NuiSkeletonPositionIndex.FootLeft,
-
-        RIGHT_HIP = NuiSkeletonPositionIndex.HipRight,
-		RIGHT_KNEE = NuiSkeletonPositionIndex.KneeRight,
-        RIGHT_ANKLE = NuiSkeletonPositionIndex.AnkleRight,
-		RIGHT_FOOT = NuiSkeletonPositionIndex.FootRight,
-		
-		END 
-	};
-	
 	public static class Constants
 	{
 		public const int NuiSkeletonCount = 6;

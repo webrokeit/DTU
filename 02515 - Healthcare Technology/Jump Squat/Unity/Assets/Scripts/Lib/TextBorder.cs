@@ -92,7 +92,6 @@ public class TextBorder : MonoBehaviour {
     }
 
     void InitBorders() {
-        Debug.Log("INit borders");
         _borders = new GameObject[4 * BorderWidth];
         for (var i = 0; i < _borders.Length; i++) {
             _borders[i] = new GameObject(name + "_border[" + i + "]", typeof(GUIText));
@@ -111,7 +110,6 @@ public class TextBorder : MonoBehaviour {
     }
 
     void RemoveBorders() {
-        Debug.Log("remove borders");
         var children = transform.childCount;
         if (children < 1) return;
 

@@ -1,10 +1,7 @@
 ﻿using System;
 using Assets.Scripts.Kinect;
 using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
-using System.Text;
-using System.Diagnostics;
 using Debug = UnityEngine.Debug;
 using Random = UnityEngine.Random;
 
@@ -13,10 +10,10 @@ public class GUIManager : MonoBehaviour {
 
     public GUIText GameOverText, ScoreText, RunningScoreText, RunningRoundText, RoundTimeText, EndGameText, RoundCountdownText;
     private List<Vector3> _movePositions;
-    private List<Gestures> moves;
-    private FadeoutText roundPointsGained;
-    private FadeoutText roundCompleted;
-    private bool playerCheck;
+    private List<Gestures> _moves;
+    private FadeoutText _roundPointsGained;
+    private FadeoutText _roundCompleted;
+    private bool _playerCheck;
 
     public PrefabCol Prefabs;
 
@@ -32,9 +29,9 @@ public class GUIManager : MonoBehaviour {
         RoundTimeText.enabled = false;
         EndGameText.enabled = false;
         RoundCountdownText.enabled = false;
-        playerCheck = false;
+        _playerCheck = false;
         _movePositions = new List<Vector3>();
-        moves = new List<Gestures>();
+        _moves = new List<Gestures>();
 	}
 	
 	// Update is called once per frame
@@ -43,10 +40,10 @@ public class GUIManager : MonoBehaviour {
         RunningRoundText.text = "Round "+Brain.Round;
         RoundTimeText.text = "Time left: " + Brain.GetTimeLeft();
         RoundCountdownText.text = Brain.GetCountdownLeft();
-        if (Brain.IsPlayerMissing() && playerCheck)
+        if (Brain.IsPlayerMissing() && _playerCheck)
         {
-            roundCompleted.enabled = false;
-            roundPointsGained.enabled = false;
+            _roundCompleted.enabled = false;
+            _roundPointsGained.enabled = false;
             DisplayMissingPlayer();
         }
 	}
@@ -59,7 +56,7 @@ public class GUIManager : MonoBehaviour {
         RunningRoundText.text = "Round: " + Brain.Round;
         RunningRoundText.enabled = true;
         RunningScoreText.enabled = true;
-        moves = new List<Gestures>();
+        _moves = new List<Gestures>();
         _movePositions = new List<Vector3>();
         EndGameText.text = "";
     }
@@ -86,7 +83,7 @@ public class GUIManager : MonoBehaviour {
 
     public void SetNextMove(Gestures move)
     {
-        moves.Add(move);
+        _moves.Add(move);
         var pos = GenerateVector();
         while (_movePositions.Contains(pos))
         {
@@ -105,7 +102,7 @@ public class GUIManager : MonoBehaviour {
     }
 
     void DisplayNewRound() {
-        playerCheck = false;
+        _playerCheck = false;
         var roundPrefabObj = Instantiate(Prefabs.Round, new Vector3(0.5f, 0.5f, 0f), Quaternion.identity) as GameObject;
         FadeoutText fadeoutObj;
         if (roundPrefabObj == null || (fadeoutObj = roundPrefabObj.GetComponent<FadeoutText>()) == null) {
@@ -136,26 +133,26 @@ public class GUIManager : MonoBehaviour {
         roundCompletedPrefabObj.guiText.text = "Round " + (Brain.Round - 1) + " completed";
         roundPointsGainedPrefabObj.guiText.text = "You have gained " + Brain.RoundScore + " points this round";
         fadeoutObj.TextFaded += (script, obj) => DisplayNewRound();
-        roundPointsGained = roundPointsfadeoutObj;
-        roundCompleted = fadeoutObj;
+        _roundPointsGained = roundPointsfadeoutObj;
+        _roundCompleted = fadeoutObj;
         if (Brain.IsPlayerMissing())
         {
             fadeoutObj.enabled = false;
             roundPointsfadeoutObj.enabled = false;
             DisplayMissingPlayer();
         }
-        playerCheck = true;
+        _playerCheck = true;
     }
 
     void PlayerIsBack()
     {
-        roundCompleted.enabled = true;
-        roundPointsGained.enabled = true;
+        _roundCompleted.enabled = true;
+        _roundPointsGained.enabled = true;
     }
 
     void DisplayMissingPlayer()
     {
-        playerCheck = false;
+        _playerCheck = false;
         var missingPlayerPrefabObj = Instantiate(Prefabs.MissingPlayer, new Vector3(0.5f, 0.75f, 0), Quaternion.identity) as GameObject;
 
         FadeoutText fadeoutObj;
@@ -170,15 +167,15 @@ public class GUIManager : MonoBehaviour {
         {
             fadeoutObj.TextFaded += (script, obj) => DisplayMissingPlayer();
         }
-        else
-        {
+        else {
+            Destroy(fadeoutObj.gameObject);
             PlayerIsBack();
         }
     }
 
     private void DisplayMoves(int index = 0) {
         if (index < 0) index = 0;
-        if (index >= moves.Count) {
+        if (index >= _moves.Count) {
             StartRound();
             return;
         }
@@ -190,7 +187,7 @@ public class GUIManager : MonoBehaviour {
             return;
         }
 
-        movePrefabObj.guiText.text = moves[index].ToString();
+        movePrefabObj.guiText.text = _moves[index].ToString();
         fadeoutObj.TextFaded += (script, obj) => DisplayMoves(index + 1);
     }
 
@@ -221,7 +218,7 @@ public class GUIManager : MonoBehaviour {
         pointsGainedObj.guiText.text = "+" + points;
         pointsGainedObj.guiText.pixelOffset = new Vector2(0, 15);
 
-        movePrefabObj.guiText.text = moves[moveIndex].ToString();
+        movePrefabObj.guiText.text = _moves[moveIndex].ToString();
     }
 
     private void RoundStart()

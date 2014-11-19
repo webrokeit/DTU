@@ -9,9 +9,10 @@ using Assets.Scripts.Lib;
 using UnityEngine;
 
 namespace Assets.Scripts.Kinect {
-    public class JointLogger {
+    public class JointLogger : IDisposable {
         public string LogFile { get; private set; }
         private readonly StreamWriter _dataStream;
+        private bool _disposed;
 
         public JointLogger(string logFile) {
             LogFile = logFile;
@@ -53,6 +54,13 @@ namespace Assets.Scripts.Kinect {
             foreach (var dataLine in gestures.Select(gestureDetected => baseDataLine + (gestureDetected != null ? gestureDetected.Gesture.ToString() : "None"))) {
                 _dataStream.WriteLine(dataLine);
             }
+        }
+
+        public void Dispose() {
+            if (_disposed) return;
+            _dataStream.Flush();
+            _dataStream.Close();
+            _disposed = true;
         }
     }
 }

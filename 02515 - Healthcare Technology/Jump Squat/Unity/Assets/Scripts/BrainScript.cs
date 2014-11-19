@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using Assets.Scripts;
 using Assets.Scripts.Kinect;
 using Assets.Scripts.Kinect.Gesture;
 using Assets.Scripts.Lib;
@@ -20,18 +21,19 @@ public class BrainScript : MonoBehaviour {
     private bool _wrongCombi;
     private const int TimePerExercise = 5000;
     private Stopwatch _exerciseTime;
-    private bool playerMissing;
     public GUIManager GuiManager;
     private Stopwatch _roundCountdown;
     public GestureTracker GestureTracker;
     public GestureInputter GestureInputter;
+
+    public string ScoresLogFile = "C:/Logs/{app_name}/{session}_scores.csv";
+    private ScoreLogger _logger;
 
 	// Use this for initialization
 	void Start () {
         GameEventManager.GameStart += GameStart;
         GameEventManager.GameOver += GameOver;
         GameEventManager.RoundStart += RoundStart;
-        playerMissing = true;
         _exerciseTime = new Stopwatch();
         _timeout = false;
         _wrongCombi = false;
@@ -44,7 +46,14 @@ public class BrainScript : MonoBehaviour {
 	    if (GestureInputter) {
 	        GestureInputter.GestureInput += AddUserCombination;
 	    }
+	    _logger = new ScoreLogger(ScoresLogFile);
 	}
+
+    void OnApplicationQuit() {
+        if (_logger != null) {
+            _logger.Dispose();
+        }
+    }
 
     public string GetCountdownLeft() {
         return _roundCountdown.ElapsedMilliseconds >= 3000 ? "GO!" : (3 - Math.Floor(_roundCountdown.ElapsedMilliseconds / 1000.0)).ToString(CultureInfo.InvariantCulture);
@@ -89,6 +98,11 @@ public class BrainScript : MonoBehaviour {
     }
 
     private void NewRound() {
+        if (_correctCombi.Count > 0 && _logger != null) {
+            var manager = KinectManager.Instance;
+            var userid = manager.IsUserDetected() ? manager.GetPlayer1ID() : 0;
+            _logger.Log(userid, Round, RoundScore, Score);
+        }
         var move = _possibleMoves[UnityEngine.Random.Range(0, _possibleMoves.Length)];
         _correctCombi.Add(move);
         Round++;

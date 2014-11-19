@@ -83,6 +83,12 @@ public class GestureTracker : MonoBehaviour {
 	    }
 	}
 
+    void OnApplicationQuit() {
+        if (_logger != null) {
+            _logger.Dispose();
+        }
+    }
+
     void HandleDisplayOverlays(KinectManager manager, JointPositions positions) {
         if (DisplayOverlays) {
             if (!_displayState) {
