@@ -37,7 +37,7 @@
 
 % Title
 \HRule \\[0.4cm]
-{\huge \bfseries 1st Group Report}\\[0.1cm]
+{\huge \bfseries 2nd Group Report}\\[0.1cm]
 \HRule \\[1.5cm]
 
 % Author and supervisor
@@ -60,15 +60,17 @@ Morten Chabert \textsc{Eskesen}\\
 
 \section*{Progress}
 \subsection*{Things that are going well}
-We have managed to finish implementing the game. It recognizes when the user squats or jumps.
+Working with the Microsoft Kinect has become a bit easier. We have a better understanding of how it works, what data it can provide and how we can use that data. Gesture recognition is quite fun to implement and test.\\
+We have working prototype of our game.
 
 \subsection*{Things that are not going so well}
-We found out that the old game was not doable the way we wanted to do it. Therefore we have changed the game - see next section.
+We found out that the game we originally planned to make, was not doable the way we wanted to do it. Therefore we have changed decided to change the game a bit. Primarily we had major difficulties with building a proper scene, this includes finding good and assets to make it look nice and also finding an avatar that would actually work with the Microsoft Kinect. We tried different avatars, but there always seemed to be something wrong.
 
 \subsection*{Any changes in the project}
-The game has been changed to a Memory Game of training exercises. Round 1 has 1 exercise the user has to remember and then perform. The numbers of exercises increase with the number of rounds. Round 1 would for example be jump and then round 2 would be jump, squat and so forth. So each round it only adds one more exercise to be performed. The order of exercises will stay the same throughout the game.
+We agreed to forget about making proper graphics and using avatars. Instead we've chosen to use the RGB Camera feature of the Microsoft Kinect to display the actual user. Then we've made an overlay on top of the RGB image displaying the game components, such as round, score, moves to make.\\
+The game has been changed to a Memory Game of training exercises. Round 1 has 1 exercise, round 2 has 2 exercises and so forth. When a round begins the exercises to perform are displayed and then a timer is started. The player has to perform the displayed exercises within a timeframe. The exercises are only displayed in the beginning of the round, which means that not only do they have to perform the exercise, they also have to remember the order in which to perform them. Right now we support to exercises, \emph{Jump} and \emph{Squat}. The exercises are chosen at random. When an exercise is chosen, it gets added to the list of exercises to perform, which means the exercises already in the list remain there when a new round starts and a new exercise is added.
 
 \subsection*{Brief summary of what has been done since last report}
-The old game was discarded and the new game has been implemented. It is ready for testing by our chosen test groups.
+The new game has been prototyped and tested briefly. The requirement specification is about done, the test specification might be extended. Most tests pass and some are yet to be executed. We expect to be able to improve the prototype a bit before we get our chosen test groups to try it out.
 
 \end{document}
