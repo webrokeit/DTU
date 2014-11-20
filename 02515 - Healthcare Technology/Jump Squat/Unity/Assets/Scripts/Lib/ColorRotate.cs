@@ -38,7 +38,7 @@ public class ColorRotate : MonoBehaviour {
         if (Speed < 0.00f) Speed = 1.0f;
     }
 
-    void Update() {
+    void FixedUpdated() {
         switch (_direction) {
             case ColorDirection.RedToGreen:
                 if (_green < MaxGreen) {

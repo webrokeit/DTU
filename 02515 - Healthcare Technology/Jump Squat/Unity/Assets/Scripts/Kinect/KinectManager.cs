@@ -59,25 +59,12 @@ public class KinectManager : MonoBehaviour
 	// Selection of smoothing parameters
 	public Smoothing smoothing = Smoothing.Default;
 	
-	// Lists of GameObjects that will be controlled by which player.
-	public List<GameObject> Player1Avatars;
-	public List<GameObject> Player2Avatars;
-	
 	
 	// Minimum time between gesture detections
 	public float MinTimeBetweenGestures = 0.7f;
 	
 	// GUI Text to show messages.
 	public GameObject CalibrationText;
-	
-	// GUI Texture to display the hand cursor for Player1
-	public GameObject HandCursor1;
-	
-	// GUI Texture to display the hand cursor for Player1
-	public GameObject HandCursor2;
-	
-	// Bool to specify whether Left/Right-hand-cursor and the Click-gesture control the mouse cursor and click
-	public bool ControlMouseCursor = false;
 	
 	// Bool to keep track of whether Kinect has been initialized
 	private bool KinectInitialized = false; 
@@ -135,9 +122,6 @@ public class KinectManager : MonoBehaviour
 	private Matrix4x4[] player1JointsOri, player2JointsOri;
 	private KinectWrapper.NuiSkeletonBoneOrientation[] jointOrientations;
 	
-	// general gesture tracking time start
-	private float[] gestureTrackingAtTime;
-	
 	private Matrix4x4 kinectToWorld, flipMatrix;
 	private static KinectManager instance;
 	
@@ -156,7 +140,7 @@ public class KinectManager : MonoBehaviour
 	// checks if Kinect is initialized and ready to use. If not, there was an error during Kinect-sensor initialization
 	public static bool IsKinectInitialized()
 	{
-		return instance != null ? instance.KinectInitialized : false;
+		return instance != null && instance.KinectInitialized;
 	}
 	
 	// checks if Kinect is initialized and ready to use. If not, there was an error during Kinect-sensor initialization
@@ -191,8 +175,8 @@ public class KinectManager : MonoBehaviour
 	// returns the depth map position for a 3d joint position
 	public Vector2 GetDepthMapPosForJointPos(Vector3 posJoint)
 	{
-		Vector3 vDepthPos = KinectWrapper.MapSkeletonPointToDepthPoint(posJoint);
-		Vector2 vMapPos = new Vector2(vDepthPos.x, vDepthPos.y);
+		var vDepthPos = KinectWrapper.MapSkeletonPointToDepthPoint(posJoint);
+		var vMapPos = new Vector2(vDepthPos.x, vDepthPos.y);
 		
 		return vMapPos;
 	}
@@ -551,8 +535,6 @@ public class KinectManager : MonoBehaviour
 			player1JointsOri = new Matrix4x4[skeletonJointsCount];
 			player2JointsOri = new Matrix4x4[skeletonJointsCount];
 			
-			gestureTrackingAtTime = new float[KinectWrapper.Constants.NuiSkeletonMaxTracked];
-			
 			//create the transform matrix that converts from kinect-space to world-space
 			Quaternion quatTiltAngle = new Quaternion();
 			quatTiltAngle.eulerAngles = new Vector3(-SensorAngle, 0.0f, 0.0f);
@@ -597,19 +579,17 @@ public class KinectManager : MonoBehaviour
 
 		if(ComputeUserMap)
 		{
-			float displayMapsWidthPercent = DisplayMapsWidthPercent / 100f;
-			float displayMapsHeightPercent = displayMapsWidthPercent * KinectWrapper.GetDepthHeight() / KinectWrapper.GetDepthWidth();
+			var displayMapsWidthPercent = DisplayMapsWidthPercent / 100f;
+			var displayMapsHeightPercent = displayMapsWidthPercent * KinectWrapper.GetDepthHeight() / KinectWrapper.GetDepthWidth();
 
-			float displayWidth = cameraRect.width * displayMapsWidthPercent;
-			float displayHeight = cameraRect.width * displayMapsHeightPercent;
+			var displayWidth = cameraRect.width * displayMapsWidthPercent;
+			var displayHeight = cameraRect.width * displayMapsHeightPercent;
 
 	        // Initialize depth & label map related stuff
 	        usersMapSize = KinectWrapper.GetDepthWidth() * KinectWrapper.GetDepthHeight();
 	        usersLblTex = new Texture2D(KinectWrapper.GetDepthWidth(), KinectWrapper.GetDepthHeight());
 	        usersMapColors = new Color32[usersMapSize];
 			usersPrevState = new ushort[usersMapSize];
-			//usersMapRect = new Rect(Screen.width, Screen.height - usersLblTex.height / 2, -usersLblTex.width / 2, usersLblTex.height / 2);
-	        //usersMapRect = new Rect(cameraRect.width, cameraRect.height - cameraRect.height * MapsPercentHeight, -cameraRect.width * MapsPercentWidth, cameraRect.height * MapsPercentHeight);
 			usersMapRect = new Rect(cameraRect.width - displayWidth, cameraRect.height, displayWidth, -displayHeight);
 			
 	        usersDepthMap = new ushort[usersMapSize];
@@ -618,19 +598,15 @@ public class KinectManager : MonoBehaviour
 		
 		if(ComputeColorMap)
 		{
-			float displayMapsWidthPercent = DisplayMapsWidthPercent / 100f;
-			float displayMapsHeightPercent = displayMapsWidthPercent * KinectWrapper.GetColorHeight() / KinectWrapper.GetColorWidth();
+			var displayMapsWidthPercent = DisplayMapsWidthPercent / 100f;
+			var displayMapsHeightPercent = displayMapsWidthPercent * KinectWrapper.GetColorHeight() / KinectWrapper.GetColorWidth();
 			
-			float displayWidth = cameraRect.width * displayMapsWidthPercent;
-			float displayHeight = cameraRect.width * displayMapsHeightPercent;
+			var displayWidth = cameraRect.width * displayMapsWidthPercent;
+			var displayHeight = cameraRect.width * displayMapsHeightPercent;
 			
 			// Initialize color map related stuff
 	        usersClrTex = new Texture2D(KinectWrapper.GetColorWidth(), KinectWrapper.GetColorHeight());
-	        //usersClrRect = new Rect(cameraRect.width, cameraRect.height - cameraRect.height * MapsPercentHeight, -cameraRect.width * MapsPercentWidth, cameraRect.height * MapsPercentHeight);
-			usersClrRect = new Rect(cameraRect.width - displayWidth, cameraRect.height, displayWidth, -displayHeight);
-			
-//			if(ComputeUserMap)
-//				usersMapRect.x -= cameraRect.width * DisplayMapsWidthPercent; //usersClrTex.width / 2;
+	        usersClrRect = new Rect(cameraRect.width - displayWidth, cameraRect.height, displayWidth, -displayHeight);
 			
 			colorImage = new Color32[KinectWrapper.GetColorWidth() * KinectWrapper.GetColorHeight()];
 			usersColorMap = new byte[colorImage.Length << 2];

@@ -53,7 +53,7 @@ public class GUIManager : MonoBehaviour {
         GameOverText.enabled = false;
         ScoreText.enabled = false;
         RunningScoreText.text = "Score: " + Brain.Score;
-        RunningRoundText.text = "Round: " + Brain.Round;
+        RunningRoundText.text = "Round " + Brain.Round;
         RunningRoundText.enabled = true;
         RunningScoreText.enabled = true;
         _moves = new List<Gestures>();
