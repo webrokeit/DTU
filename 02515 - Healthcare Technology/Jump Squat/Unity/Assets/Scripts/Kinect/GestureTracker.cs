@@ -77,11 +77,17 @@ public class GestureTracker : MonoBehaviour {
 	    }
 
 	    HandleDisplayOverlays(manager, positions);
-
+        
 	    if (_logger != null && (LogMode == LogModes.EachFrame || (LogMode == LogModes.GesturesOnly && gesturesDetected.Count > 0))) {
 	        _logger.Log(positions, userId, gesturesDetected);
 	    }
 	}
+
+    void OnApplicationQuit() {
+        if (_logger != null) {
+            _logger.Dispose();
+        }
+    }
 
     void HandleDisplayOverlays(KinectManager manager, JointPositions positions) {
         if (DisplayOverlays) {

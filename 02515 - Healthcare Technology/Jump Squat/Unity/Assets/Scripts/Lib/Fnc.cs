@@ -29,5 +29,13 @@ namespace Assets.Scripts.Lib {
             self.Reset();
             self.Start();
         }
+
+        public static Vector2 GetMainGameViewSize() {
+            var t = Type.GetType("UnityEditor.GameView,UnityEditor");
+            if (t == null) return Vector2.zero;
+            var getSizeOfMainGameView = t.GetMethod("GetSizeOfMainGameView", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static);
+            var res = getSizeOfMainGameView.Invoke(null, null);
+            return (Vector2)res;
+        }
     }
 }

@@ -19,7 +19,7 @@
 	<DebugType>full</DebugType>
 	<Optimize>false</Optimize>
 	<OutputPath>Temp\bin\Debug\</OutputPath>
-	<DefineConstants>DEBUG;TRACE;UNITY_4_5_3;UNITY_4_5;UNITY_STANDALONE_WIN;ENABLE_MICROPHONE;ENABLE_TEXTUREID_MAP;ENABLE_UNITYEVENTS;ENABLE_NEW_HIERARCHY ;ENABLE_AUDIO_FMOD;UNITY_STANDALONE;ENABLE_MONO;ENABLE_TERRAIN;ENABLE_SUBSTANCE;ENABLE_GENERICS;INCLUDE_WP8SUPPORT;ENABLE_MOVIES;ENABLE_WWW;ENABLE_IMAGEEFFECTS;INCLUDE_WP_BLUE_SUPPORT;ENABLE_WEBCAM;INCLUDE_METROSUPPORT;RENDER_SOFTWARE_CURSOR;ENABLE_NETWORK;ENABLE_PHYSICS;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_2D_PHYSICS;ENABLE_SHADOWS;ENABLE_AUDIO;ENABLE_NAVMESH_CARVING;ENABLE_DUCK_TYPING;ENABLE_SINGLE_INSTANCE_BUILD_SETTING;ENABLE_PROFILER;UNITY_EDITOR;UNITY_EDITOR_WIN</DefineConstants>
+	<DefineConstants>DEBUG;TRACE;UNITY_4_5_4;UNITY_4_5;UNITY_STANDALONE_WIN;ENABLE_MICROPHONE;ENABLE_TEXTUREID_MAP;ENABLE_UNITYEVENTS;ENABLE_NEW_HIERARCHY ;ENABLE_AUDIO_FMOD;UNITY_STANDALONE;ENABLE_MONO;ENABLE_TERRAIN;ENABLE_SUBSTANCE;ENABLE_GENERICS;INCLUDE_WP8SUPPORT;ENABLE_MOVIES;ENABLE_WWW;ENABLE_IMAGEEFFECTS;INCLUDE_WP_BLUE_SUPPORT;ENABLE_WEBCAM;INCLUDE_METROSUPPORT;RENDER_SOFTWARE_CURSOR;ENABLE_NETWORK;ENABLE_PHYSICS;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_2D_PHYSICS;ENABLE_SHADOWS;ENABLE_AUDIO;ENABLE_NAVMESH_CARVING;ENABLE_DUCK_TYPING;ENABLE_SINGLE_INSTANCE_BUILD_SETTING;ENABLE_PROFILER;UNITY_EDITOR;UNITY_EDITOR_WIN</DefineConstants>
 	<ErrorReport>prompt</ErrorReport>
 	<WarningLevel>4</WarningLevel>
 	<NoWarn>0169</NoWarn>
@@ -46,29 +46,9 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\DEMO KinectScripts\AvatarController.cs" />
-     <Compile Include="Assets\DEMO KinectScripts\Filters\BoneOrientationsConstraint.cs" />
-     <Compile Include="Assets\DEMO KinectScripts\Filters\BoneOrientationsFilter.cs" />
-     <Compile Include="Assets\DEMO KinectScripts\Filters\ClippedLegsFilter.cs" />
-     <Compile Include="Assets\DEMO KinectScripts\Filters\JointPositionsFilter.cs" />
-     <Compile Include="Assets\DEMO KinectScripts\Filters\KinectHelper.cs" />
-     <Compile Include="Assets\DEMO KinectScripts\Filters\SelfIntersectionConstraint.cs" />
-     <Compile Include="Assets\DEMO KinectScripts\Filters\TimedLerp.cs" />
-     <Compile Include="Assets\DEMO KinectScripts\Filters\TrackingStateFilter.cs" />
-     <Compile Include="Assets\DEMO KinectScripts\KinectGestures.cs" />
-     <Compile Include="Assets\DEMO KinectScripts\KinectManager.cs" />
-     <Compile Include="Assets\DEMO KinectScripts\KinectWrapper.cs" />
-     <Compile Include="Assets\DEMO KinectScripts\Samples\GetJointPositionDemo.cs" />
-     <Compile Include="Assets\DEMO KinectScripts\Samples\LoadMainLevel.cs" />
-     <Compile Include="Assets\DEMO KinectScripts\Samples\MouseControl.cs" />
-     <Compile Include="Assets\DEMO KinectScripts\Samples\SetSceneAvatars.cs" />
-     <Compile Include="Assets\DEMO KinectScripts\Samples\SimpleGestureListener.cs" />
-     <Compile Include="Assets\REMEMBER-IMPORT\Scripts\BrainScript.cs" />
-     <Compile Include="Assets\REMEMBER-IMPORT\Scripts\FadeoutText.cs" />
-     <Compile Include="Assets\REMEMBER-IMPORT\Scripts\GUIManager.cs" />
-     <Compile Include="Assets\REMEMBER-IMPORT\Scripts\GameEventManager.cs" />
-     <Compile Include="Assets\REMEMBER-IMPORT\Scripts\ScaleText.cs" />
-     <Compile Include="Assets\REMEMBER-IMPORT\Scripts\TextBorder.cs" />
+     <Compile Include="Assets\Scripts\BrainScript.cs" />
+     <Compile Include="Assets\Scripts\GUIManager.cs" />
+     <Compile Include="Assets\Scripts\GameEventManager.cs" />
      <Compile Include="Assets\Scripts\Kinect\Gesture\IGesture.cs" />
      <Compile Include="Assets\Scripts\Kinect\Gesture\JumpGesture.cs" />
      <Compile Include="Assets\Scripts\Kinect\Gesture\SquatGesture.cs" />
@@ -80,8 +60,16 @@
      <Compile Include="Assets\Scripts\Kinect\JointOverlays.cs" />
      <Compile Include="Assets\Scripts\Kinect\JointPositions.cs" />
      <Compile Include="Assets\Scripts\Kinect\KinectEnums.cs" />
+     <Compile Include="Assets\Scripts\Kinect\KinectLoader.cs" />
+     <Compile Include="Assets\Scripts\Kinect\KinectManager.cs" />
      <Compile Include="Assets\Scripts\Kinect\KinectOverlayer.cs" />
+     <Compile Include="Assets\Scripts\Kinect\KinectWrapper.cs" />
+     <Compile Include="Assets\Scripts\Lib\ColorRotate.cs" />
+     <Compile Include="Assets\Scripts\Lib\FadeoutText.cs" />
      <Compile Include="Assets\Scripts\Lib\Fnc.cs" />
+     <Compile Include="Assets\Scripts\Lib\ScaleText.cs" />
+     <Compile Include="Assets\Scripts\Lib\TextBorder.cs" />
+     <Compile Include="Assets\Scripts\ScoreLogger.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
