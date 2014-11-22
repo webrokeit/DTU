@@ -17,7 +17,7 @@ public class HoverMe : MonoBehaviour {
 		if (_hoverStart > 0.0f) {
 			var delta = Time.time - _hoverStart;
 			if(HoverProgressed != null) {
-				var progress = Mathf.Min (TimeToActivate / delta, 1.0f);
+				var progress = Mathf.Min (delta / TimeToActivate, 1.0f);
 				HoverProgressed(this, progress);
 			}
 
