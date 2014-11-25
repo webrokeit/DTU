@@ -62,6 +62,7 @@ The National Institute of Standards and Technology is a federal technology agenc
 \emph{"Cloud computing is a model for enabling ubiquitous, convenient, on-demand network access to a shared pool of configurable computing resources that can be rapidly provisioned and released with minimal management effort or service provider interaction."} \cite{clouddefinition}
 \end{center}
 This definition states that shared networks, servers, applications, services etc can easily be distributed globally and quickly maintained by using cloud computing.\\
+
 There are five essential characteristics of the cloud computing model
 \begin{description}
 \item[On-demand self-service] No required human interaction when needing more or less computing capabilities
@@ -70,10 +71,16 @@ There are five essential characteristics of the cloud computing model
 \item[Rapid elasticity] Capabilities can be elastically released to scale rapidly according to the demand
 \item[Measured service] In an automatic way the cloud computing systems control and optimize recourse use
 \end{description}
+
 There are four different deployment models. One cloud infrastructure is for exclusive use by a single organization comprising the multiple consumers - the \emph{private cloud}. Another cloud infrastructure is for exclusive use by a specific community of users from organizations with shared concerns - the \emph{community cloud}. The \emph{public cloud} is an infrastructure open for use by the general public. The last cloud infrastructure is a mixture of two or more distinct cloud infrastructures that remain unique entities - the \emph{hybrid cloud}.
 
-\section{Fault tolerance}
-Brief description of what fault tolerance is (in cloud computing)...
+\section{Fault tolerance in cloud computing}
+Fault tolerance is a key factor for cloud computing systems due to the rapid exponential growth in use of cloud computing \cite{faulttolerancetechniques}. The purpose of fault tolerance in any system is to achieve robustness and dependability. Fault tolerance policies and techniques allow us to classify this techniques into 2 types
+\begin{description}
+\item[Proactive fault tolerance policy] aims to avoid recovering from fault, errors and failure by predicting them and replacing the suspicious component. This means detecting problems before they actually occur.
+\item[Reactive fault tolerance policy] reduces the effect of failures when the failure actually occurs.
+\end{description}
+These policies can be divided into two further sub techniques error processing and fault treatment. The aim of error processing is to remove errors from the computational state and the aim of fault treatment is to prevent faults from reoccurring.
 
 \chapter{Amazon Web Services}
 The Amazon Web Services, henceforth \emph{AWS}....
