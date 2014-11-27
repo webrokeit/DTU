@@ -18,12 +18,12 @@ public class HoverMe : MonoBehaviour {
 			var delta = Time.time - _hoverStart;
 			if(HoverProgressed != null) {
 				var progress = Mathf.Min (delta / TimeToActivate, 1.0f);
-				HoverProgressed(this, progress);
+				HoverProgressed(gameObject, progress);
 			}
 
 			if (delta >= TimeToActivate) {
 				if (HoverActivated != null) {
-					HoverActivated (this);
+					HoverActivated (gameObject);
 				}
 			}
 		}

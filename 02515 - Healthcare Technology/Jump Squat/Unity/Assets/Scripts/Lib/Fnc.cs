@@ -37,5 +37,12 @@ namespace Assets.Scripts.Lib {
             var res = getSizeOfMainGameView.Invoke(null, null);
             return (Vector2)res;
         }
+
+        public static void Fill<T>(this T[] arr, T value) {
+            if (arr == null || arr.Length < 1) return;
+            for (var i = 0; i < arr.Length; i++) {
+                arr[i] = value;
+            }
+        }
     }
 }
