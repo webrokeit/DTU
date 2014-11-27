@@ -64,9 +64,11 @@
      <Compile Include="Assets\Scripts\Kinect\KinectManager.cs" />
      <Compile Include="Assets\Scripts\Kinect\KinectOverlayer.cs" />
      <Compile Include="Assets\Scripts\Kinect\KinectWrapper.cs" />
+     <Compile Include="Assets\Scripts\Lib\Buttonize.cs" />
      <Compile Include="Assets\Scripts\Lib\ColorRotate.cs" />
      <Compile Include="Assets\Scripts\Lib\FadeoutText.cs" />
      <Compile Include="Assets\Scripts\Lib\Fnc.cs" />
+     <Compile Include="Assets\Scripts\Lib\HoverMe.cs" />
      <Compile Include="Assets\Scripts\Lib\ScaleText.cs" />
      <Compile Include="Assets\Scripts\Lib\TextBorder.cs" />
      <Compile Include="Assets\Scripts\ScoreLogger.cs" />
