@@ -71,11 +71,16 @@ namespace Assets.Scripts.Kinect {
             if (!overlayObject || !_mappings.ContainsKey(overlayObject)) return;
 
             var joint = _mappings[overlayObject];
+            Position(manager, positions, joint, overlayObject, smoothFactor, _overlays[overlayObject]);
+        }
+
+        public static void Position(KinectManager manager, JointPositions positions, Joints joint, GameObject overlayObject, float smoothFactor, float distanceToCamera) {
+            if (!overlayObject) return;
+
             positions.InitIfNotSet(joint);
             if (!positions.AreAllNonZero(joint)) return;
 
             var jointPosition = positions[joint];
-            var distanceToCamera = _overlays[overlayObject];
 
             var depthPosition = manager.GetDepthMapPosForJointPos(jointPosition);
             var colorPosition = manager.GetColorMapPosForDepthPos(depthPosition);

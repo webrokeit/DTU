@@ -9,24 +9,24 @@ using UnityEngine;
 public class GestureInputter : MonoBehaviour {
     public KeyCode JumpKey = KeyCode.UpArrow;
     public KeyCode SquatKey = KeyCode.DownArrow;
-    
+    public KeyCode StartKey = KeyCode.Space;
+
     public delegate void GestureInputEvent(Gestures gesture);
     public event GestureInputEvent GestureInput;
+
+    public event Action GameStartRequested;
 
     void Start () { }
 
     private void Update() {
         if (Input.GetKeyUp(JumpKey)) {
-            PublishGesture(Gestures.Jump);
+            if(GestureInput != null) GestureInput(Gestures.Jump);
         }
         if (Input.GetKeyUp(SquatKey)) {
-            PublishGesture(Gestures.Squat);
+            if (GestureInput != null) GestureInput(Gestures.Squat);
         }
-    }
-
-    private void PublishGesture(Gestures gesture) {
-        if (GestureInput != null) {
-            GestureInput(gesture);
+        if (Input.GetKeyUp(StartKey)) {
+            if (GameStartRequested != null) GameStartRequested();
         }
     }
 }

@@ -12,6 +12,9 @@ using System.Collections;
 public class GestureTracker : MonoBehaviour {
     public bool DisplayOverlays = false;
     public JointOverlays Overlays;
+    public bool DisplayCursor = false;
+    public GameObject CursorObject = null;
+    private float _cursorDistToCamera;
     public float SmoothFactor = 5f;
     private bool _displayState;
 
@@ -36,6 +39,7 @@ public class GestureTracker : MonoBehaviour {
             overlay.SetActive(DisplayOverlays);
             Overlays[overlay] = (overlay.transform.position - Camera.main.transform.position).magnitude;
         }
+	    if (CursorObject) _cursorDistToCamera = (CursorObject.transform.position - Camera.main.transform.position).magnitude;
         _displayState = DisplayOverlays;
 
 	    if (GesturesToTrack != null && GesturesToTrack.Length > 0) {
@@ -105,6 +109,16 @@ public class GestureTracker : MonoBehaviour {
                 overlay.SetActive(false);
             }
             _displayState = false;
+        }
+        
+        if (!CursorObject) return;
+        if (DisplayCursor) {
+            if (!CursorObject.activeInHierarchy) {
+                CursorObject.SetActive(true);
+            }
+            JointOverlays.Position(manager, positions, Joints.LeftFoot, CursorObject, SmoothFactor, _cursorDistToCamera);
+        } else if (CursorObject.activeInHierarchy) {
+            CursorObject.SetActive(false);
         }
     }
 }

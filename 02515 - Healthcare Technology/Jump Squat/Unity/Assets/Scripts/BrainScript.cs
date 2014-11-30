@@ -45,6 +45,7 @@ public class BrainScript : MonoBehaviour {
 	    }
 	    if (GestureInputter) {
 	        GestureInputter.GestureInput += AddUserCombination;
+	        GestureInputter.GameStartRequested += NewGame;
 	    }
 	    _logger = new ScoreLogger(ScoresLogFile);
 	}
@@ -70,10 +71,6 @@ public class BrainScript : MonoBehaviour {
     }
 
 	void Update () {
-        if (Input.GetKeyDown(KeyCode.Space)) {
-            GameEventManager.StartGame();
-        }
-
         if (_roundCountdown.IsRunning && _roundCountdown.ElapsedMilliseconds > 3750) {
             if (_roundCountdown.ElapsedMilliseconds < 3000) return;
             if(!_exerciseTime.IsRunning) _exerciseTime.Start();
@@ -95,6 +92,11 @@ public class BrainScript : MonoBehaviour {
         Score += (int)totalScore;
         RoundScore += (int)totalScore;
         GuiManager.GainedPoints((int) totalScore, _userCombi.Count - 1);
+    }
+
+    public void NewGame() {
+        if (Round > 0) return;
+        GameEventManager.StartGame();
     }
 
     private void NewRound() {
