@@ -1,5 +1,6 @@
-\documentclass[12pt]{report}
+\documentclass[11pt]{report}
 \usepackage{graphicx}
+\usepackage{geometry}
 \usepackage{titling}
 \usepackage{fancyhdr}
 \usepackage[latin1]{inputenc}
@@ -9,14 +10,17 @@
 \usepackage{amssymb}
 \usepackage{amsthm}
 \usepackage{amsfonts}
+\usepackage{amsmath}
 \usepackage[usenames,dvipsnames,svgnames,table]{xcolor}
 \usepackage{listings}
 \usepackage[hidelinks]{hyperref}
+\usepackage[labelfont=bf]{caption}
+\usepackage{longtable}
+%\usepackage{tocbibind}
 \parindent=0pt
 \frenchspacing
 
 \pagestyle{fancy}
-
 \fancyhead[L]{\slshape\footnotesize December 3, 2014\\\textsc{02515 Health Care Technology}}
 \fancyhead[R]{\slshape\footnotesize \textsc{Andreas Kjeldsen (s092638)}\\\textsc{Morten Eskesen (s133304)}}
 \fancyfoot[C]{\thepage}
@@ -59,57 +63,251 @@ Morten Chabert \textsc{Eskesen}\\
 \end{center}
 \end{titlepage}
 
+\begingroup
+\tableofcontents
+\let\clearpage\relax
+\listoffigures
+\let\clearpage\relax
+\listoftables
+\endgroup
+
 \chapter{Introduction}
 \section{Formalities}
-This report is a result of a project done in the course \emph{Health Care Technology} taken at DTU. The project has been a collaboration between us both, Andreas and Morten, where we each have been equally responsible for all parts of the project. By Andreas' mother we were able to test the game on kids from elementary school. 
+This report is a result of a project done in the course \emph{Health Care Technology} taken at DTU. The project has been a collaboration between us both, Andreas and Morten, where we each have been equally responsible for all parts of the project. Andreas' mother works at an elementary school and by virtue of that we were able to test the game on kids from elementary school.
 
 \section{Objectives}
 The objective and product of the course Health Care Technology is to create a health-promoting interactive game by using Unity and Kinect technology. The game should solve a health care problem in Denmark. The course puts a lot of focus on health care challenges in today's Denmark and how the challenges can be solved by modern technology. In the future we will rely more and more on modern technology for health care problem as one of the problems in health care is the increasing need for treatment of the aging population. Another problem is the number of obese people in Denmark which has increased considerably in the last decade \cite{Sundhedsstyrelsen}.\\
-This project aims to aid the solving of the increasing obesity problem in Denmark by creating a game that will increase the physical activity of children such that obesity can be prevented and obese children can become more healthy.
+This project aims to aid the solving of the increasing obesity problem in Denmark by creating a game that will increase the physical activity of people of age 13 and up, such that obesity can be prevented and obese people can become more healthy.
 
-\section{Obesity}
+\section{Overweight \& obesity}
+Overweight and obesity are defined as abnormal or excessive fat accumulation that presents a risk to health \cite{who-obesity}. An international measure known as Body Mass Index, henceforth \emph{BMI}, is commonly used to classify people as underweight, overweight and obese. BMI values are age-independent and the same for both sexes \cite{who-bmi}. BMI is calculated by the following:
 
+$$\text{BMI}=\frac{\text{Weight (kg)}}{\text{Height}^2 \text{(m)}}$$
+When calculating this you can use it to see if you are classified as underweight, normal, overweight or obese by the BMI scale. The BMI classifications and their corresponding values are defined as follows \cite{who-bmi}:
+\begin{table}[H]
+\centering
+\caption{BMI classification}
+\begin{tabular}{| c | c | c | c}
+\hline
+\textbf{Classification} & \textbf{BMI}\\ \hline
+Underweight & Below 18.5 \\ \hline
+Normal range & 18.5 - 24.99 \\ \hline
+Overweight & Over 25\\ \hline
+Obese & Over 30 \\ \hline
+\end{tabular}
+\end{table}
+Overweight and obesity are major risk factors for a number of chronic diseases. These diseases include diabetes, cardiovascular diseases and cancer. In Denmark the total expenses linked with obesity and the treatment thereof on hospital was calculated as being 1.1 billion kroner in 2004 \cite{consequences-obese}.
 
 \chapter{Game details}
-\section{Requirements specification}
-
-
 \section{Game description}
+The Remember Training Game, as the name suggests, is a game where both memory and physical exercises are key components. {\\\bfseries \Huge MOREEEE HEEREEE!!}
 
+\section{Requirements specification}
+The focus of the game is to get people to exercise, hence it's vital to incorporate a requirement of movement. Though it might seem redundant, it is also important to make requirements on the visualization of the game, the difficulty of the game and the usability of the game.
+
+\subsection{Game setup}
+The game should be easy to setup. Hence there should be no additional software installations required to get the program working. There might be a small setup required for the actual room the game is to be played in. As this is a game that requires physical activity, the player should be able to move around, jump up and don and squat without hitting any obstacles. To enhance the gaming experience, the lights in the room should be turned on.
+
+\subsection{Game start}
+The player must be able to start the game just by interacting with the Kinect. When a game is finished, the player should be able to restart the game without having to first close down the game and then run it again.
+
+\subsection{Player recognition}
+The game must be able to recognize players\footnote{ To recognize a player, means identify that a player is in front of the Kinect. It does not mean identifying a specific person.}. The game must support one player, though two player mode would be nice to have. The game should support players of various height, width and depth, thus the game should be able to calibrate when a new player is recognized.
+
+\subsection{Game progression}
+While playing the game, the user should be able to determine if they're progressing or not. The game should consist of rounds, which the player can use to determine if they're progressing or not. The player should also be rewarded when progressing in the game. The reward should be points which in turn should increase the players score.
+
+\subsection{Exercises}
+The exercises the player has to perform should be picked at random. Picking the exercises at random forces the player to be paying attention and to exercise their memory. Each round a new exercise must be added to the sequence of exercises to perform. The order of the exercises must not be changed within a single game. The exercises are shown sequentially. The position on the screen where the exercise will be shown should be chosen at random the first time, in the following rounds the exercise should be shown at the same position.
+
+\subsection{Gesture recognition}
+The basis for the game, is that the player should perform a specific set of exercises. The game must be able to recognize these exercises. The game should also be able to recognize exercises that are being performed in a consecutive manner. The recognition should be flexible, in such a way that false positives for gestures are very rare and preferably not happening at all.
+
+\subsection{Timing}
+Each exercise should be performed within a set amount of time. When an exercise is performed correctly, the timing should be reset and allow the same amount of time for the next exercise. The amount of time should allow for the player to remember which exercise to perform and for the player to actually perform it. The amount of time should not allow for the player to write down the exercises, look up which to perform or become too relaxed.
+
+\subsection{Scoring}
+When the player is rewarded points for performing the right exercise, the amount of points being rewarded along with the exercise the user performed, should be shown on the screen. Showing the rewarded points and the exercise is a way for the game to provide feedback for the player. The feedback informs the player that the exercise was recognized and that they should progress onto the next exercise. The feedback should be shown on the screen where the exercise perform was shown. The amount of points gained should depend on how far the player has progressed in the game and how quickly they perform the exercise.
+
+\subsection{Game over}
+The game should end if an exercise is not performed within the allowed time or if the wrong exercise is performed. The player must be informed that the game is over. A summary of the game should be displayed to the player.
+
+\subsection{Summary}
+Below is a summary of the requirements specification modeled as a table. Each requirement states two scenarios, the \emph{need to have} and the \emph{nice to have}. As a minimum the game should support the need to haves, but we aim for the game to support most, if not all, of the nice to haves. 
+
+
+\begin{center}
+\begin{longtable}{| p{3cm} | p{4.75cm} | p{6cm} | }
+\caption[Requirement specification summary]{Requirement specification, describing the minimum requirements (Need) and the desired requirements (Nice).}
+
+\hline \multicolumn{1}{|c|}{\textbf{Requirement} } & \multicolumn{1}{c|}{\textbf{Need}} & \multicolumn{1}{c|}{\textbf{Nice}} \\ \hline 
+\endfirsthead
+
+\multicolumn{3}{c}%
+{{\bfseries \tablename\ \thetable{} -- continued from previous page}} \\
+\hline \multicolumn{1}{|c|}{\textbf{Requirement}} &
+\multicolumn{1}{c|}{\textbf{Need}} &
+\multicolumn{1}{c|}{\textbf{Nice}} \\ \hline 
+\endhead
+
+\hline \multicolumn{3}{|r|}{{Continued on next page}} \\ \hline
+\endfoot
+
+\hline \hline
+\endlastfoot
+
+
+\hline
+Room setup & A well lit room with no objects within the viewport of the Kinect & A room with some lights turned on, doesn't matter if there are objects within the viewport of the Kinect \\ \hline
+Game start & The player must able to start the game by interacting with the Kinect & The player must be able to both start and restart the game by interacting with the Kinect \\ \hline
+Amount of players & One player is supported & Two players are supported \\ \hline
+Player recognition & The game should be able to recognize the player, calibration poses might be required & The game should be able to recognize the player, calibration is done automatically \\ \hline
+Game progression & The game consists of rounds which the player can progress though & The game consists of rounds which the player can progress through, additionally points are also rewarded \\ \hline
+Exercises & New exercise each round while keeping the order of previous exercises, the exercises are all shown in the middle of the screen & New exercise each round while keeping the order of previous exercises, the exercises are shown at random positions \\ \hline
+Gesture recognition & The gestures are recognized, false positives are rare & The gestures are recognized, false positives are very rare if not happening at all \\ \hline
+Timing & Timing of exercise, player has plenty of time between exercises & Timing of exercises, player has little time between exercises and must remain active and observant. \\ \hline
+Scoring & Points are earned when performing the right exercise & Points are earned when performing the right exercise, amount of points are based on game progression \\ \hline
+Feedback & The player gets visual feedback when an exercise has been performed & The player gets visual feedback when an exercise has been performed while also being notified about the amount of points earned \\ \hline
+Game over & The game can end when the player fails to perform the right exercise within the allowed time & The game can end when the player fails to perform the right exercise within the allowed time, the obtained score is also shown on the screen \\ \hline
+\end{longtable}
+\end{center}
 
 \section{Technology}
-
-
-\section{Game specification}
+%\section{Game specification}
 
 
 \chapter{Implementation}
-
+The game has been implemented using Unity3D Free as the game engine and the Visual Studio IDE for coding in C\#. 
 
 \section{Implementation order}
+The game has been made in an incremental manner, using some of the principals of Scrum. Git and Github has been used for source control, feature discussion and issue tracking. 
 
+\subsection{Scene}
+The scene was kept simple. There's a skybox with a solid color used as the background for the game. GUIText objects are then used to display various texts. The game is to be kept simple and not overly fancy, therefore the texts are using a font with the look and feel of good old 8bit games. The font is readable close by and when it's scaled up. The font is called \emph{Press Start 2P} and is Open Font licensed (OFL) \cite{2pfont}. 
+
+\subsection{Game manager}
+
+
+\subsection{Keyboard input}
+
+\subsection{Kinect integration}
+
+\subsection{Joint tracking}
+
+\subsection{Gesture recognition}
+
+\subsection{Abstractions}
+
+\subsection{Visual improvements}
+
+\subsection{Hover buttons}
 
 \chapter{Test}
 \section{Test specification}
 
 
 \section{Test results}
+Besides testing on ourselves, our friends and family, we also wanted to take the game out in the world and apply it in an environment where it could possibly have a positive effect. Our game was tested on kids in age range 12-15 at an elementary school in Helsing\o r. The game was tested in a classroom, hence we could test if furniture in the background would interfere. We found that the player had to stand at least 12 meters away and be right beside some furniture, before it would have an effect on the Kinect registering the joints properly. One of the measurable features of a training game is the heart rate of the player. When testing we noted the heart rate of the player before and after playing the game. What follows is a table of the test results obtaining from the elementary school.
 
+Players occurring with the same name are not different players but the same player's second try. HR is Heart Rate, the first number is the before heart rate and the second number is the heart rate after - i.e. 76 $\rightarrow$ 114 means a heart rate of 76 before and 114 after playing. The percentage describes how much the heart rate increased in percentage. FR is Failure Reason where the following codes apply:
+\begin{itemize}
+\item[1] Wrong exercise done by the player
+\item[2] Time ran out, i.e. no exercise was done in time
+\item[3] Registration error
+\item[4] Computer crashed
+\end{itemize}
+
+\begin{table}[H]
+\centering
+\caption[Test results]{Results after testing 14 youngsters with an average age of 13.9. The results show an average increase in heart rate of 52.9 \%.}
+\begin{tabular}{ | c | c | c | c | c | c | c | c | c | c |}
+\hline
+\textbf{Name} & \textbf{Age} & \textbf{Gender} & \textbf{Heart rate} & \textbf{Diff.} & \textbf{\%} & \textbf{Round} & \textbf{Score} & \textbf{FR}\\ \hline
+Amine & 15 & F & 76 $\rightarrow$ 114 & 38 & 50.0 & 5 & 2264 & 1\\ \hline 
+Anders & 15 & M & 64 $\rightarrow$ 93 &  29 & 45.3 & 3 & 253 & 1\\ \hline 
+Anders & 15 & M & 67 $\rightarrow$ 102  & 35 & 52.2  & 4 & 1057 & 1\\ \hline 
+%Andreas & 24 & M & 72 $\rightarrow$ 163 &  & y & 17 & 86505 & \\ \hline 
+Ditte & 14 & F & 69 $\rightarrow$ 117 & 48  & 70.0 & 9 & 10045 & 4\\ \hline 
+Ditte & 14 & F & 74 $\rightarrow$ 141 & 67 & 90.5 & 12 & 27497 & 1\\ \hline 
+Frederik & 15 & M & 73 $\rightarrow$ 94 & 21 & 28.8 & 3 & 342 & 2\\ \hline 
+Freja & 13 & F & 72 $\rightarrow$ 80 &  8 & 11.1 & 2 & 58 & 1\\ \hline 
+Freja & 13 & F & 77 $\rightarrow$ 96 &  19 & 24.7 & 3 & 143 & 3\\ \hline 
+Imon & 15 & M & 78 $\rightarrow$ 100 & 22 & 28.2 & 5 & 1971 & 1\\ \hline 
+Isabella & 15 & F & 73 $\rightarrow$ 120 & 47 & 64.4 & 7 & 6132 & 1\\ \hline 
+Jasper & 15 & M & 71 $\rightarrow$ 87  & 16 & 22.5 & 3 & 652 & 1\\ \hline 
+Jasper & 15 & M & 73 $\rightarrow$ 123 & 50 & 68.5 & 7 & 6129 & 1\\ \hline 
+L\ae rke & 12 & F & 79 $\rightarrow$ 106 & 27 & 34.2 & 4 & 1077 & 3\\ \hline 
+L\ae rke & 12 & F & 73 $\rightarrow$ 121 & 48 & 65.8 & 11 & 18528 & 1\\ \hline 
+Marcus & 12 & M & 76 $\rightarrow$ 114 & 41 & 54.0 & 4 & 3308 & 1\\ \hline 
+Marcus & 12 & M & 73 $\rightarrow$ 132 & 59 & 80.8 & 13 & 36939 & 1\\ \hline 
+Nicklas & 15 & M & 64 $\rightarrow$ 104 & 40 & 62.5 & 5 & 1983 & 1\\ \hline 
+Nicklas & 15 & M & 73 $\rightarrow$ 114 & 41 & 56.2 & 8 & 6931 & 1\\ \hline 
+Philip & 13 & M & 73 $\rightarrow$ 127 & 54 & 74.0 & 9 & 10116 & 1\\ \hline 
+Philip & 13 & M & 78 $\rightarrow$ 141 & 63 & 80.8 &12 & 22991& 1\\ \hline 
+Siw & 15 & F & 74 $\rightarrow$ 123 & 49 & 66.2 & 5 & 1411 & 2\\ \hline 
+Siw & 15 & F & 72 $\rightarrow$ 129 & 57 & 79.2 & 12 & 19345 & 1\\ \hline 
+Zenah & 13 & F & 74 $\rightarrow$ 91 & 17 & 23.0 & 4 & 1304 & 1\\ \hline 
+Zenah & 13 & F & 83 $\rightarrow$ 112 & 29 & 34.9 & 8 & 9775 & 1\\ \hline
+Average & 13.9 & \multicolumn{2}{r}{} & & 52.9 & 6.9 & 7927.1 & \\ \hline
+\end{tabular}
+\end{table}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.60]{../GFX/Resultsgraph.png}
+	\caption{Graphical overview of the test results}
+\end{figure}
+
+On average a player's heart rate increased with 52.9\% which is a very satisfied result with our requirement of a heart rate increase of 40\%.
+
+\subsection{Feedback}
+The children playing our game gave a lot of feedback to the game. As a spectator you could very clearly see that they were trying hard to remember the exercises especially in the higher rounds. What follows is a list of feedback given by the children.
+\begin{itemize}
+\item It is physically exhausting
+\item You could clearly see when an exercise was done correctly by virtue of the green text on the screen with the points gained
+\item It is hard to remember the order of exercises, especially when the exercises alternate very often
+\item It is like using a Jump Rope (said by a girl who had many jumps)
+\item Sometimes it was difficult to tell how high to jump and how low to squat in order for the game to register the exercise properly
+\end{itemize}
 
 \chapter{Conclusion \& Discussion}
 
 
-\chapter{Further development}
+\section{Further development}
+The vision for the game is to extend it into a suite of small games to help the player exercise. The Remember Training Game should just be one of the small games included in the suite. The other small games could then focus on something else like the arms, suppleness or reaction time. Introducing two player mode would also be a possibility, this way the player not only competes with themselves but also a friend (or foe). As a suite, the players would have a profile where they stats would be logged. The player should then be able to track their progress in the various small games. Based on the player progression, the games should become either harder or easier to allow for further improvement. Ideally the suite could be linked with various apps like Endomondo and gadgets like the Nike FuelBand to collect even more data, that would be used for player statistics and progression overviews. Visually the suite would also need an overhaul and have a proper interface for navigating the system and exercises.
+
 
 \begin{thebibliography}{9}
 \bibitem{Sundhedsstyrelsen}
-  Sundhedsstyrelsen:
+  Sundhedsstyrelsen,
   \emph{Overv\ae gt}
   \url{http://sundhedsstyrelsen.dk/da/sundhed/overvaegt}
+
+\bibitem{who-obesity}
+	World Health Organization,
+	\emph{Obesity}
+	\url{http://www.who.int/topics/obesity/en/}
+	
+\bibitem{who-bmi}
+	World Health Organization,
+	\emph{BMI classification}
+	\url{http://apps.who.int/bmi/index.jsp?introPage=intro_3.html}
+
+\bibitem{consequences-obese}
+	Ministeriet for Sundhed og Forebyggelse,
+	\emph{Samfunds\o konomiske konsekvenser af sv\ae r overv\ae gt}
+	\url{http://www.sum.dk/Aktuelt/Nyheder/Forebyggelse/2007/Maj/Samfundsoekonomiske_konsekvenser.aspx}
+
+\bibitem{2pfont}
+	Google Fonts, \emph{Press Start 2P}
+	\url{https://www.google.com/fonts/specimen/Press+Start+2P}
 
 \end{thebibliography}
 
 
-\chapter{Appendixes}
+\appendix
+
+\chapter{This is the first appendix}
+I think we should avoid putting in all our code...
 
 \end{document}

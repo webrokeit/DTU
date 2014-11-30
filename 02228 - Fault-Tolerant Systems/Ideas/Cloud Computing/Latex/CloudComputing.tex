@@ -50,11 +50,17 @@ Morten Chabert \textsc{Eskesen}\\
 \end{center}
 \end{titlepage}
 
+\begingroup
+\tableofcontents
+\let\clearpage\relax
+\listoffigures
+\endgroup
+
 \chapter{Introduction}
 In this report we will describe what cloud computing is, further we will give a detailed description of the architecture and fault-tolerant features of two cloud system, at last we will compare how the systems handle failures and discuss the pros and cons of these methods. As a result of the comparison, we will be able to conclude on what the systems do well and where they might be able to improve.
 
 \section{Scope}
-We will focus on the fault-tolerant features of the cloud computing architecture within the two selected cloud computing systems. We have chosen to focus on Amazon Web Services and Google Cloud Platform. We have chosen these cloud computing systems because both systems are among the most popular\footnote{Popular means that they are among the most commonly used platforms for enterprise cloud developers} cloud computing systems \cite{cloudsurvey}.
+We will focus on the fault-tolerant features of the cloud computing architecture within the two selected cloud computing systems. We have chosen to focus on Amazon Web Services and Google Cloud Platform. We have chosen these cloud computing systems because both systems are among the most popular\footnote{Popular means that they are among the most commonly used platforms for enterprise cloud developers.} cloud computing systems \cite{cloudsurvey}.
 
 \section{Cloud Computing}
 The National Institute of Standards and Technology is a federal technology agency in the United States of America. They define cloud computing by the following:
@@ -69,7 +75,7 @@ There are five essential characteristics of the cloud computing model
 \item[Broad network access] Capabilities are accessed through standard mechanisms and available over the network
 \item[Resource pooling] Computing resources are pooled in order to serve multiple consumers 
 \item[Rapid elasticity] Capabilities can be elastically released to scale rapidly according to the demand
-\item[Measured service] In an automatic way the cloud computing systems control and optimize recourse use
+\item[Measured service] In an automatic way the cloud computing systems control and optimize resource use
 \end{description}
 
 There are four different deployment models. One cloud infrastructure is for exclusive use by a single organization comprising the multiple consumers - the \emph{private cloud}. Another cloud infrastructure is for exclusive use by a specific community of users from organizations with shared concerns - the \emph{community cloud}. The \emph{public cloud} is an infrastructure open for use by the general public. The last cloud infrastructure is a mixture of two or more distinct cloud infrastructures that remain unique entities - the \emph{hybrid cloud}.
@@ -83,17 +89,70 @@ Fault tolerance is a key factor for cloud computing systems due to the rapid exp
 These policies can be divided into two further sub techniques error processing and fault treatment. The aim of error processing is to remove errors from the computational state and the aim of fault treatment is to prevent faults from reoccurring.
 
 \chapter{Amazon Web Services}
-The Amazon Web Services, henceforth \emph{AWS}, is a collection of remote computing services which make a cloud computing platform launched by Amazon.com in 2006. This chapter will outline the architecture of the cloud computing platform and describe the fault-tolerant features the platform has.
+The Amazon Web Services, henceforth \emph{AWS}, is a collection of remote computing services which make up a cloud computing platform. AWS was launched by Amazon.com in 2006. This chapter will outline the architecture of their platform and describe the fault-tolerant features the platform provide.
 
 \section{Architecture}
+AWS offers a wide range of services, which can be seen as components of a system. The services they provide are available in multiple continents. The services can be used to build entire systems which are highly fault-tolerant. Using AWS the hassle of obtaining servers in various locations is removed, instead the user just has to select which region to deploy to. Though it might be tempting to just push an entire system out into the cloud, it is not enough to make it fault tolerant. The architecture of the system is important. Below is example architectures for a website and an application.
+
+\subsection{Website architecture}
+In \autoref{fig:webarchitecture} is a system with two availability zones, each hosting the web server, application server and a database server. Replication is setup between the databases. Dependencies between the availability zones has been avoided. The load balancing makes sure to distribute the traffic properly. If one of the web servers or application servers fail, then the load balancer could redirect all traffic to availability zone without errors. While the traffic is redirected, the failed instance will be replaced by instantiating a new instance from a preconfigured image.
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.5]{../GFX/aws_architecture_web.jpg}
+\caption[Example of fault-tolerant website architecture hosted on AWS]{Example of fault-tolerant website architecture hosted on AWS\cite{AWS_ac_ra_ftha_04}.}
+\label{fig:webarchitecture}
+\end{figure}
+
+\subsection{Application architecture}
+In \autoref{fig:apparchitecture} is a system with two availability zones, each hosting an application instance and a storage instance. At specified time intervals, snapshots of the storage instances are saved to another storage system, which also has fault-tolerance implemented. In the event of an availability zone becoming unavailable, the Elastic IP can easily be mapped to use another availability zone. In the event of an application instance crashing, the instance can easily be replaced using a preconfigured images of the instance. When the application instance has been replaced, the storage instance used is re-attached. If the storage instance fails, a new one can be instantiated from the saved snapshots.
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.55]{../GFX/aws_architecture_app.jpg}
+\caption[Example of fault-tolerant application architecture hosted on AWS]{Example of fault-tolerant application architecture hosted on AWS \cite{AWS_ac_ra_ftha_04}.}
+\label{fig:apparchitecture}
+\end{figure}
+
+\section{Availability}
+AWS have regions in various parts of the world. Each region has multiple Availability Zones, henceforth \emph{AZ}. When using AWS, the user has to specify in which region they wish to have their resource\footnote{A resource can be a computing resource, storage resource etc.} located. Within the region, a resource may then be distributed to multiple AZ.
+
+\section{Redundant storage}
+AWS provides multiple ways of storing data. They have key/value based storage (S3), block storage (EBS) and physical SSDs.
+
+\subsection{Simple Storage Service}
+The Amazon Simple Storage Service, henceforth \emph{S3}, is a highly-scalable, reliable and low-latency key/value data storage infrastructure. With S3 you define buckets in which you wish to store data. Each bucket range from 1 TB to 5TB in capacity and has a maximum file size of 5 GB. Within a region, the data stored in S3 is replicated to various AZ, hence redundancy is implemented. Storing the data within various AZ, allows S3 to fetch the data requested from whichever AZ that contains the requested data with the lowest latency. Though the data is available from multiple AZ in the region, it can be setup to also be replicated to different regions, which in turn replicates the data to the various AZ in the region. 
+
+\subsection{Elastic Block Storage}
+The Amazon Elastic Block Storage, henceforth \emph{EBS}, is block storage for use with their Elastic Compute Cloud. The blocks can be used just like an ordinary hard disk. There EBS is backed by either SSD disks or magnetic disks. It is recommended to use the SSD backed EBS for services and applications and only use the magnetic disks for data that is rarely accessed. EBS can be run in four different RAID\footnote{RAID stands for Redundant Array of Independent Disks.} configurations. The configurations are RAID0 (striped disks), RAID1 (mirroring), RAID5 (striping with distributed parity) and RAID6 (striping with double distributed parity). Amazon recommend RAID0 for use when I/O performance is more important than fault-tolerance, RAID1 when fault-tolerance is more important than I/O performance and they discourage the use of RAID5 and RAID6 \cite{AWS_raid_config}. Snapshots are created of the EBS volumes and stored on S3, thus the EBS volumes can be recreated at any time.
+
+\subsection{Physical SSDs}
+The Amazon Elastic Compute Cloud, henceforth \emph{EC2}, are computing instances. The EC2 instances comes in various versions ranging from small instances with limited capabilities to large extravagant instances that are fully equipped. The smaller instances have no hard disk but are using EBS instead. The larger instances can both use EBS and hard disks. The hard disks used are SSDs and if more than one is attached to the instance, then they can be run in either RAID0 or RAID1. Some instances are optimized for EBS, which means that the overhead of using EBS instead of an attached SSD is very limited. All instances are able to access EBS, this is due to the hard disks attached to a computing instance are formatted when the instance is terminated, thus important long-term data should be stored on EBS \cite{AWS_instance_storage}. 
+
+\section{Application Recovery}
+At AWS, the computing instances are started by launching an Amazon Machine Image, henceforth \emph{AMI}. The AMIs are ready to deploy templates of the root volume (for example an operating system, an application server and applications), launch permissions and mapping to EBS volumes. Using AMIs it is easy to launch a new instance when server load is high or quickly recover from instance failures. The AMIs are stored on S3.
+
+\section{Elastic Load Balancing}
+The Amazon Elastic Load Balancing, is a service for distributing the load between running EC2 instances. Further it also allows for greater levels of fault-tolerance by routing traffic away from faulty EC2 instances. Elastic Load Balancing can be setup to automatically detect if EC2 instances are performing poorly or if they are dead, in this case the EC2 instance will no longer receive incoming traffic. While the traffic is being routed to other EC2 instances, the faulty EC2 instance will be replaced by a newly launched EC2 instance or a reserved EC2 instance. When the new EC2 instance is up and running, the Elastic Load Balancer can start routing traffic to it. If setup properly, the detection and replacement of faulty EC2 instances can be done automatically without the need of any manually interaction with the AWS. Elastic Load Balancing also allows for auto scaling, meaning if more computing power is required, a new EC2 instance can be launched and then the load balancer will start to even out the traffic. An example use for Elastic Load Balancing with auto scaling is shown in \autoref{fig:awsebs}. The example show two load balancers, where the first one spreads the traffic between the EC2 instances running the web server, the next load balancer spreads the traffic between the EC2 instances running the application serving. Using this setup, it's possible to scale the EC2 instances asymmetrically, this is useful when only the EC2 instances running the web server is in need of more resources etc.
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale=.375]{../GFX/aws_elb_web.jpg}
+\caption{Example of using AWS Elastic Load Balancing for fault-tolerance and auto scaling.}
+\label{fig:awsebs}
+\end{figure}
 
 
-\section{Fault-Tolerant Features}
+\section{Elastic IP}
+Amazon offers Elastic IP, which is a publicly accessible IP that is linked with an EC2 instance. When an EC2 instance is launched, it will get an IP assigned to it. There are no guarantee that an EC2 instance will be assigned the same IP if it has been stopped and then started again. To circumvent this problem, the Elastic IP can be used. The Elastic IP is static, hence other applications or end users will only have to access the Elastic IP and not worrying about being routed to a destination. The Elastic IP can also be used in case of an instance failure. When an instance fails, a new instance can be launched thereafter the Elastic IP is linked with the new instance. Same procedure can be applied if an availability zone becomes unavailable.
+
+
 
 
 \chapter{Google Cloud Platform}
 \section{Architecture}
-\section{Fault-Tolerant Features}
+\section{Availability}
+\section{Redundant storage}
 
 \chapter{Comparison of Failure Handling}
 List of faults that the systems handle along with a description of how it's handled and why it works. If the methods for handling the failure differ, we will discuss the methods, highlighting their pros and cons.
@@ -104,7 +163,7 @@ Conclude on our findings, focus on what the systems do well and where it might b
 \begin{thebibliography}{99}
 
 \bibitem{AWS_ac_ra_ftha_04}
-	Amazon Web Services Reference Architectures, \emph{Fault Tolerance \& High Availability}, 2014.
+	Amazon Web Services Reference Architectures, \emph{Fault Tolerance \& High Availability}, viewed October 2014.
 	\url{http://media.amazonwebservices.com/architecturecenter/AWS_ac_ra_ftha_04.pdf}
 	
 \bibitem{AWS_building_fault_tolerant_applications}
@@ -118,7 +177,23 @@ Conclude on our findings, focus on what the systems do well and where it might b
 \bibitem{AWS_youtube_designing_fault_tolerant_applications}
 	Amazon Web Services, \emph{Designing Fault-Tolerant Applications}, YouTube, July 2011.
 	\url{https://www.youtube.com/watch?v=9BrmHoyFJUY}
+
+\bibitem{AWS_S3}
+	Amazon Web Services, \emph{Amazon S3}, viewed October 2014.
+	\url{http://aws.amazon.com/s3/}
 	
+\bibitem{AWS_EBS}
+	Amazon Web Services, \emph{Amazon EBS}, viewed October 2014.
+	\url{http://aws.amazon.com/ebs/}
+
+\bibitem{AWS_raid_config}
+	Amazon Web Services, \emph{RAID Configuration}, viewed October 2014.
+	\url{http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/raid-config.html}
+	
+\bibitem{AWS_instance_storage}
+	Amazon Web Services, \emph{Instance Storage}, viewed October 2014.
+	\url{http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/InstanceStorage.html}
+
 \bibitem{google_cloud_platform_documentation}
 	Google, \emph{Google Cloud Platform Documentation}.
 	\url{https://cloud.google.com/docs/}	
@@ -141,9 +216,7 @@ Conclude on our findings, focus on what the systems do well and where it might b
 	
 \bibitem{cloudsurvey}
 	Larry Dignan, \emph{Amazon Web Services, Windows Azure top cloud dev choices, says survey}, August 2013.
-	\href{http://www.zdnet.com/amazon-web-services-windows-azure-top-cloud-dev-choices-says-survey-7000019115/}
-	{Online article}
-	%% Linket er for stort til margenen somehow, quick fix lige pt.. :)
+	\url{http://zd.net/1vw5pzE}
 	
 \bibitem{clouddefinition}
 	National Institute of Standards and Technology, \emph{The NIST Definition of Cloud Computing}, October 2011.
@@ -152,6 +225,9 @@ Conclude on our findings, focus on what the systems do well and where it might b
 \bibitem{faulttolerancetechniques}
 	Prasenjit Kumar Patra, Harshpreet Singh and Gurpreet Singh, \emph{Fault Tolerance Techniques and Comparative Implementation in Cloud Computing}, February 2013.
 	International Journal of Computer Applications.
+	
+\bibitem{healthcare}
+	Terrell Herzig et al., \emph{Implementing Information Security in Healthcare: Building a Security Program}, HIMSS, February 2013
 
 \end{thebibliography}
 
