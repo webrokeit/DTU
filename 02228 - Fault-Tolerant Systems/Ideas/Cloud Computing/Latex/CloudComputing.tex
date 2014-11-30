@@ -89,7 +89,7 @@ Fault tolerance is a key factor for cloud computing systems due to the rapid exp
 These policies can be divided into two further sub techniques error processing and fault treatment. The aim of error processing is to remove errors from the computational state and the aim of fault treatment is to prevent faults from reoccurring.
 
 \chapter{Amazon Web Services}
-The Amazon Web Services, henceforth \emph{AWS}, is a collection of remote computing services which make up a cloud computing platform. AWS was launched by Amazon.com in 2006. This chapter will outline the architecture of their platform and describe the fault-tolerant features the platform provide.
+The Amazon Web Services, henceforth \emph{AWS}, is a collection of remote computing services which make up a cloud computing platform. AWS was launched by Amazon.com in 2006. This chapter will outline the architecture of their platform and describe the fault-tolerant features the platform provides.
 
 \section{Architecture}
 AWS offers a wide range of services, which can be seen as components of a system. The services they provide are available in multiple continents. The services can be used to build entire systems which are highly fault-tolerant. Using AWS the hassle of obtaining servers in various locations is removed, instead the user just has to select which region to deploy to. Though it might be tempting to just push an entire system out into the cloud, it is not enough to make it fault tolerant. The architecture of the system is important. Below is example architectures for a website and an application.
@@ -150,9 +150,55 @@ Amazon offers Elastic IP, which is a publicly accessible IP that is linked with 
 
 
 \chapter{Google Cloud Platform}
+Google Cloud Platform, henceforth \emph{GCP}, is collection of cloud computing products made by Google. This chapter will outline the architecture of GCP and describe the fault-tolerant features the platform provides.
+
 \section{Architecture}
+Google App Engine, henceforth \emph{GAE}, is a service for developing and hosting web applications in Google-managed data centers. In \autoref{fig:webapparchitecture} the architecture of a web application on GAE is depicted. The Google Load Balancer makes sure to distribute the traffic properly. The load balancer is a built-in feature of GAE that provides transparent Layer 3 and Layer 7 load balancing to applications. GAE has an automatic scaling feature. When the number of request increases for an application GAE will automatically allocate more resources such that the web application is able to handle the additional demand.The Memcache and Task Queue services are integrated within GAE. The Memcache is an in-memory cache shared across all of the GAE instances. This means that there is extremely high speed access to information cached by the web-server. Task Queue provides a mechanism to free the front end servers to service new user requests by offloading longer running tasks to backend servers. Google Cloud Storage is an online storage service for files, i.e. the static content. Meanwhile the dynamic content from databases is handled by the Google Cloud SQL and Google Cloud Datastore. Google Cloud SQL is a fully managed MySQL database that lives in the Google Cloud infrastructure. Google Cloud Datastore is a fully managed, highly available NoSQL data storage for non-relational data that includes a REST API.
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.43]{../GFX/GCPwebapparchi}
+\caption[Google Web Application Architecture on Google App Engine]{Google Web Application Architecture on Google App Engine \cite{google_webapp_architecture}.}
+\label{fig:webapparchitecture}
+\end{figure}
+
 \section{Availability}
+GCP has regions in various parts of the world. Each region has multiple availability zones. When using GCP the customer has to specify in which region their resource should be located. Only certain resources are region- and zone-specific. Resources that are specific to a zone or a region can only be used by other resources in the same zone or region. Disks and instances are examples of zonal resources. Other resources are global resources that can be used by any other resource across any location. An example of a global resource is an image. In order to build fault-tolerant applications that have high availability the recommendation from Google is to deploy applications across multiple zones in a region. The goal of this is to protect against unexpected failures of components, up to and including a single zone. When putting resources in different zones in a region it provides isolation for many types of infrastructure, hardware and software failures. Even higher degree of failure independence is achieved by putting resources in different regions.
+
 \section{Redundant storage}
+GCP provides multiple ways of storing data. They have storage for files (CS), NoSQL data storage (CD) and MySQL database (CSQL). These ways of storing data will explained in this section.
+
+\subsection{Cloud Storage}
+The Google Cloud Storage, henceforth \emph{CS}, is an online file storage web service for storing and accessing your data on Google's infrastructure. All data in CS belongs inside a project. Project consists of a set of users, a set of APIs, billing, authentication and monitoring settings for those APIs. Buckets are the basic containers that holds the data. Everything stored in CS must be contained in a bucket. Buckets belong to a project. Objects are the individual pieces of data stored in CS. CS provides a set of features and capabilities which are designed to store, share and manage data in an efficient and reliable way.
+
+\begin{description}
+\item[High capability and Scalability] CS is able to store objects that are terabytes in size.
+\item[Strong Data Consistency] CS provides strong read-after-write consistency for all upload and delete operations. In availability terms upload operations to CS are atomic, i.e. when uploading an object it is not accessible until it is completely uploaded.
+\item[Bucket Locations] CS provides users with the ability to specify where the buckets are geographically stored.
+\item[REST APIs] CS provides two RESTful programming interfaces.
+\end{description}
+
+\subsection{Cloud Datastore}
+The Google Cloud Datastore, henceforth \emph{CD}, is a schemaless NoSQL datastore providing robust, scalable storage for applications. CD has the following features
+
+\begin{itemize}
+\item No planned downtime
+\item Atomic transactions
+\item High availability of reads and writes
+\item Strong consistency for reads and ancestor queries
+\item Eventual consistency for all other queries
+\end{itemize}
+
+CD replicates data across many datacenters using a system which is based on Paxos algorithm. Paxos is a family of protocols for solving consensus in a network of unreliable processors. Consensus is the process of agreeing on one result among a group of participants. Google has used the algorithm to build a fault-tolerant database, i.e. CD. CD can execute multiple operations in a single transaction. A transaction can not succeed unless every operation in the transaction succeeds. If one of the operations fail the transaction is automatically rolled back.
+
+\subsection{Cloud SQL}
+The Google Cloud SQL, henceforth \emph{CSQL}, is a MySQL database that lives in Google's cloud. It has all the capability and functionality of MySQL with a few additional features and a few unsupported features. According to Google, CSQL is ideal to use in a small to medium-sized application. CSQL offers fully managed, highly available relational databases. It is possible to create, configure and use MySQL databases that live in Google's cloud. Google handles the replication, encryption, patch management and backups. All the data is encrypted when stored and in flight on Google's network. Only authorized IP addresses are accepted when connecting to instances and can be secured with SSL. All the data is replicated in multiple locations to achieve durability and high availability.
+
+\section{Load balancing}
+
+
+\section{Data placement}
+
 
 \chapter{Comparison of Failure Handling}
 List of faults that the systems handle along with a description of how it's handled and why it works. If the methods for handling the failure differ, we will discuss the methods, highlighting their pros and cons.
@@ -201,6 +247,14 @@ Conclude on our findings, focus on what the systems do well and where it might b
 \bibitem{google_dataplace_for_fault_tolerance}
 	Google Patents, \emph{Data placement for fault tolerance}, February 2006.
 	\url{http://www.google.com/patents/US7000141}
+	
+\bibitem{google_webapp_architecture}
+	Google Cloud Platform, \emph{Architecture: Web Application on Google App Engine}
+	\url{https://cloud.google.com/solutions/architecture/webapp?hl=da}
+	
+\bibitem{}
+	Google Cloud Docs, \emph{Regions \& Zones}
+	\url{https://cloud.google.com/compute/docs/zones}
 	
 \bibitem{google_app_engine_scalability_2009}
 	Google I/O, \emph{App Engine: Scalability, Fault Tolerance, and Integrating Amazon EC2}, YouTube, June 2006.
