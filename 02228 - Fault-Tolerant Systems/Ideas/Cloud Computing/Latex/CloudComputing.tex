@@ -195,10 +195,18 @@ CD replicates data across many datacenters using a system which is based on Paxo
 The Google Cloud SQL, henceforth \emph{CSQL}, is a MySQL database that lives in Google's cloud. It has all the capability and functionality of MySQL with a few additional features and a few unsupported features. According to Google, CSQL is ideal to use in a small to medium-sized application. CSQL offers fully managed, highly available relational databases. It is possible to create, configure and use MySQL databases that live in Google's cloud. Google handles the replication, encryption, patch management and backups. All the data is encrypted when stored and in flight on Google's network. Only authorized IP addresses are accepted when connecting to instances and can be secured with SSL. All the data is replicated in multiple locations to achieve durability and high availability.
 
 \section{Load balancing}
+Load balancing is a service for distributing the load across multiple virtual machine instances. Google Compute Engine, henceforth \emph{GCE}, is the service that allows users to launch virtual machine instances. The load balancing can be done with either network load balancing or HTTP load balancing. The load balancing provides the following benefits:
 
+\begin{itemize}
+\item Scaling of application
+\item Supporting heavy traffic
+\item Detection of faulty virtual machines
+\item Balance load across regions
+\item Route traffic to closest virtual machine
+\item Support content-based routing
+\end{itemize}
 
-\section{Data placement}
-
+This means that faulty virtual machines will not cause downtime of an application as the traffic can be routed to other healthy running virtual machines or a new virtual machine can be launched to replace the faulty one. The scaling of application is done by launching new virtual machines if in need of computing power due to heavy traffic. When launching new virtual machines the load balancer will distribute the load in a way such that the traffic for each virtual machine is even.
 
 \chapter{Comparison of Failure Handling}
 List of faults that the systems handle along with a description of how it's handled and why it works. If the methods for handling the failure differ, we will discuss the methods, highlighting their pros and cons.
