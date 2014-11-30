@@ -118,16 +118,19 @@ In \autoref{fig:apparchitecture} is a system with two availability zones, each h
 AWS have regions in various parts of the world. Each region has multiple Availability Zones, henceforth \emph{AZ}. When using AWS, the user has to specify in which region they wish to have their resource\footnote{A resource can be a computing resource, storage resource etc.} located. Within the region, a resource may then be distributed to multiple AZ.
 
 \section{Redundant storage}
-AWS provides multiple ways of storing data. They have key/value based storage (S3), block storage (EBS) and physical SSDs.
+AWS provides multiple ways of storing data. They have key/value based storage (S3), block storage (EBS), databases (RDS, DynamoDB \& SimpleDB) and physical SSDs.
 
 \subsection{Simple Storage Service}
 The Amazon Simple Storage Service, henceforth \emph{S3}, is a highly-scalable, reliable and low-latency key/value data storage infrastructure. With S3 you define buckets in which you wish to store data. Each bucket range from 1 TB to 5TB in capacity and has a maximum file size of 5 GB. Within a region, the data stored in S3 is replicated to various AZ, hence redundancy is implemented. Storing the data within various AZ, allows S3 to fetch the data requested from whichever AZ that contains the requested data with the lowest latency. Though the data is available from multiple AZ in the region, it can be setup to also be replicated to different regions, which in turn replicates the data to the various AZ in the region. 
 
 \subsection{Elastic Block Storage}
-The Amazon Elastic Block Storage, henceforth \emph{EBS}, is block storage for use with their Elastic Compute Cloud. The blocks can be used just like an ordinary hard disk. There EBS is backed by either SSD disks or magnetic disks. It is recommended to use the SSD backed EBS for services and applications and only use the magnetic disks for data that is rarely accessed. EBS can be run in four different RAID\footnote{RAID stands for Redundant Array of Independent Disks.} configurations. The configurations are RAID0 (striped disks), RAID1 (mirroring), RAID5 (striping with distributed parity) and RAID6 (striping with double distributed parity). Amazon recommend RAID0 for use when I/O performance is more important than fault-tolerance, RAID1 when fault-tolerance is more important than I/O performance and they discourage the use of RAID5 and RAID6 \cite{AWS_raid_config}. Snapshots are created of the EBS volumes and stored on S3, thus the EBS volumes can be recreated at any time.
+The Amazon Elastic Block Storage, henceforth \emph{EBS}, is block storage for use with their Elastic Compute Cloud. The blocks can be used just like an ordinary hard drive. There EBS is backed by either SSD disks or magnetic disks. It is recommended to use the SSD backed EBS for services and applications and only use the magnetic disks for data that is rarely accessed. EBS can be run in four different RAID\footnote{RAID stands for Redundant Array of Independent Disks.} configurations. The configurations are RAID0 (striped disks), RAID1 (mirroring), RAID5 (striping with distributed parity) and RAID6 (striping with double distributed parity). Amazon recommend RAID0 for use when I/O performance is more important than fault-tolerance, RAID1 when fault-tolerance is more important than I/O performance and they discourage the use of RAID5 and RAID6 \cite{AWS_raid_config}. Snapshots are created of the EBS volumes and stored on S3, thus the EBS volumes can be recreated at any time.
 
-\subsection{Physical SSDs}
-The Amazon Elastic Compute Cloud, henceforth \emph{EC2}, are computing instances. The EC2 instances comes in various versions ranging from small instances with limited capabilities to large extravagant instances that are fully equipped. The smaller instances have no hard disk but are using EBS instead. The larger instances can both use EBS and hard disks. The hard disks used are SSDs and if more than one is attached to the instance, then they can be run in either RAID0 or RAID1. Some instances are optimized for EBS, which means that the overhead of using EBS instead of an attached SSD is very limited. All instances are able to access EBS, this is due to the hard disks attached to a computing instance are formatted when the instance is terminated, thus important long-term data should be stored on EBS \cite{AWS_instance_storage}. 
+\subsection{Databases}
+Amazon provides three types of databases. The Amazon Relational Database Service, henceforth \emph{RDS}, is a relational database service. The Amazon DynamoDB is a fully managed NoSQL database. The Amazon SimpleDB is a non-relational data store. Common for all the databases, is the way their data is stored. When data is stored in the databases it is replicated to multiple AZ and stored, which means the data is highly available and redundantly stored. RDS support snapshots, also known as DB snapshots. A DB snapshot is a point in time image of the database. DB snapshots are created in user setup intervals and have a retention period of up to 30 days. Full backups of RDS can also be made and stored on S3 to further increase the redundancy. DynamoDB and SimpleDB can be backed up manually to S3.
+
+\subsection{SSDs}
+The Amazon Elastic Compute Cloud, henceforth \emph{EC2}, are computing instances. The EC2 instances comes in various versions ranging from small instances with limited capabilities to large extravagant instances that are fully equipped. The smaller instances have no hard drive but are using EBS instead. The larger instances can both use EBS and hard drives. The hard drives used are SSDs and if more than one is attached to the instance, then they can be run in either RAID0 or RAID1. Some instances are optimized for EBS, which means that the overhead of using EBS instead of an attached SSD is very limited. All instances are able to access EBS, this is due to the hard drives attached to a computing instance are formatted when the instance is terminated, thus important long-term data should be stored on EBS \cite{AWS_instance_storage}. 
 
 \section{Application Recovery}
 At AWS, the computing instances are started by launching an Amazon Machine Image, henceforth \emph{AMI}. The AMIs are ready to deploy templates of the root volume (for example an operating system, an application server and applications), launch permissions and mapping to EBS volumes. Using AMIs it is easy to launch a new instance when server load is high or quickly recover from instance failures. The AMIs are stored on S3.
@@ -239,6 +242,18 @@ Conclude on our findings, focus on what the systems do well and where it might b
 \bibitem{AWS_EBS}
 	Amazon Web Services, \emph{Amazon EBS}, viewed October 2014.
 	\url{http://aws.amazon.com/ebs/}
+	
+\bibitem{AWS_RDS}
+	Amazon Web Services, \emph{Amazon RDS}, viewed October 2014.
+	\url{http://aws.amazon.com/rds/}
+	
+\bibitem{AWS_dynamo_db}
+	Amazon Web Services, \emph{Amazon DynamoDB}, viewed October 2014.
+	\url{http://aws.amazon.com/dynamodb/}
+	
+\bibitem{AWS_simple_db}
+	Amazon Web Services, \emph{Amazon SimpleDB}, viewed October 2014.
+	\url{http://aws.amazon.com/simpledb/}	
 
 \bibitem{AWS_raid_config}
 	Amazon Web Services, \emph{RAID Configuration}, viewed October 2014.
