@@ -14,7 +14,7 @@ public class BrainScript : MonoBehaviour {
     public int Round { get; private set; }
     public int Score { get; private set; }
     public int RoundScore { get; private set; }
-    private readonly Gestures[] _possibleMoves = {Gestures.Jump, Gestures.Squat};
+    public Gestures[] PossibleMoves = {Gestures.Jump, Gestures.Squat};
     private List<Gestures> _correctCombi = new List<Gestures>();
     private List<Gestures> _userCombi = new List<Gestures>();
     private bool _timeout;
@@ -41,7 +41,13 @@ public class BrainScript : MonoBehaviour {
         RoundScore = 0;
 
 	    if (GestureTracker) {
-	        GestureTracker.GestureDetected += (id, gesture) => AddUserCombination(gesture.Gesture);
+	        GestureTracker.GestureDetected += (id, gesture) => {
+	            if (gesture.Gesture == Gestures.DoubleClap) {
+	                NewGame();
+	            } else {
+	                AddUserCombination(gesture.Gesture);
+	            }
+	        };
 	    }
 	    if (GestureInputter) {
 	        GestureInputter.GestureInput += AddUserCombination;
@@ -105,7 +111,7 @@ public class BrainScript : MonoBehaviour {
             var userid = manager.IsUserDetected() ? manager.GetPlayer1ID() : 0;
             _logger.Log(userid, Round, RoundScore, Score);
         }
-        var move = _possibleMoves[UnityEngine.Random.Range(0, _possibleMoves.Length)];
+        var move = PossibleMoves[UnityEngine.Random.Range(0, PossibleMoves.Length)];
         _correctCombi.Add(move);
         Round++;
         GuiManager.SetNextMove(move);
@@ -113,7 +119,7 @@ public class BrainScript : MonoBehaviour {
     }
 
     private void AddUserCombination(Gestures gesture) {
-        if (!_possibleMoves.Contains(gesture)) return;
+        if (!PossibleMoves.Contains(gesture)) return;
         if (!_exerciseTime.IsRunning) return;
 
         var index = _userCombi.Count;

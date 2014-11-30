@@ -8,8 +8,7 @@ using Random = UnityEngine.Random;
 public class GUIManager : MonoBehaviour {
     public BrainScript Brain;
 
-    public GUIText GameOverText, RunningScoreText, RunningRoundText, RoundTimeText, EndGameText, RoundCountdownText;
-    public Buttonize StartButton;
+    public GUIText GameOverText, RunningScoreText, RunningRoundText, RoundTimeText, EndGameText, RoundCountdownText, DoubleClapStartText, DoubleClapRestartText;
     private List<Vector3> _movePositions;
     private List<Gestures> _moves;
     private FadeoutText _roundPointsGained;
@@ -29,12 +28,10 @@ public class GUIManager : MonoBehaviour {
         RoundTimeText.enabled = false;
         EndGameText.enabled = false;
         RoundCountdownText.enabled = false;
+	    DoubleClapStartText.enabled = true;
         _playerCheck = false;
         _movePositions = new List<Vector3>();
         _moves = new List<Gestures>();
-	    if (StartButton) {
-	        StartButton.ButtonClicked += Brain.NewGame;
-	    }
 	}
 	
 	// Update is called once per frame
@@ -54,7 +51,8 @@ public class GUIManager : MonoBehaviour {
     private void GameStart()
     {
         GameOverText.enabled = false;
-        StartButton.enabled = false;
+        DoubleClapStartText.enabled = false;
+        DoubleClapRestartText.enabled = false;
         RunningScoreText.text = "Score: " + Brain.Score;
         RunningRoundText.text = "Round " + Brain.Round;
         RunningRoundText.enabled = true;
@@ -70,8 +68,7 @@ public class GUIManager : MonoBehaviour {
         RoundTimeText.enabled = false;
         GameOverText.enabled = true;
         EndGameText.enabled = true;
-        StartButton.Text = "RESTART";
-        StartButton.enabled = true;
+        DoubleClapRestartText.enabled = true;
         RunningScoreText.text = "Score: " + Brain.Score;
     }
 

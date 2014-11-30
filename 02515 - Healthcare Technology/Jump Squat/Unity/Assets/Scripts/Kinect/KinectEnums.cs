@@ -36,6 +36,7 @@ namespace Assets.Scripts.Kinect {
 
     public enum Gestures {
         Jump,
-        Squat
+        Squat,
+        DoubleClap
     }
 }

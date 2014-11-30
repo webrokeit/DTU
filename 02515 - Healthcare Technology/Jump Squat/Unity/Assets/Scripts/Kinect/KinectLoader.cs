@@ -3,7 +3,6 @@ using System.Collections;
 using System.Threading;
 using UnityEngine;
 
-[RequireComponent(typeof(KinectManager))]
 internal class KinectLoader : MonoBehaviour {
     public int LevelIndexToLoad = 1;
 

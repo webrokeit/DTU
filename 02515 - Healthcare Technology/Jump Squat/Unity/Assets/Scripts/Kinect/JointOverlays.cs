@@ -71,15 +71,6 @@ namespace Assets.Scripts.Kinect {
             if (!overlayObject || !_mappings.ContainsKey(overlayObject)) return;
 
             var joint = _mappings[overlayObject];
-            Position(manager, positions, joint, overlayObject, smoothFactor, _overlays[overlayObject]);
-        }
-
-        public static void Position(KinectManager manager, JointPositions positions, Joints joint, GameObject overlayObject, float smoothFactor, float distanceToCamera) {
-            if (!overlayObject) return;
-
-            positions.InitIfNotSet(joint);
-            if (!positions.AreAllNonZero(joint)) return;
-
             var jointPosition = positions[joint];
 
             var depthPosition = manager.GetDepthMapPosForJointPos(jointPosition);
@@ -88,6 +79,7 @@ namespace Assets.Scripts.Kinect {
             var scaleX = colorPosition.x / KinectWrapper.Constants.ColorImageWidth;
             var scaleY = 1.0f - colorPosition.y / KinectWrapper.Constants.ColorImageHeight;
 
+            var distanceToCamera = _overlays[overlayObject];
             var overlayPosition = Camera.main.ViewportToWorldPoint(new Vector3(scaleX, scaleY, distanceToCamera));
             overlayObject.transform.position = Vector3.Lerp(overlayObject.transform.position, overlayPosition, smoothFactor * Time.deltaTime);
         }
