@@ -29,13 +29,13 @@ namespace Assets.Scripts.Kinect.Gesture.States {
 
             if (!Ducked) {
                 if (positions[Joints.LeftKnee].y < StartPositions[Joints.LeftKnee].y
-                    && Mathf.Abs(positions[Joints.LeftKnee].y - StartPositions[Joints.LeftKnee].y) >= 0.15f
+                    && Mathf.Abs(positions[Joints.LeftKnee].y - StartPositions[Joints.LeftKnee].y) >= 0.10f
                     && positions[Joints.RightKnee].y < StartPositions[Joints.RightKnee].y
-                    && Mathf.Abs(positions[Joints.RightKnee].y - StartPositions[Joints.RightKnee].y) >= 0.15f
+                    && Mathf.Abs(positions[Joints.RightKnee].y - StartPositions[Joints.RightKnee].y) >= 0.10f
                     && positions[Joints.LeftHip].y < StartPositions[Joints.LeftHip].y
-                    && Mathf.Abs(positions[Joints.LeftHip].y - StartPositions[Joints.LeftHip].y) >= 0.35f
+                    && Mathf.Abs(positions[Joints.LeftHip].y - StartPositions[Joints.LeftHip].y) >= 0.30f
                     && positions[Joints.RightHip].y < StartPositions[Joints.RightHip].y
-                    && Mathf.Abs(positions[Joints.RightHip].y - StartPositions[Joints.RightHip].y) >= 0.35f
+                    && Mathf.Abs(positions[Joints.RightHip].y - StartPositions[Joints.RightHip].y) >= 0.30f
                 ) {
                     DuckedTime = Time.time;
                     DuckedPositions = positions;
@@ -58,10 +58,10 @@ namespace Assets.Scripts.Kinect.Gesture.States {
 
         public static SquatGestureState Create(JointPositions positions) {
             positions.InitIfNotSet(UsedJoints);
-            if (-0.4f > positions[Joints.LeftKnee].y || positions[Joints.LeftKnee].y > -0.2f) return null;
-            if (-0.4f > positions[Joints.RightKnee].y || positions[Joints.RightKnee].y > -0.2f) return null;
-            if (-0.1f > positions[Joints.LeftHip].y || positions[Joints.LeftHip].y > 0.1f) return null;
-            if (-0.1f > positions[Joints.RightHip].y || positions[Joints.RightHip].y > 0.1f) return null;
+            if (-0.45f > positions[Joints.LeftKnee].y || positions[Joints.LeftKnee].y > -0.25f) return null;
+            if (-0.45f > positions[Joints.RightKnee].y || positions[Joints.RightKnee].y > -0.25f) return null;
+            if (-0.15f > positions[Joints.LeftHip].y || positions[Joints.LeftHip].y > 0.15f) return null;
+            if (-0.15f > positions[Joints.RightHip].y || positions[Joints.RightHip].y > 0.15f) return null;
 
             return new SquatGestureState {
                 StartTime = Time.time,

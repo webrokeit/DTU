@@ -1,5 +1,6 @@
-\documentclass[12pt]{report}
+\documentclass[11pt]{report}
 \usepackage{graphicx}
+\usepackage{geometry}
 \usepackage{titling}
 \usepackage{fancyhdr}
 \usepackage[latin1]{inputenc}
@@ -13,7 +14,7 @@
 \usepackage[usenames,dvipsnames,svgnames,table]{xcolor}
 \usepackage{listings}
 \usepackage[hidelinks]{hyperref}
-\usepackage{caption}
+\usepackage[labelfont=bf]{caption}
 \usepackage{longtable}
 %\usepackage{tocbibind}
 \parindent=0pt
@@ -23,9 +24,6 @@
 \fancyhead[L]{\slshape\footnotesize December 3, 2014\\\textsc{02515 Health Care Technology}}
 \fancyhead[R]{\slshape\footnotesize \textsc{Andreas Kjeldsen (s092638)}\\\textsc{Morten Eskesen (s133304)}}
 \fancyfoot[C]{\thepage}
-
-\captionsetup[figure]{labelfont=bf}
-\captionsetup[table]{labelfont=bf}
 
 \newcommand{\tab}{\hspace*{2em}}
 \newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
@@ -139,7 +137,7 @@ Below is a summary of the requirements specification modeled as a table. Each re
 
 
 \begin{center}
-\begin{longtable}{| p{2.5cm} | p{4.25cm} | p{5.55cm} | }
+\begin{longtable}{| p{3cm} | p{4.75cm} | p{6cm} | }
 \caption[Requirement specification summary]{Requirement specification, describing the minimum requirements (Need) and the desired requirements (Nice).}
 
 \hline \multicolumn{1}{|c|}{\textbf{Requirement} } & \multicolumn{1}{c|}{\textbf{Need}} & \multicolumn{1}{c|}{\textbf{Nice}} \\ \hline 
@@ -147,9 +145,9 @@ Below is a summary of the requirements specification modeled as a table. Each re
 
 \multicolumn{3}{c}%
 {{\bfseries \tablename\ \thetable{} -- continued from previous page}} \\
-\hline \multicolumn{1}{|c|}{\textbf{Time (s)}} &
-\multicolumn{1}{c|}{\textbf{Triple chosen}} &
-\multicolumn{1}{c|}{\textbf{Other feasible triples}} \\ \hline 
+\hline \multicolumn{1}{|c|}{\textbf{Requirement}} &
+\multicolumn{1}{c|}{\textbf{Need}} &
+\multicolumn{1}{c|}{\textbf{Nice}} \\ \hline 
 \endhead
 
 \hline \multicolumn{3}{|r|}{{Continued on next page}} \\ \hline
@@ -225,7 +223,7 @@ Players occurring with the same name are not different players but the same play
 \caption[Test results]{Results after testing 14 youngsters with an average age of 13.9. The results show an average increase in heart rate of 52.9 \%.}
 \begin{tabular}{ | c | c | c | c | c | c | c | c | c | c |}
 \hline
-\textbf{Name} & \textbf{Age} & \textbf{Sex} & \textbf{HR} & \textbf{Diff.} & \textbf{\%} & \textbf{Round} & \textbf{Score} & \textbf{FR}\\ \hline
+\textbf{Name} & \textbf{Age} & \textbf{Gender} & \textbf{Heart rate} & \textbf{Diff.} & \textbf{\%} & \textbf{Round} & \textbf{Score} & \textbf{FR}\\ \hline
 Amine & 15 & F & 76 $\rightarrow$ 114 & 38 & 50.0 & 5 & 2264 & 1\\ \hline 
 Anders & 15 & M & 64 $\rightarrow$ 93 &  29 & 45.3 & 3 & 253 & 1\\ \hline 
 Anders & 15 & M & 67 $\rightarrow$ 102  & 35 & 52.2  & 4 & 1057 & 1\\ \hline 
@@ -308,6 +306,9 @@ The vision for the game is to extend it into a suite of small games to help the 
 \end{thebibliography}
 
 
-\chapter{Appendixes}
+\appendix
+
+\chapter{This is the first appendix}
+I think we should avoid putting in all our code...
 
 \end{document}
