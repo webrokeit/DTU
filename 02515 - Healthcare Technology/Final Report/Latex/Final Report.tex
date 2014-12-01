@@ -178,30 +178,27 @@ The game is developed using Unity and Kinect technology. Unity is a program that
 
 
 \chapter{Implementation}
-The game has been implemented using Unity3D Free as the game engine and the Visual Studio IDE for coding in C\#. 
+The game has been implemented using Unity3D Free as the game engine and the Visual Studio IDE for coding in C\#.  The game has been made in an incremental manner, using some of the principals of Scrum. Git and Github has been used for source control, feature discussion and issue tracking. 
 
-\section{Implementation order}
-The game has been made in an incremental manner, using some of the principals of Scrum. Git and Github has been used for source control, feature discussion and issue tracking. 
-
-\subsection{Scene}
+\section{Scene}
 The scene was kept simple. There's a skybox with a solid color used as the background for the game. GUIText objects are then used to display various texts. The game is to be kept simple and not overly fancy, therefore the texts are using a font with the look and feel of good old 8bit games. The font is readable close by and when it's scaled up. The font is called \emph{Press Start 2P} and is Open Font licensed (OFL) \cite{2pfont}. 
 
-\subsection{Game manager}
+\section{Game management}
+A set of classes were made to manage the game, these include a \emph{Brain} script, \emph{GameEventManager} script and \emph{GUIManager} script. These scripts make up the primary game functionality. The Brain script is in charge of starting a new game, creating new rounds, adding moves to perform while playing, keeping score and ending the game. The GUIManager is in charge of showing/hiding and updating the GUITexts used within the game. The GameEventManager is used for delegating messages about the state of the game (start game, end game, new round).
 
+\section{Keyboard input}
+The game can be played using the keyboard. This was implemented for the sake of testing the game management functionality without having to interact with the Kinect. Pressing the up arrow key indicates a Jump, pressing the down arrow key indicates a Squat and pressing the space bar indicates a new game is to be started.
 
-\subsection{Keyboard input}
+\section{Kinect integration}
+The Kinect had to be hooked up to the game. At first the KUInterface code that was handed out in the course was used to interact with the Kinect. It worked, but was missing some functionality for getting viewport coordinates of the limbs.
 
-\subsection{Kinect integration}
+\section{Joint tracking}
 
-\subsection{Joint tracking}
+\section{Gesture recognition}
 
-\subsection{Gesture recognition}
+\section{Abstractions}
 
-\subsection{Abstractions}
-
-\subsection{Visual improvements}
-
-\subsection{Hover buttons}
+\section{Visual improvements}
 
 \chapter{Test}
 \section{Test specification}
