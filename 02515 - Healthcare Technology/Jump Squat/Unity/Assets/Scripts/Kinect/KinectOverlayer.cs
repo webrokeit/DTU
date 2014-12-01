@@ -14,7 +14,6 @@ public class KinectOverlayer : MonoBehaviour
 		
 		if(manager && manager.IsInitialized()) {
 			if(BackgroundImage && (BackgroundImage.texture == null)) {
-                Debug.Log("Camera is ready!");
                 BackgroundImage.texture = manager.GetUsersClrTex();
 			}
 		}
