@@ -174,12 +174,39 @@ Game over & The game can end when the player fails to perform the right exercise
 \end{center}
 
 \section{Technology}
-%\section{Game specification}
-The game is developed using Unity and Kinect technology. Unity is a program that is used for developing games both 2D and 3D. The Kinect technology is capable of tracking all human movements.
+The game has been developed using Unity 3D and the Microsoft Kinect Sensor technology.
+
+\subsection{Unity 3D}
+Unity 3D, henceforth Unity, is a Game Engine that can be used for developing games in both 2D and 3D. Unity includes a physics engine. In the Unity Asset Store, an enormous amount of community created assets are available, some have to be bought, others are available for free. The assets range from complete games to single assets with very specific functionality. Using the assets from the Asset Store can speed up the development process and also makes it possible to create good looking and functional games without skills in both design and coding.
+
+\subsection{Microsft Kinect Sensor}
+The Microsoft Kinect Sensor technology is capable of tracking human movements, by tracking a specific set of joints of the humanoid skeleton. The joints the Kinect is capable of tracking are:
+\begin{description}
+	\item[HipCenter] The upper center of the pelvis (\emph{sacrum} in latin).
+        	\item[Spine] The vertical center of the spine.
+        	\item[ShoulderCenter] The spot where the collarbones connect with the sternum.
+        	\item[Head]
+        	\item[ShoulderLeft]
+        	\item[ElbowLeft]
+        	\item[WristLeft]
+        	\item[HandLeft]
+        	\item[ShoulderRight]
+        	\item[ElbowRight]
+        	\item[WristRight]
+        	\item[HandRight]
+        	\item[HipLeft]
+        	\item[KneeLeft]
+        	\item[AnkleLeft]
+        	\item[FootLeft]
+        	\item[HipRight]
+        	\item[KneeRight]
+        	\item[AnkleRight
+        	\item[FootRight]
+\end{description}
 
 
 \chapter{Implementation}
-The game has been implemented using Unity3D Free v4.5.4 as the game engine and the Visual Studio IDE for coding in C\#.  The game has been made in an incremental manner, using some of the principals of Scrum. Git and Github has been used for source control, feature discussion and issue tracking. 
+The game has been implemented using Unity3D Free v4.5.4 as the game engine, the Visual Studio IDE for coding in C\# and the Microsoft Kinect Sensor v1 for player tracking.  The game has been made in an incremental manner, using some of the principals of Scrum. Git and Github has been used for source control, feature discussion and issue tracking. 
 
 \section{Scene}
 The scene was kept simple. There's a skybox with a solid color used as the background for the game. GUIText objects are then used to display various texts. The game is to be kept simple and not overly fancy, therefore the texts are using a font with the look and feel of good old 8bit games. The font is readable close by and when it's scaled up. The font is called \emph{Press Start 2P} and is Open Font licensed (OFL) \cite{2pfont}. 
@@ -208,20 +235,22 @@ NEED GRAPH...!
 The primary visual used in the game is the feed from the RGB camera of the Kinect. The texts used was clear and readable when just testing the Game Management, as the background was a solid color and the texts was another solid color with great contrast. When using the feed from the RGB camera as the background of the game, there are no limits to the colors, shapes and lightning. Therefore a border was added to the text. In Unity 3D Free v4.5.4 the GUIText component does not have a border feature. To fix this, a script was made mimics a border around the text, by drawing the text multiple times behind the actual GUIText. While developing the game, a preview screen is visible that shows what the game will look like. Everything seems fine in the preview, but when the game is launched and played in full screen mode, the texts weren't scaling, hence they were quite hard to read from a distance. Another script was created that scales the texts. A third script was created, which makes the texts fade out after a certain amount of time.
 
 \chapter{Test}
+Some introductory text to the tests.
+
 \section{Test specification}
 
 \begin{center}
-\begin{longtable}{| p{3.2cm} | p{3.75cm} | p{3.75cm} | p{2.55cm} |}
+\begin{longtable}{| p{1cm} | p{3.2cm} | p{3.75cm} | p{3.75cm} |}
 \caption[Test specification]{Test specifcation, describing the minimum acceptance criteria (Need) and the desired acceptance criteria (Nice).}\\
 
 \hline
-\multicolumn{1}{|c|}{\textbf{Test}} & \multicolumn{1}{c|}{\textbf{Need}} & \multicolumn{1}{c|}{\textbf{Nice}} & \multicolumn{1}{c|}{\textbf{Status}} \\
+\multicolumn{1}{|c|}{\textbf{ID}} & \multicolumn{1}{|c|}{\textbf{Test}} & \multicolumn{1}{c|}{\textbf{Need}} & \multicolumn{1}{c|}{\textbf{Nice}} \\
 \endfirsthead
 
 \multicolumn{4}{c}%
 {{\bfseries \tablename\ \thetable{} -- continued from previous page}} \\
 \hline
-\multicolumn{1}{|c|}{\textbf{Requirement}} & \multicolumn{1}{c|}{\textbf{Need}} & \multicolumn{1}{c|}{\textbf{Nice}} &\multicolumn{1}{c|}{\textbf{Status}} \\
+\multicolumn{1}{|c|}{\textbf{ID}} & \multicolumn{1}{|c|}{\textbf{Test}} & \multicolumn{1}{c|}{\textbf{Need}} & \multicolumn{1}{c|}{\textbf{Nice}} \\
 \endhead
 
 \multicolumn{4}{r}{\textit{Continued on next page}} \\
@@ -230,17 +259,22 @@ The primary visual used in the game is the feed from the RGB camera of the Kinec
 \endlastfoot
 
 \hline
-Start \& setup time & 1 min & 30 seconds & Nice achieved \\ \hline
-User interface & User is instructed and can play & User can play without instructions & Need achieved\footnote{During the test session the users were given a short introduction, explaining they had to jump if the game said jump and squat if the game said squat. Even without further introduction, it was clear that the users quickly understood how the gesture recognition feedback worked, how high to jump and how deep to squat.} \\ \hline
-Performance & Performance is reported & Difficulty of game is adapted to performance & Need achieved \\ \hline
-Jump recognition & A jump is recognized & Height of a jump is recognized & Need achieved \\ \hline
-Squat recognition & A squat is recognized & A deep squat is recognized & Nice achieved\footnote{Requiring that the player was to do a deep squat was definitely possible codewise, but during our test session, it showed that not all people are flexible enough to actually do a deep squat, thus the requirement for the squat was slacked a bit.} \\ \hline
-Player's heart rate & 20\% increase in heart rate of player on average & 40\% increase in heart rate of player on average & Nice achieved  \\ \hline
-Clap recognition & A single clap is recognized & A double clap is recognized & Nice achieved \\ \hline
-Calibration & User has to stand in specific pose to calibrate & Calibration is done automatically & Nice achieved \\ \hline
-%Gesture recognition & Gestures are recognized regardless of the size of the player with code modifications & Gestures are recognized regardless of the size of the player without code modifications & Nice achieved \\ \hline
+T1 & Start \& setup time & 1 min & 30 seconds \\ \hline
+T2 & User interface & User is instructed and can play & User can play without instructions \\ \hline
+T3 & Game progression & Game progression is reported & Difficulty of game is adapted to how far the player has progressed in the game\\ \hline
+T4 & Jump recognition & A jump is recognized & Height of a jump is recognized \\ \hline
+T5 & Squat recognition & A squat is recognized & A deep squat is recognized \\ \hline
+T6 & Clap recognition & A single clap is recognized & A double clap is recognized \\ \hline
+T7 & Calibration & User has to stand in specific pose to calibrate & Calibration is done automatically \\ \hline
+T8 & Player's heart rate & 20\% increase in heart rate of player on average & 40\% increase in heart rate of player on average \\ \hline
+T9 & Gesture recognition & Gestures are recognized regardless of the size of the player with code modifications & Gestures are recognized regardless of the size of the player without code modifications \\ \hline
 \end{longtable}
 \end{center}
+
+
+Note til T2: During the test session the users were given a short introduction, explaining they had to jump if the game said jump and squat if the game said squat. Even without further introduction, it was clear that the users quickly understood how the gesture recognition feedback worked, how high to jump and how deep to squat.\\
+Note til T3: The requirements for the gestures are not becoming more strict the further the player has progressed. But the amount of exercises to remember is increased, so in a sense, the difficulty of the game is adapting to the performance of the player. Further it could be introduced that the previous exercises are either not shown again or the time they are shown is decreased.\\
+Note til T5: Requiring that the player was to do a deep squat was definitely possible codewise, but during our test session, it showed that not all people are flexible enough to actually do a deep squat, thus the requirement for the squat was slacked a bit.
 
 \section{Test results}
 Besides testing on ourselves, our friends and family, we also wanted to take the game out in the world and apply it in an environment where it could possibly have a positive effect. Our game was tested on kids in age range 12-15 at an elementary school in Helsing\o r. The game was tested in a classroom, hence we could test if furniture in the background would interfere. We found that the player had to stand at least 12 meters away and be right beside some furniture, before it would have an effect on the Kinect registering the joints properly. One of the measurable features of a training game is the heart rate of the player. When testing we noted the heart rate of the player before and after playing the game. What follows is a table of the test results obtaining from the elementary school.\\
