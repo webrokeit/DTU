@@ -16,6 +16,7 @@
 \usepackage[hidelinks]{hyperref}
 \usepackage[labelfont=bf]{caption}
 \usepackage{longtable}
+\usepackage{tablefootnote}
 %\usepackage{tocbibind}
 \parindent=0pt
 \frenchspacing
@@ -98,10 +99,6 @@ Obese & Over 30 \\ \hline
 \end{table}
 Overweight and obesity are major risk factors for a number of chronic diseases. These diseases include diabetes, cardiovascular diseases and cancer. In Denmark the total expenses linked with obesity and the treatment thereof on hospital was calculated as being 1.1 billion kroner in 2004 \cite{consequences-obese}.
 
-\section{Memory}
-
-
-
 \chapter{Game details}
 \section{Game description}
 The Remember Training Game, as the name suggests, is a game where both memory and physical exercises are key components. The game consists of rounds, where in each round you have to perform certain exercises. The exercises are Squat and Jump. Round 1 consists of 1 exercise, Round 2 consists of 2 exercises - the previous one and a new exercise chosen at random and the game continues like this until game over.
@@ -142,22 +139,22 @@ Below is a summary of the requirements specification modeled as a table. Each re
 
 \begin{center}
 \begin{longtable}{| p{3cm} | p{4.75cm} | p{6cm} | }
-\caption[Requirement specification summary]{Requirement specification, describing the minimum requirements (Need) and the desired requirements (Nice).}
+\caption[Requirement specification summary]{Requirement specification, describing the minimum requirements (Need) and the desired requirements (Nice).}\\
 
-\hline \multicolumn{1}{|c|}{\textbf{Requirement} } & \multicolumn{1}{c|}{\textbf{Need}} & \multicolumn{1}{c|}{\textbf{Nice}} \\ \hline 
+\hline
+\multicolumn{1}{|c|}{\textbf{Requirement}} & \multicolumn{1}{c|}{\textbf{Need}} & \multicolumn{1}{c|}{\textbf{Nice}} \\
 \endfirsthead
 
 \multicolumn{3}{c}%
 {{\bfseries \tablename\ \thetable{} -- continued from previous page}} \\
 \hline \multicolumn{1}{|c|}{\textbf{Requirement}} &
 \multicolumn{1}{c|}{\textbf{Need}} &
-\multicolumn{1}{c|}{\textbf{Nice}} \\ \hline 
+\multicolumn{1}{c|}{\textbf{Nice}} \\
 \endhead
 
-\hline \multicolumn{3}{|r|}{{Continued on next page}} \\ \hline
+\multicolumn{3}{r}{\textit{Continued on next page}} \\
 \endfoot
 
-\hline \hline
 \endlastfoot
 
 
@@ -177,12 +174,39 @@ Game over & The game can end when the player fails to perform the right exercise
 \end{center}
 
 \section{Technology}
-%\section{Game specification}
-The game is developed using Unity and Kinect technology. Unity is a program that is used for developing games both 2D and 3D. The Kinect technology is capable of tracking all human movements.
+The game has been developed using Unity 3D and the Microsoft Kinect Sensor technology.
+
+\subsection{Unity 3D}
+Unity 3D, henceforth Unity, is a Game Engine that can be used for developing games in both 2D and 3D. Unity includes a physics engine. In the Unity Asset Store, an enormous amount of community created assets are available, some have to be bought, others are available for free. The assets range from complete games to single assets with very specific functionality. Using the assets from the Asset Store can speed up the development process and also makes it possible to create good looking and functional games without skills in both design and coding.
+
+\subsection{Microsft Kinect Sensor}
+The Microsoft Kinect Sensor technology is capable of tracking human movements, by tracking a specific set of joints of the humanoid skeleton. The joints the Kinect is capable of tracking are:
+\begin{description}
+	\item[HipCenter] The upper center of the pelvis (\emph{sacrum} in latin).
+        	\item[Spine] The vertical center of the spine.
+        	\item[ShoulderCenter] The spot where the collarbones connect with the sternum.
+        	\item[Head]
+        	\item[ShoulderLeft]
+        	\item[ElbowLeft]
+        	\item[WristLeft]
+        	\item[HandLeft]
+        	\item[ShoulderRight]
+        	\item[ElbowRight]
+        	\item[WristRight]
+        	\item[HandRight]
+        	\item[HipLeft]
+        	\item[KneeLeft]
+        	\item[AnkleLeft]
+        	\item[FootLeft]
+        	\item[HipRight]
+        	\item[KneeRight]
+        	\item[AnkleRight
+        	\item[FootRight]
+\end{description}
 
 
 \chapter{Implementation}
-The game has been implemented using Unity3D Free as the game engine and the Visual Studio IDE for coding in C\#.  The game has been made in an incremental manner, using some of the principals of Scrum. Git and Github has been used for source control, feature discussion and issue tracking. 
+The game has been implemented using Unity3D Free v4.5.4 as the game engine, the Visual Studio IDE for coding in C\# and the Microsoft Kinect Sensor v1 for player tracking.  The game has been made in an incremental manner, using some of the principals of Scrum. Git and Github has been used for source control, feature discussion and issue tracking. 
 
 \section{Scene}
 The scene was kept simple. There's a skybox with a solid color used as the background for the game. GUIText objects are then used to display various texts. The game is to be kept simple and not overly fancy, therefore the texts are using a font with the look and feel of good old 8bit games. The font is readable close by and when it's scaled up. The font is called \emph{Press Start 2P} and is Open Font licensed (OFL) \cite{2pfont}. 
@@ -194,40 +218,68 @@ A set of classes were made to manage the game, these include a \emph{Brain} scri
 The game can be played using the keyboard. This was implemented for the sake of testing the game management functionality without having to interact with the Kinect. Pressing the up arrow key indicates a Jump, pressing the down arrow key indicates a Squat and pressing the space bar indicates a new game is to be started.
 
 \section{Kinect integration}
-The Kinect had to be hooked up to the game. At first the KUInterface code that was handed out in the course was used to interact with the Kinect. It worked, but was missing some functionality for getting viewport coordinates of the limbs.
+The Kinect had to be hooked up to the game. At first the KUInterface code that was handed out in the course was used to interact with the Kinect. It worked, but was missing some functionality that was required, hence another wrapper for interacting with the Kinect was found on the Unity Asset Store \cite{assetstorekinect}. The other wrapper included a KinectWrapper class that is in charge of communicating with the Kinect using PInvoke calls and a KinectManager class to be used with Unity. The KinectManager included a large amount of code for gesture recognition that was overly complicated, hence the code has been removed together with several options of the KinectManager that was of no use.
 
 \section{Joint tracking}
+The KinectManager provides functionality for obtaining the current positions of the joints in \emph{Viewport Space}. To verify that the joints are tracked, GameObjects were setup to follow the joints. GameObjects use \emph{World Space}, hence the joint position had to be changed into World Space. The calculations required for transforming the positions were included with the KinectManager \cite{assetstorekinect}. A class for tracking all the joints and overlaying them with GameObjects were made, further a helper class for obtaining, getting and setting the joint positions were made, this also allowed for logging of the joint positions to a log file.
 
 \section{Gesture recognition}
+The joints are tracked in Viewport Space, which is a 2 dimensional space and goes from -1.0 to 1.0 in both the $x$ and the $y$ direction. There are no certainties that the joints are always at the same height when the player is idle, i.e. the \emph{HipCenter} joint is not always located at $y = 0.0$. The joint position logging was then used to find a base interval in which it could be assumed that the HipCenter joint was located when the player is idle. Same procedure for the other joints used in the jump gesture (KneeLeft, KneeRight), the squat gesture (KneeLeft, KneeRight, HipLeft, HipRight) and the clap gesture (HandLeft, HandRight). To actually be a gesture, the player had to perform a specific action. When jumping, the player have to raise their knees a certain amount, when squatting the player has to lower their knees and hips a certain amount and when clapping the player has to move their hands together. The amount the joints had to move was also found using the joint positions log. By performing the exercises while logging the joint positions, the goal intervals in which it could be assumed the player would have reached the required pose was found. Using the base intervals and the goal intervals, the amount required to move the joints were found. Detecting a gesture was then just the matter of tracking the joints required in the gesture over time, noting if the joints moved by the required amount. Restrictions are in place, stating that the player has to be within the base intervals for the joints before a gesture is tracked. This is e.g. to prevent two simultaneous squats to be perceived as a jump.
 
-\section{Abstractions}
+\begin{figure}[H]
+NEED GRAPH...!
+\caption{Graph showing the positions of KneeLeft and KneeRight during a session where the player jumped.}
+\end{figure}
 
 \section{Visual improvements}
+The primary visual used in the game is the feed from the RGB camera of the Kinect. The texts used was clear and readable when just testing the Game Management, as the background was a solid color and the texts was another solid color with great contrast. When using the feed from the RGB camera as the background of the game, there are no limits to the colors, shapes and lightning. Therefore a border was added to the text. In Unity 3D Free v4.5.4 the GUIText component does not have a border feature. To fix this, a script was made mimics a border around the text, by drawing the text multiple times behind the actual GUIText. While developing the game, a preview screen is visible that shows what the game will look like. Everything seems fine in the preview, but when the game is launched and played in full screen mode, the texts weren't scaling, hence they were quite hard to read from a distance. Another script was created that scales the texts. A third script was created, which makes the texts fade out after a certain amount of time.
 
 \chapter{Test}
-This chapter will outline our test specification, our test results from testing the game on children from an elementary school and discuss the test results in regards to our test specification.
+Some introductory text to the tests.
 
 \section{Test specification}
-\begin{table}[H]
-\caption{Test specifcation, describing the minimum requirements (Need) and the desired requirements (Nice)}
-\centering
-\begin{tabular}{| p {4 cm} | p {3.25cm} | p{3.25cm} | p {2.5 cm} | c | c | c |}
+
+\begin{center}
+\begin{longtable}{| p{1cm} | p{3.2cm} | p{3.75cm} | p{3.75cm} |}
+\caption[Test specification]{Test specifcation, describing the minimum acceptance criteria (Need) and the desired acceptance criteria (Nice).}\\
+
 \hline
-\textbf{Test} & \textbf{Need} & \textbf{Nice} & \textbf{Status} \\ \hline
-Start \& setup time & 1 min & 30 seconds & Nice achieved \\ \hline
-User interface & User is instructed and can play & User can play without instructions & Need achieved \\ \hline
-Performance & Performance is report & Difficulty of game is adapted to performance & Need achieved \\ \hline
-Jump recognition & A jump is recognized & Height of a jump is recognized & Need achieved \\ \hline
-Squat recognition & A squat is recognized & Lying down is recognized & Need achieved \\ \hline
-Player's heart rate & 20\% increase in heart rate of player on average & 40\% increase in heart rate of player on average & Nice achieved  \\ \hline
-Gesture recognition & Gestures are recognized regardless of the size of the player with code modifications & Gestures are recognized regardless of the size of the player without code modifications & Need achieved \\ \hline
-\end{tabular}
-\end{table}
+\multicolumn{1}{|c|}{\textbf{ID}} & \multicolumn{1}{|c|}{\textbf{Test}} & \multicolumn{1}{c|}{\textbf{Need}} & \multicolumn{1}{c|}{\textbf{Nice}} \\
+\endfirsthead
+
+\multicolumn{4}{c}%
+{{\bfseries \tablename\ \thetable{} -- continued from previous page}} \\
+\hline
+\multicolumn{1}{|c|}{\textbf{ID}} & \multicolumn{1}{|c|}{\textbf{Test}} & \multicolumn{1}{c|}{\textbf{Need}} & \multicolumn{1}{c|}{\textbf{Nice}} \\
+\endhead
+
+\multicolumn{4}{r}{\textit{Continued on next page}} \\
+\endfoot
+
+\endlastfoot
+
+\hline
+T1 & Start \& setup time & 1 min & 30 seconds \\ \hline
+T2 & User interface & User is instructed and can play & User can play without instructions \\ \hline
+T3 & Game progression & Game progression is reported & Difficulty of game is adapted to how far the player has progressed in the game\\ \hline
+T4 & Jump recognition & A jump is recognized & Height of a jump is recognized \\ \hline
+T5 & Squat recognition & A squat is recognized & A deep squat is recognized \\ \hline
+T6 & Clap recognition & A single clap is recognized & A double clap is recognized \\ \hline
+T7 & Calibration & User has to stand in specific pose to calibrate & Calibration is done automatically \\ \hline
+T8 & Player's heart rate & 20\% increase in heart rate of player on average & 40\% increase in heart rate of player on average \\ \hline
+T9 & Gesture recognition & Gestures are recognized regardless of the size of the player with code modifications & Gestures are recognized regardless of the size of the player without code modifications \\ \hline
+\end{longtable}
+\end{center}
+
+
+Note til T2: During the test session the users were given a short introduction, explaining they had to jump if the game said jump and squat if the game said squat. Even without further introduction, it was clear that the users quickly understood how the gesture recognition feedback worked, how high to jump and how deep to squat.\\
+Note til T3: The requirements for the gestures are not becoming more strict the further the player has progressed. But the amount of exercises to remember is increased, so in a sense, the difficulty of the game is adapting to the performance of the player. Further it could be introduced that the previous exercises are either not shown again or the time they are shown is decreased.\\
+Note til T5: Requiring that the player was to do a deep squat was definitely possible codewise, but during our test session, it showed that not all people are flexible enough to actually do a deep squat, thus the requirement for the squat was slacked a bit.
 
 \section{Test results}
-Besides testing on ourselves, our friends and family, we also wanted to take the game out in the world and apply it in an environment where it could possibly have a positive effect. Our game was tested on kids in age range 12-15 at an elementary school in Helsing\o r. The game was tested in a classroom, hence we could test if furniture in the background would interfere. We found that the player had to stand at least 12 meters away and be right beside some furniture, before it would have an effect on the Kinect registering the joints properly. One of the measurable features of a training game is the heart rate of the player. When testing we noted the heart rate of the player before and after playing the game. What follows is a table of the test results obtaining from the elementary school.
-
-Players occurring with the same name are not different players but the same player's second try. In the heart rate section the first number is the before heart rate and the second number is the heart rate after - i.e. 76 $\rightarrow$ 114 means a heart rate of 76 before and 114 after playing. The percentage describes how much the heart rate increased in percentage. FR is Failure Reason where the following codes apply:
+Besides testing on ourselves, our friends and family, we also wanted to take the game out in the world and apply it in an environment where it could possibly have a positive effect. Our game was tested on kids in age range 12-15 at an elementary school in Helsing\o r. The game was tested in a classroom, hence we could test if furniture in the background would interfere. We found that the player had to stand at least 12 meters away and be right beside some furniture, before it would have an effect on the Kinect registering the joints properly. One of the measurable features of a training game is the heart rate of the player. When testing we noted the heart rate of the player before and after playing the game. What follows is a table of the test results obtaining from the elementary school.\\
+\\
+Players occurring with the same name are not different players but the same player's second try. The first number in the heart rate column is the heart rate before and the second number is the heart rate after - i.e. 76 $\rightarrow$ 114 means a heart rate of 76 before and 114 after playing. The percentage describes how much the heart rate increased in percentage. FR is Failure Reason where the following codes apply:
 \begin{itemize}
 \item[1] Wrong exercise done by the player
 \item[2] Time ran out, i.e. no exercise was done in time
@@ -237,7 +289,7 @@ Players occurring with the same name are not different players but the same play
 
 \begin{table}[H]
 \centering
-\caption[Test results]{Results after testing 14 youngsters with an average age of 13.9. The results show an average increase in heart rate of 52.9 \%.}
+\caption[Test results]{Results after testing 14 kids with an average age of 13.9. The results show an average increase in heart rate of 52.9 \%.}
 \begin{tabular}{ | c | c | c | c | c | c | c | c | c | c |}
 \hline
 \textbf{Name} & \textbf{Age} & \textbf{Gender} & \textbf{Heart rate} & \textbf{Diff.} & \textbf{\%} & \textbf{Round} & \textbf{Score} & \textbf{FR}\\ \hline
@@ -272,7 +324,7 @@ Average & 13.9 & \multicolumn{2}{r}{} & & 52.9 & 6.9 & 7927.1 & \\ \hline
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[scale=0.60]{../GFX/Resultsgraph.png}
+	\includegraphics[scale=0.6]{../GFX/Resultsgraph.png}
 	\caption{Graphical overview of the test results}
 \end{figure}
 
@@ -285,7 +337,7 @@ The children playing our game gave a lot of feedback to the game. As a spectator
 \item You could clearly see when an exercise was done correctly by virtue of the green text on the screen with the points gained
 \item It is hard to remember the order of exercises, especially when the exercises alternate very often
 \item It is like using a Jump Rope (said by a girl who had many jumps)
-\item Sometimes it was difficult to tell how high to jump and how low to squat in order for the game to register the exercise properly
+\item At first it was difficult to tell how high to jump and how low to squat in order for the game to register the exercise properly
 \end{itemize}
 
 \chapter{Conclusion \& Discussion}
@@ -322,6 +374,10 @@ The vision for the game is to extend it into a suite of small games to help the 
 \bibitem{2pfont}
 	Google Fonts, \emph{Press Start 2P}
 	\url{https://www.google.com/fonts/specimen/Press+Start+2P}
+	
+\bibitem{assetstorekinect}
+	RF Solutions, \emph{Kinect with MS-SDK}, v1.11, October 15, 2014
+	\url{https://www.assetstore.unity3d.com/en/#!/content/7747}
 
 \end{thebibliography}
 
