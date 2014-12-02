@@ -315,8 +315,6 @@ Average & 13.9 & \multicolumn{2}{r}{} & & 52.9 & 6.9 & 7927.1 & \\ \hline
 	\caption{Graphical overview of the test results}
 \end{figure}
 
-On average a player's heart rate increased with 52.9\% which is a very satisfied result with our requirement of a heart rate increase of 40\%.
-
 \subsection{Feedback}
 The children playing our game gave a lot of feedback to the game. As a spectator you could very clearly see that they were trying hard to remember the exercises especially in the higher rounds. What follows is a list of feedback given by the children.
 \begin{itemize}
@@ -331,6 +329,7 @@ The children playing our game gave a lot of feedback to the game. As a spectator
 Based on the test results, the following discussion will analyze to which extend the tests in the test specification have been passed.
 
 \subsection*{T1: Start \& setup time}
+The test session showed that the game was never more than 30 seconds to startup and be ready for playing. This means that we have achieved the \textbf{nice} requirement of this test case. However the only reason the startup took some time was because of the Kinect having to be started and therefore we would have liked a more smooth transition such as turning on a PlayStation so the screen is not all black when starting up.
 
 \subsection*{T2: User interface}
 During the test session the users were given a short introduction, explaining they had to jump if the game said jump and squat if the game said squat. Even without further introduction, it was clear that the users quickly understood how the gesture recognition feedback worked, how high to jump and how deep to squat. The game states the commands to perform but may lack further explanation of when and how to jump and squat. The test case only satisfies the \textbf{need} requirement.
@@ -339,32 +338,34 @@ During the test session the users were given a short introduction, explaining th
 The requirements for the gestures are not becoming more strict the further the player has progressed. But the amount of exercises to remember is increased, so in a sense, the difficulty of the game is adapting to the performance of the player. Further it could be introduced that the previous exercises are either not shown again or the time they are shown is decreased. The test case only satisfies the \textbf{need} requirement.
 
 \subsection*{T4: Jump recognition}
+If the height of a jump had been recognized we could have logged the heights of all the jumps made by players. We could have used this to make an analysis of how high each player jumps and who had the record among the test subjects. As mentioned the requirements for jumping are not becoming more strict as the game is progressing. We would have liked to have done this in order to make the game more difficult as the game progressed such that the player had to jump higher and higher. The test case satisfies the \textbf{need} requirement.
 
 \subsection*{T5: Squat recognition}
 Requiring that the player was to do a deep squat was definitely possible code-wise, but during our test session, it showed that not all people are flexible enough to actually do a deep squat, thus the requirement for the squat was slacked a bit. With the requirement slacked, the player can still perform a deep squat and it will still be recognized. Encouragement towards performing the exercises to their full extent should be a part of the introduction to the game. The test case satisfies the \textbf{nice} requirement.
-
 
 \subsection*{T6: Clap recognition}
 The test showed that a single clap to start the game could be confusing. It is not uncommon for people to put their hands together, just as if they would clap. Requiring a double clap proved to be more appropriate, as it had to be a conscious action performed by the player. The test case satisfies the \textbf{nice} requirement.
 
 \subsection*{T7: Calibration}
-
+The test session showed that we did not have to restart the game between each player or position each player in a specific pose in order to calibrate. The calibration was done automatically. The test case satisfies the \textbf{nice} requirement.
 
 \subsection*{T8: Player's heart rate}
+The test session yielded a result that showed an average of 52.9\% increase in heart rate. This is a quite high increase in heart rate for a game. It has to be taken into account that the test subjects were quite excitable and very competitive with their friends and laughing while playing. Therefore we can not point out the game as the single factor for the increase in heart rate. However the test case satisfies the \textbf{nice} requirement which was a 40\% increase in heart rate.
 
 \subsection*{T9: Player's memory}
+The test session showed that each player who tried the game more than once progressed at least 1 more round the second time than their first time. It means that the players are getting better and better at the game and thereby doing more exercises and increasing their heart rate and their ability to remember the exercises to perform. The test case satisfies the \textbf{nice} requirement. 
 
 \subsection*{T10: Missing player}
-
+The test session showed that each time a player was not able to be registered then the game notified that a missing player was missing and paused the game. This was however only done between rounds, i.e. before exercises for the round is being shown on the screen in order to prevent players from cheating by writing down the order of exercises. The test case satisfies the \textbf{nice} requirement.
 
 \chapter{Conclusion \& Discussion}
 This chapter will conclude and discuss the work done in this project. It will also discuss the possibilities for further development of the game.
 
 \section{Conclusion}
-
+In this project we have used Unity and Kinect technology to create a game that challenges both the memory and the fitness of the player. The game combines the two physical exercises Jump and Squat to create a Workout Memory Game. The game consists of rounds. Round 1 consists of 1 exercise, round 2 consists of the previous exercise and a new exercise and so on until the game is over. The exercises are chosen at random. The player has 5 seconds to perform each exercise and the game ends when a player runs out of time to do an exercise or doing the wrong exercise. The game has fulfilled all the desired requirements from the requirement specification excluding the desired requirement about two player mode. The test results showed an average of 52.9\% increase in heart rate, which is more than our initial desired acceptance criteria. The test results also showed that the players also progressed further in the game for each time they played the game.
 
 \section{Further development}
-The vision for the game is to extend it into a suite of small games to help the player exercise. The Workout Memory Game should just be one of the small games included in the suite. The other small games could then focus on something else like the arms, suppleness or reaction time. Introducing two player mode would also be a possibility, this way the player not only competes with themselves but also a friend (or foe). As a suite, the players would have a profile where they stats would be logged. The player should then be able to track their progress in the various small games. Based on the player progression, the games should become either harder or easier to allow for further improvement. Ideally the suite could be linked with various apps like Endomondo and gadgets like the Nike FuelBand to collect even more data, that would be used for player statistics and progression overviews. Visually the suite would also need an overhaul and have a proper interface for navigating the system and exercises.
+The vision for the game is to extend it into a suite of small games to help the player exercise. The Workout Memory Game should just be one of the small games included in the suite. The other small games could then focus on something else like the arms, suppleness or reaction time. Introducing two player mode would also be a possibility, this way the player not only competes with themselves but also a friend (or foe). As a suite, the players would have a profile where they stats would be logged. The player should then be able to track their progress in the various small games. Based on the player progression, the games should become either harder or easier to allow for further improvement. Ideally the suite could be linked with various apps like Endomondo and gadgets like the Nike FuelBand to collect even more data, that would be used for player statistics and progression overviews. Visually the suite would also need an overhaul and have a proper interface for navigating the system and exercises. As the game is implemented now each exercise to perform in every round is shown for 2 seconds. In order to introduce more difficulty this could be changed such that only the exercise introduced in the current round was shown for 2 seconds and the others for 1 second. Other possibilities could be that the time exercises are shown decreases as the game is processing.
 
 
 \begin{thebibliography}{9}
