@@ -2,10 +2,7 @@
 using System.Globalization;
 using Assets.Scripts;
 using Assets.Scripts.Kinect;
-using Assets.Scripts.Kinect.Gesture;
-using Assets.Scripts.Lib;
 using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Diagnostics;
@@ -26,6 +23,7 @@ public class BrainScript : MonoBehaviour {
     public GestureTracker GestureTracker;
     public GestureInputter GestureInputter;
 
+    public bool LogScores = false;
     public string ScoresLogFile = "C:/Logs/{app_name}/{session}_scores.csv";
     private ScoreLogger _logger;
 
@@ -53,7 +51,9 @@ public class BrainScript : MonoBehaviour {
 	        GestureInputter.GestureInput += AddUserCombination;
 	        GestureInputter.GameStartRequested += NewGame;
 	    }
-	    _logger = new ScoreLogger(ScoresLogFile);
+	    if (LogScores) {
+	        _logger = new ScoreLogger(ScoresLogFile);
+	    }
 	}
 
     void OnApplicationQuit() {
@@ -73,7 +73,8 @@ public class BrainScript : MonoBehaviour {
     public bool IsPlayerMissing()
     {
         var manager = KinectManager.Instance;
-        return !manager || !manager.IsInitialized() || !manager.IsUserDetected();
+        // If no kinect is found, play with keyboard
+        return manager && manager.IsInitialized() && !manager.IsUserDetected();
     }
 
 	void Update () {
