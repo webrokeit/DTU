@@ -99,6 +99,9 @@ Obese & Over 30 \\ \hline
 \end{table}
 Overweight and obesity are major risk factors for a number of chronic diseases. These diseases include diabetes, cardiovascular diseases and cancer. In Denmark the total expenses linked with obesity and the treatment thereof on hospital was calculated as being 1.1 billion kroner in 2004 \cite{consequences-obese}.
 
+\section{Memory}
+
+
 \chapter{Game details}
 \section{Game description}
 The Remember Training Game, as the name suggests, is a game where both memory and physical exercises are key components. The game consists of rounds, where in each round you have to perform certain exercises. The exercises are Squat and Jump. Round 1 consists of 1 exercise, Round 2 consists of 2 exercises - the previous one and a new exercise chosen at random and the game continues like this until game over.
@@ -235,9 +238,11 @@ NEED GRAPH...!
 The primary visual used in the game is the feed from the RGB camera of the Kinect. The texts used was clear and readable when just testing the Game Management, as the background was a solid color and the texts was another solid color with great contrast. When using the feed from the RGB camera as the background of the game, there are no limits to the colors, shapes and lightning. Therefore a border was added to the text. In Unity 3D Free v4.5.4 the GUIText component does not have a border feature. To fix this, a script was made mimics a border around the text, by drawing the text multiple times behind the actual GUIText. While developing the game, a preview screen is visible that shows what the game will look like. Everything seems fine in the preview, but when the game is launched and played in full screen mode, the texts weren't scaling, hence they were quite hard to read from a distance. Another script was created that scales the texts. A third script was created, which makes the texts fade out after a certain amount of time.
 
 \chapter{Test}
-Some introductory text to the tests.
+This chapter will outline our test specification and the test results from testing on children from an elementary school. Lastly it will discuss the test results in regards to the test specification.
+%Some introductory text to the tests.
 
 \section{Test specification}
+In this section we have modeled our test specification as a table. Each test states two scenarios, the \emph{need} to have and the \emph{nice} to have. The needs to have describe the minimum acceptance criteria and the nice to have describe the desired acceptance criteria.
 
 \begin{center}
 \begin{longtable}{| p{1cm} | p{3.2cm} | p{3.75cm} | p{3.75cm} |}
@@ -272,9 +277,9 @@ T9 & Gesture recognition & Gestures are recognized regardless of the size of the
 \end{center}
 
 
-Note til T2: During the test session the users were given a short introduction, explaining they had to jump if the game said jump and squat if the game said squat. Even without further introduction, it was clear that the users quickly understood how the gesture recognition feedback worked, how high to jump and how deep to squat.\\
-Note til T3: The requirements for the gestures are not becoming more strict the further the player has progressed. But the amount of exercises to remember is increased, so in a sense, the difficulty of the game is adapting to the performance of the player. Further it could be introduced that the previous exercises are either not shown again or the time they are shown is decreased.\\
-Note til T5: Requiring that the player was to do a deep squat was definitely possible codewise, but during our test session, it showed that not all people are flexible enough to actually do a deep squat, thus the requirement for the squat was slacked a bit.
+%Note til T2: During the test session the users were given a short introduction, explaining they had to jump if the game said jump and squat if the game said squat. Even without further introduction, it was clear that the users quickly understood how the gesture recognition feedback worked, how high to jump and how deep to squat.\\
+%Note til T3: The requirements for the gestures are not becoming more strict the further the player has progressed. But the amount of exercises to remember is increased, so in a sense, the difficulty of the game is adapting to the performance of the player. Further it could be introduced that the previous exercises are either not shown again or the time they are shown is decreased.\\
+%Note til T5: Requiring that the player was to do a deep squat was definitely possible codewise, but during our test session, it showed that not all people are flexible enough to actually do a deep squat, thus the requirement for the squat was slacked a bit.
 
 \section{Test results}
 Besides testing on ourselves, our friends and family, we also wanted to take the game out in the world and apply it in an environment where it could possibly have a positive effect. Our game was tested on kids in age range 12-15 at an elementary school in Helsing\o r. The game was tested in a classroom, hence we could test if furniture in the background would interfere. We found that the player had to stand at least 12 meters away and be right beside some furniture, before it would have an effect on the Kinect registering the joints properly. One of the measurable features of a training game is the heart rate of the player. When testing we noted the heart rate of the player before and after playing the game. What follows is a table of the test results obtaining from the elementary school.\\
@@ -339,6 +344,11 @@ The children playing our game gave a lot of feedback to the game. As a spectator
 \item It is like using a Jump Rope (said by a girl who had many jumps)
 \item At first it was difficult to tell how high to jump and how low to squat in order for the game to register the exercise properly
 \end{itemize}
+
+\section{Discussion}
+Note til T2: During the test session the users were given a short introduction, explaining they had to jump if the game said jump and squat if the game said squat. Even without further introduction, it was clear that the users quickly understood how the gesture recognition feedback worked, how high to jump and how deep to squat.\\
+Note til T3: The requirements for the gestures are not becoming more strict the further the player has progressed. But the amount of exercises to remember is increased, so in a sense, the difficulty of the game is adapting to the performance of the player. Further it could be introduced that the previous exercises are either not shown again or the time they are shown is decreased.\\
+Note til T5: Requiring that the player was to do a deep squat was definitely possible codewise, but during our test session, it showed that not all people are flexible enough to actually do a deep squat, thus the requirement for the squat was slacked a bit.
 
 \chapter{Conclusion \& Discussion}
 This chapter will conclude and discuss the work done in this project. It will also discuss the possibilities for further development of the game.
