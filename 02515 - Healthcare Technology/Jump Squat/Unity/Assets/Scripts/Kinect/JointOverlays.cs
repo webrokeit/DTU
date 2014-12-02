@@ -31,6 +31,7 @@ namespace Assets.Scripts.Kinect {
 
         private Dictionary<GameObject, float> _overlays;
         private Dictionary<GameObject, Joints> _mappings;
+        private Joints[] _overlayedJoints = {};
 
         public float this[GameObject overlay] {
             get { return _overlays[overlay]; }
@@ -65,6 +66,7 @@ namespace Assets.Scripts.Kinect {
             if (RightKnee != null) _mappings[RightKnee] = Joints.RightKnee;
             if (RightAnkle != null) _mappings[RightAnkle] = Joints.RightAnkle;
             if (RightFoot != null) _mappings[RightFoot] = Joints.RightFoot;
+            _overlayedJoints = _mappings.Values.ToArray();
         }
 
         public void Position(KinectManager manager, JointPositions positions, GameObject overlayObject, float smoothFactor) {
@@ -82,6 +84,10 @@ namespace Assets.Scripts.Kinect {
             var distanceToCamera = _overlays[overlayObject];
             var overlayPosition = Camera.main.ViewportToWorldPoint(new Vector3(scaleX, scaleY, distanceToCamera));
             overlayObject.transform.position = Vector3.Lerp(overlayObject.transform.position, overlayPosition, smoothFactor * Time.deltaTime);
+        }
+
+        public Joints[] GetOverlayedJoints() {
+            return _overlayedJoints ;
         }
 
         public IEnumerator<GameObject> GetEnumerator() {

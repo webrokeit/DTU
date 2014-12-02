@@ -25,6 +25,8 @@ public class KinectManager : MonoBehaviour
 	// Public Bool to determine whether to receive and compute the color map
 	public bool ComputeColorMap = false;
 
+    public float DisplayMapsWidthPercent = 20f;
+
 	// How high off the ground is the sensor (in meters).
 	public float SensorHeight = 1.0f;
 
@@ -45,7 +47,6 @@ public class KinectManager : MonoBehaviour
 	
 	// Selection of smoothing parameters
 	public Smoothing smoothing = Smoothing.Default;
-	
 	
 	// Bool to keep track of whether Kinect has been initialized
 	private bool _kinectInitialized = false; 
@@ -73,9 +74,8 @@ public class KinectManager : MonoBehaviour
 	private Texture2D _usersClrTex;
 	//Color[] usersClrColors;
 	private Rect _usersClrRect;
-    private float DisplayMapsWidthPercent = 20f;
-	
-	//short[] usersLabelMap;
+
+    //short[] usersLabelMap;
 	private ushort[] _usersDepthMap;
 	private float[] _usersHistogramMap;
 	
@@ -140,12 +140,10 @@ public class KinectManager : MonoBehaviour
 	// returns the depth data for a specific pixel, if ComputeUserMap is true
 	public ushort GetDepthForPixel(int x, int y)
 	{
-		int index = y * KinectWrapper.Constants.DepthImageWidth + x;
+		var index = y * KinectWrapper.Constants.DepthImageWidth + x;
 		
-		if(index >= 0 && index < _usersDepthMap.Length)
-			return _usersDepthMap[index];
-		else
-			return 0;
+		if(index >= 0 && index < _usersDepthMap.Length) return _usersDepthMap[index];
+		return 0;
 	}
 	
 	// returns the depth map position for a 3d joint position
@@ -224,10 +222,8 @@ public class KinectManager : MonoBehaviour
 	// returns true if the User is calibrated and ready to use
 	public bool IsPlayerCalibrated(uint UserId)
 	{
-		if(UserId == _player1Id)
-			return _player1Calibrated;
-		else if(UserId == _player2Id)
-			return _player2Calibrated;
+		if(UserId == _player1Id) return _player1Calibrated;
+		if(UserId == _player2Id) return _player2Calibrated;
 		
 		return false;
 	}
@@ -988,31 +984,6 @@ public class KinectManager : MonoBehaviour
 		}
 	}
 	
-	// draws the skeleton in the given texture
-	private void DrawSkeleton(Texture2D aTexture, ref KinectWrapper.NuiSkeletonData skeletonData, ref bool[] playerJointsTracked)
-	{
-		int jointsCount = (int)KinectWrapper.NuiSkeletonPositionIndex.Count;
-		
-		for(int i = 0; i < jointsCount; i++)
-		{
-			int parent = KinectWrapper.GetSkeletonJointParent(i);
-			
-			if(playerJointsTracked[i] && playerJointsTracked[parent])
-			{
-				Vector3 posParent = KinectWrapper.MapSkeletonPointToDepthPoint(skeletonData.SkeletonPositions[parent]);
-				Vector3 posJoint = KinectWrapper.MapSkeletonPointToDepthPoint(skeletonData.SkeletonPositions[i]);
-				
-//				posParent.y = KinectWrapper.Constants.ImageHeight - posParent.y - 1;
-//				posJoint.y = KinectWrapper.Constants.ImageHeight - posJoint.y - 1;
-//				posParent.x = KinectWrapper.Constants.ImageWidth - posParent.x - 1;
-//				posJoint.x = KinectWrapper.Constants.ImageWidth - posJoint.x - 1;
-				
-				//Color lineColor = playerJointsTracked[i] && playerJointsTracked[parent] ? Color.red : Color.yellow;
-				DrawLine(aTexture, (int)posParent.x, (int)posParent.y, (int)posJoint.x, (int)posJoint.y, Color.yellow);
-			}
-		}
-	}
-	
 	// draws a line in a texture
 	private void DrawLine(Texture2D a_Texture, int x1, int y1, int x2, int y2, Color a_Color)
 	{
@@ -1092,8 +1063,8 @@ public class KinectManager : MonoBehaviour
 	// convert the matrix to quaternion, taking care of the mirroring
 	private Quaternion ConvertMatrixToQuat(Matrix4x4 mOrient, int joint, bool flip)
 	{
-		Vector4 vZ = mOrient.GetColumn(2);
-		Vector4 vY = mOrient.GetColumn(1);
+		var vZ = mOrient.GetColumn(2);
+		var vY = mOrient.GetColumn(1);
 
 		if(!flip)
 		{
@@ -1107,11 +1078,11 @@ public class KinectManager : MonoBehaviour
 			vZ.y = -vZ.y;
 			vY.z = -vY.z;
 		}
-		
-		if(vZ.x != 0.0f || vZ.y != 0.0f || vZ.z != 0.0f)
-			return Quaternion.LookRotation(vZ, vY);
-		else
-			return Quaternion.identity;
+
+	    if (vZ.x != 0.0f || vZ.y != 0.0f || vZ.z != 0.0f) {
+	        return Quaternion.LookRotation(vZ, vY);
+	    }
+	    return Quaternion.identity;
 	}
 }
 
