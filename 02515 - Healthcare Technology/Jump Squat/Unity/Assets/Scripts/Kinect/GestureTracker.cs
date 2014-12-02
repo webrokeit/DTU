@@ -100,8 +100,10 @@ public class GestureTracker : MonoBehaviour {
                 }
                 _displayState = true;
             }
-            foreach (var overlay in Overlays) {
-                Overlays.Position(manager, positions, overlay, SmoothFactor);
+            if(positions.AreAllNonZero(Overlays.GetOverlayedJoints())){
+                foreach (var overlay in Overlays) {
+                    Overlays.Position(manager, positions, overlay, SmoothFactor);
+                }
             }
         } else if (_displayState) {
             foreach (var overlay in Overlays) {

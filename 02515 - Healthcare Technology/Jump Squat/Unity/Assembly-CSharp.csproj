@@ -46,7 +46,6 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\Scripts\BrainScript.cs" />
      <Compile Include="Assets\Scripts\GUIManager.cs" />
      <Compile Include="Assets\Scripts\GameEventManager.cs" />
      <Compile Include="Assets\Scripts\Kinect\Gesture\DoubleClapGesture.cs" />
@@ -66,6 +65,7 @@
      <Compile Include="Assets\Scripts\Kinect\KinectManager.cs" />
      <Compile Include="Assets\Scripts\Kinect\KinectOverlayer.cs" />
      <Compile Include="Assets\Scripts\Kinect\KinectWrapper.cs" />
+     <Compile Include="Assets\Scripts\Lib\BrainScript.cs" />
      <Compile Include="Assets\Scripts\Lib\FadeoutText.cs" />
      <Compile Include="Assets\Scripts\Lib\Fnc.cs" />
      <Compile Include="Assets\Scripts\Lib\ScaleText.cs" />

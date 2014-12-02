@@ -4,10 +4,6 @@ using System.Collections;
 public class KinectOverlayer : MonoBehaviour 
 {
 	public GUITexture BackgroundImage;
-
-	public bool DebugOutput = false;
-
-	void Start() {}
 	
 	void Update() {
 		var manager = KinectManager.Instance;
