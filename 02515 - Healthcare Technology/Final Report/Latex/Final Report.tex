@@ -180,29 +180,14 @@ The game has been developed using Unity 3D and the Microsoft Kinect Sensor techn
 Unity 3D, henceforth Unity, is a Game Engine that can be used for developing games in both 2D and 3D. Unity includes a physics engine. In the Unity Asset Store, an enormous amount of community created assets are available, some have to be bought, others are available for free. The assets range from complete games to single assets with very specific functionality. Using the assets from the Asset Store can speed up the development process and also makes it possible to create good looking and functional games without skills in both design and coding.
 
 \subsection{Microsft Kinect Sensor}
-The Microsoft Kinect Sensor technology is capable of tracking human movements, by tracking a specific set of joints of the humanoid skeleton. The joints the Kinect is capable of tracking are:
-\begin{description}
-	\item[HipCenter] The upper center of the pelvis (\emph{sacrum} in latin).
-        	\item[Spine] The vertical center of the spine.
-        	\item[ShoulderCenter] The spot where the collarbones connect with the sternum.
-        	\item[Head]
-        	\item[ShoulderLeft]
-        	\item[ElbowLeft]
-        	\item[WristLeft]
-        	\item[HandLeft]
-        	\item[ShoulderRight]
-        	\item[ElbowRight]
-        	\item[WristRight]
-        	\item[HandRight]
-        	\item[HipLeft]
-        	\item[KneeLeft]
-        	\item[AnkleLeft]
-        	\item[FootLeft]
-        	\item[HipRight]
-        	\item[KneeRight]
-        	\item[AnkleRight
-        	\item[FootRight]
-\end{description}
+The Microsoft Kinect Sensor technology is capable of tracking human movements, by tracking a specific set of joints of the humanoid skeleton, see \autoref{fig:kinectjoints}. Specific limbs can also be tracked by using two or more tracked joints and calculating the movement of the limbs based on the joints.
+
+\begin{figure}[H]
+\centering
+\includegraphics{../GFX/joints.png}
+\caption[Joints trackable by the Microsoft Kinect Sensor technology]{The joints trackable by the Microsoft Kinect Sensor technology \cite{kinectusertracking}.}
+\label{fig:kinectjoints}
+\end{figure}
 
 
 \chapter{Implementation}
@@ -228,7 +213,7 @@ The joints are tracked in Viewport Space, which is a 2 dimensional space and goe
 
 \begin{figure}[H]
 NEED GRAPH...!
-\caption{Graph showing the positions of KneeLeft and KneeRight during a session where the player jumped.}
+\caption[Graph depicting joint tracking of KneeLeft and KneeRight]{Graph showing the positions of KneeLeft and KneeRight during a session where the player jumped.}
 \end{figure}
 
 \section{Visual improvements}
@@ -378,6 +363,14 @@ The vision for the game is to extend it into a suite of small games to help the 
 \bibitem{assetstorekinect}
 	RF Solutions, \emph{Kinect with MS-SDK}, v1.11, October 15, 2014
 	\url{https://www.assetstore.unity3d.com/en/#!/content/7747}
+
+\bibitem{kinectjoints}
+	Microsoft Kinect SDK, \emph{JointType Enumeration}, viewed October 2014.
+	\url{http://msdn.microsoft.com/en-us/library/microsoft.kinect.jointtype.aspx}
+	
+\bibitem{kinectusertracking}
+	Microsoft Kinect SDK, \emph{Tracking Users with Kinect Skeletal Tracking}, viewed October 2014.
+	\url{http://msdn.microsoft.com/en-us/library/jj131025.aspx}
 
 \end{thebibliography}
 
