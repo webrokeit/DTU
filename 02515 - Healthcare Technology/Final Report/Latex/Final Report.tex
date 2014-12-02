@@ -116,7 +116,7 @@ The game should be easy to setup. Hence there should be no additional software i
 The player must be able to start the game just by interacting with the Kinect. When a game is finished, the player should be able to restart the game without having to first close down the game and then run it again.
 
 \subsection{Player recognition}
-The game must be able to recognize players\footnote{ To recognize a player, means identify that a player is in front of the Kinect. It does not mean identifying a specific person.}. The game must support one player, though two player mode would be nice to have. The game should support players of various height, width and depth, thus the game should be able to calibrate when a new player is recognized.
+The game must be able to recognize players\footnote{ To recognize a player, means identify that a player is in front of the Kinect. It does not mean identifying a specific person.}. The game must support one player, though two player mode would be nice to have. The game should support players of various height, width and depth, thus the game should be able to calibrate when a new player is recognized. The game should be able to detect if a player is missing and pause the game accordingly, though this should only be in effect between rounds to prevent cheating.
 
 \subsection{Game progression}
 While playing the game, the user should be able to determine if they're progressing or not. The game should consist of rounds, which the player can use to determine if they're progressing or not. The player should also be rewarded when progressing in the game. The reward should be points which in turn should increase the players score.
@@ -166,6 +166,7 @@ Room setup & A well lit room with no objects within the viewport of the Kinect &
 Game start & The player must able to start the game by interacting with the Kinect & The player must be able to both start and restart the game by interacting with the Kinect \\ \hline
 Amount of players & One player is supported & Two players are supported \\ \hline
 Player recognition & The game should be able to recognize the player, calibration poses might be required & The game should be able to recognize the player, calibration is done automatically \\ \hline
+Player missing & The game should be able to detect if a player is missing and pause the game accordingly & The game should be able to detect if a player is missing and pause the game accordingly, but only between rounds, to prevent cheating \\ \hline
 Game progression & The game consists of rounds which the player can progress though & The game consists of rounds which the player can progress through, additionally points are also rewarded \\ \hline
 Exercises & New exercise each round while keeping the order of previous exercises, the exercises are all shown in the middle of the screen & New exercise each round while keeping the order of previous exercises, the exercises are shown at random positions \\ \hline
 Gesture recognition & The gestures are recognized, false positives are rare & The gestures are recognized, false positives are very rare if not happening at all \\ \hline
@@ -224,7 +225,6 @@ The primary visual used in the game is the feed from the RGB camera of the Kinec
 
 \chapter{Test}
 This chapter will outline our test specification and the test results from testing on children from an elementary school. Lastly it will discuss the test results in regards to the test specification.
-%Some introductory text to the tests.
 
 \section{Test specification}
 In this section we have modeled our test specification as a table. Each test states two scenarios, the \emph{need} to have and the \emph{nice} to have. The needs to have describe the minimum acceptance criteria and the nice to have describe the desired acceptance criteria.
@@ -257,14 +257,11 @@ T5 & Squat recognition & A squat is recognized & A deep squat is recognized \\ \
 T6 & Clap recognition & A single clap is recognized & A double clap is recognized \\ \hline
 T7 & Calibration & User has to stand in specific pose to calibrate & Calibration is done automatically \\ \hline
 T8 & Player's heart rate & 20\% increase in heart rate of player on average & 40\% increase in heart rate of player on average \\ \hline
-T9 & Gesture recognition & Gestures are recognized regardless of the size of the player with code modifications & Gestures are recognized regardless of the size of the player without code modifications \\ \hline
+T9 & Player's memory & The player at least stays at the same round & The player progresses at least 1 round, as long as their physique allows it \\ \hline
+T10 & Missing player & If no player is detected, the game should pause & If no player is detected, the game should pause and notify about the player missing \\ \hline
+
 \end{longtable}
 \end{center}
-
-
-%Note til T2: During the test session the users were given a short introduction, explaining they had to jump if the game said jump and squat if the game said squat. Even without further introduction, it was clear that the users quickly understood how the gesture recognition feedback worked, how high to jump and how deep to squat.\\
-%Note til T3: The requirements for the gestures are not becoming more strict the further the player has progressed. But the amount of exercises to remember is increased, so in a sense, the difficulty of the game is adapting to the performance of the player. Further it could be introduced that the previous exercises are either not shown again or the time they are shown is decreased.\\
-%Note til T5: Requiring that the player was to do a deep squat was definitely possible codewise, but during our test session, it showed that not all people are flexible enough to actually do a deep squat, thus the requirement for the squat was slacked a bit.
 
 \section{Test results}
 Besides testing on ourselves, our friends and family, we also wanted to take the game out in the world and apply it in an environment where it could possibly have a positive effect. Our game was tested on kids in age range 12-15 at an elementary school in Helsing\o r. The game was tested in a classroom, hence we could test if furniture in the background would interfere. We found that the player had to stand at least 12 meters away and be right beside some furniture, before it would have an effect on the Kinect registering the joints properly. One of the measurable features of a training game is the heart rate of the player. When testing we noted the heart rate of the player before and after playing the game. What follows is a table of the test results obtaining from the elementary school.\\
@@ -331,9 +328,34 @@ The children playing our game gave a lot of feedback to the game. As a spectator
 \end{itemize}
 
 \section{Discussion}
-Note til T2: During the test session the users were given a short introduction, explaining they had to jump if the game said jump and squat if the game said squat. Even without further introduction, it was clear that the users quickly understood how the gesture recognition feedback worked, how high to jump and how deep to squat.\\
-Note til T3: The requirements for the gestures are not becoming more strict the further the player has progressed. But the amount of exercises to remember is increased, so in a sense, the difficulty of the game is adapting to the performance of the player. Further it could be introduced that the previous exercises are either not shown again or the time they are shown is decreased.\\
-Note til T5: Requiring that the player was to do a deep squat was definitely possible codewise, but during our test session, it showed that not all people are flexible enough to actually do a deep squat, thus the requirement for the squat was slacked a bit.
+Based on the test results, the following discussion will analyze to which extend the tests in the test specification have been passed.
+
+\subsection*{T1: Start \& setup time}
+
+\subsection*{T2: User interface}
+During the test session the users were given a short introduction, explaining they had to jump if the game said jump and squat if the game said squat. Even without further introduction, it was clear that the users quickly understood how the gesture recognition feedback worked, how high to jump and how deep to squat. The game states the commands to perform but may lack further explanation of when and how to jump and squat. The test case only satisfies the \textbf{need} requirement.
+
+\subsection*{T3: Game progression}
+The requirements for the gestures are not becoming more strict the further the player has progressed. But the amount of exercises to remember is increased, so in a sense, the difficulty of the game is adapting to the performance of the player. Further it could be introduced that the previous exercises are either not shown again or the time they are shown is decreased. The test case only satisfies the \textbf{need} requirement.
+
+\subsection*{T4: Jump recognition}
+
+\subsection*{T5: Squat recognition}
+Requiring that the player was to do a deep squat was definitely possible code-wise, but during our test session, it showed that not all people are flexible enough to actually do a deep squat, thus the requirement for the squat was slacked a bit. With the requirement slacked, the player can still perform a deep squat and it will still be recognized. Encouragement towards performing the exercises to their full extent should be a part of the introduction to the game. The test case satisfies the \textbf{nice} requirement.
+
+
+\subsection*{T6: Clap recognition}
+The test showed that a single clap to start the game could be confusing. It is not uncommon for people to put their hands together, just as if they would clap. Requiring a double clap proved to be more appropriate, as it had to be a conscious action performed by the player. The test case satisfies the \textbf{nice} requirement.
+
+\subsection*{T7: Calibration}
+
+
+\subsection*{T8: Player's heart rate}
+
+\subsection*{T9: Player's memory}
+
+\subsection*{T10: Missing player}
+
 
 \chapter{Conclusion \& Discussion}
 This chapter will conclude and discuss the work done in this project. It will also discuss the possibilities for further development of the game.
