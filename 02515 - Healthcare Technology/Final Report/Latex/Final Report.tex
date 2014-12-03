@@ -100,7 +100,7 @@ Overweight & Over 25\\ \hline
 Obese & Over 30 \\ \hline
 \end{tabular}
 \end{table}
-Overweight and obesity are major risk factors for a number of chronic diseases. These diseases include diabetes, cardiovascular diseases and cancer. In Denmark the total expenses linked with obesity and the treatment thereof on hospital was calculated as being 1.1 billion kroner in 2004 \cite{consequences-obese}.
+Overweight and obesity are major risk factors for a number of chronic diseases. These diseases include diabetes, cardiovascular diseases and cancer. In Denmark the total expenses linked with obesity and the treatment thereof in hospitals was calculated as being 1.1 billion DKK in 2004 \cite{consequences-obese}.
 
 \section{Memory}
 There exists various ways to improving ones memory. One of the techniques is to exercise regularly. Many studies have shown that the parts of the brain that control memory and thinking have greater volume in people who exercise versus people who do not exercise \cite{harvard-health}. A study from University of California, Los Angeles showed that doing brain training games can significantly improve memory and language skills - especially in older people. The brain training programs can also delay dementia in later life \cite{dailymail}. Although the study used many different brain training games with different purposes, like reasoning, short- and long-term memory etc., we have decided to combine a brain training game with exercise. This has resulted in a game that combines a memory game with exercise.
@@ -113,7 +113,7 @@ The Workout Memory Game, as the name suggests, is a game where both memory and p
 The focus of the game is to get people to exercise, hence it's vital to incorporate a requirement of movement. Though it might seem redundant, it is also important to make requirements on the visualization of the game, the difficulty of the game and the usability of the game.
 
 \subsection{Game setup}
-The game should be easy to setup. Hence there should be no additional software installations required to get the program working. There might be a small setup required for the actual room the game is to be played in. As this is a game that requires physical activity, the player should be able to move around, jump up and don and squat without hitting any obstacles. To enhance the gaming experience, the lights in the room should be turned on.
+The game should be easy to setup. Hence there should be no additional software installations required to get the program working. There might be a small setup required for the actual room the game is to be played in. As this is a game that requires physical activity, the player should be able to move around, jump and squat without hitting any obstacles. To enhance the gaming experience, the lights in the room should be turned on.
 
 \subsection{Game start}
 The player must be able to start the game just by interacting with the Kinect. When a game is finished, the player should be able to restart the game without having to first close down the game and then run it again.
@@ -203,7 +203,7 @@ The Microsoft Kinect Sensor technology is capable of tracking human movements, b
 The game has been implemented using Unity3D Free v4.5.4 as the game engine, the Visual Studio IDE for coding in C\# and the Microsoft Kinect Sensor v1 for player tracking.  The game has been made in an incremental manner, using some of the principals of Scrum. Git and Github has been used for source control, feature discussion and issue tracking. 
 
 \section{Scene}
-The scene was kept simple. There's a skybox with a solid color used as the background for the game. GUIText objects are then used to display various texts. The game is to be kept simple and not overly fancy, therefore the texts are using a font with the look and feel of good old 8bit games. The font is readable close by and when it's scaled up. The font is called \emph{Press Start 2P} and is Open Font licensed (OFL) \cite{2pfont}. 
+The scene was kept simple. There is a skybox with a solid color used as the background for the game, though when the Kinect is attached it will display the feed from the Kinect's RGB camera. GUIText objects are then used to display various texts. The game is to be kept simple and not overly fancy, therefore the texts are using a font with the look and feel of good old 8bit games. The font is readable close by and when it's scaled up. The font is called \emph{Press Start 2P} and is Open Font licensed (OFL) \cite{2pfont}. 
 
 \section{Game management}
 A set of classes were made to manage the game, these include a \emph{Brain} script, \emph{GameEventManager} script and \emph{GUIManager} script. These scripts make up the primary game functionality. The Brain script is in charge of starting a new game, creating new rounds, adding moves to perform while playing, keeping score and ending the game. The GUIManager is in charge of showing/hiding and updating the GUITexts used within the game. The GameEventManager is used for delegating messages about the state of the game (start game, end game, new round).
