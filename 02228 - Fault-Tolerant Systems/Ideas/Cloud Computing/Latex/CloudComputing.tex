@@ -136,11 +136,11 @@ The Amazon Elastic Compute Cloud, henceforth \emph{EC2}, are computing instances
 At AWS, the computing instances are started by launching an Amazon Machine Image, henceforth \emph{AMI}. The AMIs are ready to deploy templates of the root volume (for example an operating system, an application server and applications), launch permissions and mapping to EBS volumes. Using AMIs it is easy to launch a new instance when server load is high or quickly recover from instance failures. The AMIs are stored on S3.
 
 \section{Elastic Load Balancing}
-The Amazon Elastic Load Balancing, is a service for distributing the load between running EC2 instances. Further it also allows for greater levels of fault-tolerance by routing traffic away from faulty EC2 instances. Elastic Load Balancing can be setup to automatically detect if EC2 instances are performing poorly or if they are dead, in this case the EC2 instance will no longer receive incoming traffic. While the traffic is being routed to other EC2 instances, the faulty EC2 instance will be replaced by a newly launched EC2 instance or a reserved EC2 instance. When the new EC2 instance is up and running, the Elastic Load Balancer can start routing traffic to it. If setup properly, the detection and replacement of faulty EC2 instances can be done automatically without the need of any manually interaction with the AWS. Elastic Load Balancing also allows for auto scaling, meaning if more computing power is required, a new EC2 instance can be launched and then the load balancer will start to even out the traffic. An example use for Elastic Load Balancing with auto scaling is shown in \autoref{fig:awsebs}. The example show two load balancers, where the first one spreads the traffic between the EC2 instances running the web server, the next load balancer spreads the traffic between the EC2 instances running the application serving. Using this setup, it's possible to scale the EC2 instances asymmetrically, this is useful when only the EC2 instances running the web server is in need of more resources etc.
+The Amazon Elastic Load Balancing, is a service for distributing the load between running EC2 instances. Further it also allows for greater levels of fault-tolerance by routing traffic away from faulty EC2 instances. Elastic Load Balancing can be setup to automatically detect if EC2 instances are performing poorly or if they are dead, in this case the EC2 instance will no longer receive incoming traffic. While the traffic is being routed to other EC2 instances, the faulty EC2 instance will be replaced by a newly launched EC2 instance or a reserved EC2 instance. When the new EC2 instance is up and running, the Elastic Load Balancer can start routing traffic to it. If setup properly, the detection and replacement of faulty EC2 instances can be done automatically without the need of any manually interaction with the AWS. Elastic Load Balancing also allows for auto scaling, meaning if more computing power is required, a new EC2 instance can be launched and then the load balancer will start to even out the traffic. An example use for Elastic Load Balancing with auto scaling is shown in \autoref{fig:awsebs}. The example show two load balancers, where the first one spreads the traffic between the EC2 instances running the web server, the next load balancer spreads the traffic between the EC2 instances running the application server. Using this setup, it's possible to scale the EC2 instances asymmetrically, this is useful when only the EC2 instances running the web server is in need of more resources etc.
 
 \begin{figure}[H]
 \centering
-\includegraphics[scale=.375]{../GFX/aws_elb_web.jpg}
+\includegraphics[scale=.38]{../GFX/aws_elb_web.jpg}
 \caption{Example of using AWS Elastic Load Balancing for fault-tolerance and auto scaling.}
 \label{fig:awsebs}
 \end{figure}
@@ -230,10 +230,10 @@ Both platforms have an online file storage web service that uses the concept of 
 \subsection{Data loss}
 
 \section{Load Balancing}
-
+Both platforms provides the possibility of using load balancing. On both platforms, the load balancer can provide more functionality than just balancing the incoming traffic. The load balancer can identify unavailable computing instances and stop sending traffic to it, further it can also instantiate a new instance if required and automatically create new instances if the load is high.
 
 \subsection{Overload \& Crashing}
-
+Large amount of traffic can cause an overload on the computing instances, databases and storage servers. Distributing the load between all possible instances, evens out the load, thereby decreasing response times. But sometimes, even load balancing isn't enough, not even by creating more computing instances, can the load be handled. This could occur if the system is under a Denial of Service attack. 
 
 
 \chapter{Conclusion}
